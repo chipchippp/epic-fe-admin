@@ -4,7 +4,6 @@ const routes = {
 
     //      Account
     login: '/login',
-    register: '/register',
 
     //      Category
     category: '/category',

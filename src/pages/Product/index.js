@@ -5,10 +5,9 @@ function Product() {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        // Hàm gọi API để lấy danh sách sản phẩm
         const fetchProducts = async () => {
             try {
-                const response = await axios.get(`http://localhost:8082/api/v1/products`); // URL của API
+                const response = await axios.get(`http://localhost:8082/api/v1/products`);
                 setProducts(response.data.content);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -36,12 +35,9 @@ function Product() {
                                                 <th>Product ID</th>
                                                 <th>Name</th>
                                                 <th>Images</th>
-                                                <th>Description</th>
                                                 <th>Price</th>
                                                 <th>Category</th>
                                                 <th>Stock Quantity</th>
-                                                <th>Manufacturer</th>
-                                               
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -51,17 +47,14 @@ function Product() {
                                                     <td>{product.name}</td>
                                                     <td>
                                                     {product.images.length > 0 ? (
-    <img src={`http://localhost:8082/api/v1/product-images/images/${product.images[0].imageUrl}`} alt={product.name} style={{ width: '50px', height: '50px' }} />
-) : (
-    'No Image'
-)}
-            </td>
-                                                    <td>{product.description}</td>
-                                                    <td>{product.price}</td>
+                                                    <img src={`http://localhost:8082/api/v1/product-images/images/${product.images[0].imageUrl}`} alt={product.name} style={{ width: '50px', height: '50px' }} />
+                                                      ) : (
+                                                        'No Image'
+                                                            )}
+                                                    </td>
+                                                    <td>{product.price}$</td>
                                                     <td>{product.category ? product.category.categoryName : 'N/A'}</td>
                                                     <td>{product.stockQuantity}</td>
-                                                    <td>{product.manufacturer}</td>
-                                                    
                                                 </tr>
                                             ))}
                                         </tbody>
