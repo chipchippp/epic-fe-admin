@@ -9,8 +9,8 @@ import Register from '~/pages/Account/register';
 
 // Category
 import Category from '~/pages/Category/index';
-// import CategoryCreate from '~/pages/Category/create';
-// import CategoryEdit from '~/pages/Category/edit';
+import CategoryCreate from '~/pages/Category/create';
+import CategoryEdit from '~/pages/Category/edit';
 
 // Product
 import Product from '~/pages/Product/index';
@@ -32,6 +32,8 @@ export const publicRoutes = [
 
     // Category
     { path: config.routes.category, component: Category, layout: AdminLayout },
+    { path: config.routes.createCategory, component: CategoryCreate, layout: AdminLayout },
+    { path: config.routes.editCategory, component: CategoryEdit, layout: AdminLayout },
 
     // Product
     { path: config.routes.product, component: Product, layout: AdminLayout },
