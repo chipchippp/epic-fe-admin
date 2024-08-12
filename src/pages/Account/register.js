@@ -33,100 +33,77 @@ function Register() {
     };
 
     return (
-        <section className="section">
-            <div className="container mt-5">
-                <div className="row">
-                    <div className="col-12 col-sm-10 offset-sm-1 col-md-8 offset-md-2 col-lg-8 offset-lg-2 col-xl-8 offset-xl-2">
-                        <div className="login-brand">
-                            <img src="" alt="logo" width={100} className="shadow-light rounded-circle" />
-                        </div>
-                        <div className="card card-primary">
-                            <div className="card-header">
-                                <h4>Register</h4>
-                            </div>
-                            <div className="card-body">
-                                <div className="form-group">
-                                    <label htmlFor="user">User</label>
-                                    <input
-                                        id="user"
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="User"
-                                        value={user}
-                                        onChange={(e) => setUser(e.target.value)}
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="email">Email</label>
-                                    <input
-                                        id="email"
-                                        type="email"
-                                        className="form-control"
-                                        placeholder="Email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                    />
-                                </div>
-                                <div className="row">
-                                    <div className="form-group col-6">
-                                        <label htmlFor="password" className="d-block">
-                                            Password
-                                        </label>
-                                        <input
-                                            id="password"
-                                            type="password"
-                                            className="form-control"
-                                            placeholder="Password"
-                                            value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
-                                        />
-                                    </div>
-                                    <div className="form-group col-6">
-                                        <label htmlFor="confirmPassword" className="d-block">
-                                            Confirmation Password
-                                        </label>
-                                        <input
-                                            id="confirmPassword"
-                                            type="password"
-                                            className="form-control"
-                                            placeholder="Confirmation Password"
-                                            value={confirmPassword}
-                                            onChange={(e) => setConfirmPassword(e.target.value)}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <div className="custom-control custom-checkbox">
-                                        <input
-                                            type="checkbox"
-                                            name="agree"
-                                            className="custom-control-input"
-                                            id="agree"
-                                        />
-                                        <label className="custom-control-label" htmlFor="agree">
-                                            I agree with the terms and conditions
-                                        </label>
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary btn-lg btn-block"
-                                        onClick={handleSave}
-                                    >
-                                        Register
-                                    </button>
-                                </div>
-                                <div className="mt-5 text-muted text-center">
-                                    You have an account? <a href="/login">Login</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="simple-footer">Copyright © Stisla 2018</div>
+        <div className="container-scroller">
+        <div className="container-fluid page-body-wrapper full-page-wrapper">
+          <div className="content-wrapper d-flex align-items-center auth px-0">
+            <div className="row w-100 mx-0">
+              <div className="col-lg-4 mx-auto">
+                <div className="auth-form-light text-left py-5 px-4 px-sm-5">
+                  <div className="brand-logo">
+                    <img src="src/assets/images/logo.svg" alt="logo" />
+                  </div>
+                  <h4>Hello! let's get started</h4>
+                  <h6 className="font-weight-light">Sign in to continue.</h6>
+                  <form className="pt-3">
+                    <div className="form-group">
+                      <input
+                        type="email"
+                        className="form-control form-control-lg"
+                        id="exampleInputEmail1"
+                        placeholder="Username"
+                      />
                     </div>
+                    <div className="form-group">
+                      <input
+                        type="password"
+                        className="form-control form-control-lg"
+                        id="exampleInputPassword1"
+                        placeholder="Password"
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <a
+                        className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
+                        href="../../index.html"
+                      >
+                        SIGN IN
+                      </a>
+                    </div>
+                    <div className="my-2 d-flex justify-content-between align-items-center">
+                      <div className="form-check">
+                        <label className="form-check-label text-muted">
+                          <input type="checkbox" className="form-check-input" />
+                          Keep me signed in
+                        </label>
+                      </div>
+                      <a href="#" className="auth-link text-black">
+                        Forgot password?
+                      </a>
+                    </div>
+                    <div className="mb-2">
+                      <button
+                        type="button"
+                        className="btn btn-block btn-facebook auth-form-btn"
+                      >
+                        <i className="ti-facebook mr-2" />
+                        Connect using facebook
+                      </button>
+                    </div>
+                    <div className="text-center mt-4 font-weight-light">
+                      Don't have an account?{" "}
+                      <a href="register.html" className="text-primary">
+                        Create
+                      </a>
+                    </div>
+                  </form>
                 </div>
+              </div>
             </div>
-        </section>
+          </div>
+          {/* content-wrapper ends */}
+        </div>
+        {/* page-body-wrapper ends */}
+      </div>
     );
 }
 

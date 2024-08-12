@@ -1,124 +1,168 @@
-import { useNavigate, useLocation, Route, Link } from 'react-router-dom';
-import { NavDropdown, Nav } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import React, { useState, useEffect } from 'react';
 
 function HeaderAdmin() {
     const navigate = useNavigate();
-    const [username, setUsername] = useState('');
-
+    
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
-
-        if (storedUsername) {
-            setUsername(storedUsername);
-        } else {
+        if (!storedUsername) {
             navigate('/login');
         }
-    }, []);
+    }, [navigate]);
+
     const handleLogout = () => {
         localStorage.removeItem('roles');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('username');
         localStorage.removeItem('id');
-
         navigate('/login');
         toast.success('Logout Success');
     };
+
     return (
         <>
-     <header className="topbar-nav">
-  <nav className="navbar navbar-expand fixed-top">
-    <ul className="navbar-nav mr-auto align-items-center">
-      <li className="nav-item">
-        <a className="nav-link toggle-menu" href="javascript:void();">
-          <i className="icon-menu menu-icon" />
-        </a>
-      </li>
-      <li className="nav-item">
-        <form className="search-bar">
+           <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+  <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+    <a className="navbar-brand brand-logo mr-5" href="index.html">
+      <img src="/src/assets/images/logo.svg" className="mr-2" alt="logo" />
+    </a>
+    <a className="navbar-brand brand-logo-mini" href="index.html">
+      <img src="/src/assets/images/logo-mini.svg" alt="logo" />
+    </a>
+  </div>
+  <div className="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+    <button
+      className="navbar-toggler navbar-toggler align-self-center"
+      type="button"
+      data-toggle="minimize"
+    >
+      <span className="icon-menu" />
+    </button>
+    <ul className="navbar-nav mr-lg-2">
+      <li className="nav-item nav-search d-none d-lg-block">
+        <div className="input-group">
+          <div
+            className="input-group-prepend hover-cursor"
+            id="navbar-search-icon"
+          >
+            <span className="input-group-text" id="search">
+              <i className="icon-search" />
+            </span>
+          </div>
           <input
             type="text"
             className="form-control"
-            placeholder="Enter keywords"
+            id="navbar-search-input"
+            placeholder="Search now"
+            aria-label="search"
+            aria-describedby="search"
           />
-          <a href="javascript:void();">
-            <i className="icon-magnifier" />
-          </a>
-        </form>
+        </div>
       </li>
     </ul>
-    <ul className="navbar-nav align-items-center right-nav-link">
-      <li className="nav-item language">
+    <ul className="navbar-nav navbar-nav-right">
+      <li className="nav-item dropdown">
         <a
-          className="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect"
-          data-toggle="dropdown"
-          href="javascript:void();"
-        >
-          <i className="fa fa-flag" />
-        </a>
-        <ul className="dropdown-menu dropdown-menu-right">
-          <li className="dropdown-item">
-            <i className="flag-icon flag-icon-gb mr-2" /> English
-          </li>
-          <li className="dropdown-item">
-            <i className="flag-icon flag-icon-fr mr-2" /> French
-          </li>
-          <li className="dropdown-item">
-            <i className="flag-icon flag-icon-cn mr-2" /> Chinese
-          </li>
-          <li className="dropdown-item">
-            <i className="flag-icon flag-icon-de mr-2" /> German
-          </li>
-        </ul>
-      </li>
-      <li className="nav-item">
-        <a
-          className="nav-link dropdown-toggle dropdown-toggle-nocaret"
-          data-toggle="dropdown"
+          className="nav-link count-indicator dropdown-toggle"
+          id="notificationDropdown"
           href="#"
+          data-toggle="dropdown"
         >
-          <span className="user-profile">
-            <img
-              src="https://via.placeholder.com/110x110"
-              className="img-circle"
-              alt="user avatar"
-            />
-          </span>
+          <i className="icon-bell mx-0" />
+          <span className="count" />
         </a>
-        <ul className="dropdown-menu dropdown-menu-right">
-          <li className="dropdown-item user-details">
-            <a href="javaScript:void();">
-              <div className="media">
-                <div className="avatar">
-                  <img
-                    className="align-self-start mr-3"
-                    src="https://via.placeholder.com/110x110"
-                    alt="user avatar"
-                  />
-                </div>
-                <div className="media-body">
-                  <h6 className="mt-2 user-title">Sarajhon Mccoy</h6>
-                  <p className="user-subtitle">mccoy@example.com</p>
-                </div>
+        <div
+          className="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+          aria-labelledby="notificationDropdown"
+        >
+          <p className="mb-0 font-weight-normal float-left dropdown-header">
+            Notifications
+          </p>
+          <a className="dropdown-item preview-item">
+            <div className="preview-thumbnail">
+              <div className="preview-icon bg-success">
+                <i className="ti-info-alt mx-0" />
               </div>
-            </a>
-          </li>
-          <li className="dropdown-divider" />
-          <li className="dropdown-item">
-            <i className="icon-wallet mr-2" /> Profile
-          </li>
-          <li className="dropdown-divider" />
-          <li className="dropdown-item">
-            <i className="icon-power mr-2" /> Logout
-          </li>
-        </ul>
+            </div>
+            <div className="preview-item-content">
+              <h6 className="preview-subject font-weight-normal">
+                Application Error
+              </h6>
+              <p className="font-weight-light small-text mb-0 text-muted">
+                Just now
+              </p>
+            </div>
+          </a>
+          <a className="dropdown-item preview-item">
+            <div className="preview-thumbnail">
+              <div className="preview-icon bg-warning">
+                <i className="ti-settings mx-0" />
+              </div>
+            </div>
+            <div className="preview-item-content">
+              <h6 className="preview-subject font-weight-normal">Settings</h6>
+              <p className="font-weight-light small-text mb-0 text-muted">
+                Private message
+              </p>
+            </div>
+          </a>
+          <a className="dropdown-item preview-item">
+            <div className="preview-thumbnail">
+              <div className="preview-icon bg-info">
+                <i className="ti-user mx-0" />
+              </div>
+            </div>
+            <div className="preview-item-content">
+              <h6 className="preview-subject font-weight-normal">
+                New user registration
+              </h6>
+              <p className="font-weight-light small-text mb-0 text-muted">
+                2 days ago
+              </p>
+            </div>
+          </a>
+        </div>
+      </li>
+      <li className="nav-item nav-profile dropdown">
+        <a
+          className="nav-link dropdown-toggle"
+          href="#"
+          data-toggle="dropdown"
+          id="profileDropdown"
+        >
+          <img src="/src/assets/images/faces/face28.jpg" alt="profile" />
+        </a>
+        <div
+          className="dropdown-menu dropdown-menu-right navbar-dropdown"
+          aria-labelledby="profileDropdown"
+        >
+          <a className="dropdown-item">
+            <i className="ti-settings text-primary" />
+            Settings
+          </a>
+          <a className="dropdown-item">
+            <i className="ti-power-off text-primary" />
+            Logout
+          </a>
+        </div>
+      </li>
+      <li className="nav-item nav-settings d-none d-lg-flex">
+        <a className="nav-link" href="#">
+          <i className="icon-ellipsis" />
+        </a>
       </li>
     </ul>
-  </nav>
-</header>
-
-
+    <button
+      className="navbar-toggler navbar-toggler-right d-lg-none align-self-center"
+      type="button"
+      data-toggle="offcanvas"
+    >
+      <span className="icon-menu" />
+    </button>
+  </div>
+</nav>
         </>
     );
 }

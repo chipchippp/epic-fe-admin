@@ -1,41 +1,21 @@
 function FooterAdmin() {
     return (
         <>
-        {/*Start Back To Top Button*/}
-        <a href="javaScript:void();" className="back-to-top">
-          <i className="fa fa-angle-double-up" />{" "}
-        </a>
-       
-        <div className="right-sidebar">
-          <div className="switcher-icon">
-            <i className="zmdi zmdi-settings zmdi-hc-spin" />
-          </div>
-          <div className="right-sidebar-content">
-            <p className="mb-0">Gaussion Texture</p>
-            <hr />
-            <ul className="switcher">
-              <li id="theme1" />
-              <li id="theme2" />
-              <li id="theme3" />
-              <li id="theme4" />
-              <li id="theme5" />
-              <li id="theme6" />
-            </ul>
-            <p className="mb-0">Gradient Background</p>
-            <hr />
-            <ul className="switcher">
-              <li id="theme7" />
-              <li id="theme8" />
-              <li id="theme9" />
-              <li id="theme10" />
-              <li id="theme11" />
-              <li id="theme12" />
-              <li id="theme13" />
-              <li id="theme14" />
-              <li id="theme15" />
-            </ul>
-          </div>
-        </div>
+   <footer className="footer">
+  <div className="d-sm-flex justify-content-center justify-content-sm-between">
+    <span className="text-muted text-center text-sm-left d-block d-sm-inline-block">
+      Copyright © 2021. Premium
+      <a href="/" target="_blank">
+        Bootstrap admin template
+      </a>
+      from BootstrapDash. All rights reserved.
+    </span>
+    <span className="float-none float-sm-right d-block mt-1 mt-sm-0 text-center">
+      Hand-crafted &amp; made with <i className="ti-heart text-danger ml-1" />
+    </span>
+  </div>
+</footer>
+
       </>      
     );
 }
