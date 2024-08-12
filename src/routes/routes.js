@@ -5,7 +5,6 @@ import HomeAdmin from '~/pages/Home/index';
 
 // Account
 import Login from '~/pages/Account/login';
-import Register from '~/pages/Account/register';
 
 // Category
 import Category from '~/pages/Category/index';
@@ -28,7 +27,6 @@ export const publicRoutes = [
    
     // Account
     { path: config.routes.login, component: Login, layout: null },
-    { path: config.routes.register, component: Register, layout: null },
 
     // Category
     { path: config.routes.category, component: Category, layout: AdminLayout },

@@ -4,37 +4,46 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Search from '~/layouts/components/Search';
+import Pagination from '~/layouts/components/Pagination';
 
 function Category() {
     const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [search, setSearch] = useState('');
 
     useEffect(() => {
-        fetch('http://localhost:8082/api/v1/categories')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setCategories(data.content);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error('There was a problem with the fetch operation:', error);
-                toast.error('Failed to load categories');
-                setLoading(false);
-            });
-    }, []);
 
-    const handleEdit = (id) => {
-        // Redirect to edit page or open an edit modal
-        // Here, using Link to redirect to an edit page
-        console.log(`Edit category with ID: ${id}`);
-    };
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8082/api/v1/categories`);
+                setCategories(response.data.content);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        };
+
+        // fetch('http://localhost:8082/api/v1/categories')
+        //     .then((response) => {
+        //         if (!response.ok) {
+        //             throw new Error('Network response was not ok');
+        //         }
+        //         return response.json();
+        //     })
+        //     .then((data) => {
+        //         setCategories(data.content);
+        //         setLoading(false);
+        //     })
+        //     .catch((error) => {
+        //         console.error('There was a problem with the fetch operation:', error);
+        //         toast.error('Failed to load categories');
+        //         setLoading(false);
+        //     });
+        fetchProducts();
+    }, []);
 
     const handleDelete = (id) => {
         setDeleteId(id);
@@ -81,6 +90,8 @@ function Category() {
                                         <Link to="/category/create" className="btn btn-primary">
                                             <i className="fas fa-plus"></i> New
                                         </Link>
+                                        <Search setSearch={setSearch} />
+
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -119,6 +130,7 @@ function Category() {
                                                 </tbody>
                                             </table>
                                         </div>
+                                       
                                     </>
                                 )}
                             </div>
