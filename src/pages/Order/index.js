@@ -1,4 +1,4 @@
-function Orders() {
+function Order() {
     return (
       <>
       <div className="content-wrapper">
@@ -318,4 +318,4 @@ function Orders() {
 
 }
 
-export default Orders;
+export default Order;

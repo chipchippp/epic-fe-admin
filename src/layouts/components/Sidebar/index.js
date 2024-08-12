@@ -6,10 +6,10 @@ function SidebarAdmin() {
            <nav className="sidebar sidebar-offcanvas" id="sidebar">
   <ul className="nav">
     <li className="nav-item">
-      <a className="nav-link" href="index.html">
+      <Link className="nav-link" to="/">
         <i className="icon-grid menu-icon" />
         <span className="menu-title">Dashboard</span>
-      </a>
+      </Link>
     </li>
    
     <li className="nav-item">
@@ -27,9 +27,9 @@ function SidebarAdmin() {
       <div className="collapse" id="form-elements">
         <ul className="nav flex-column sub-menu">
           <li className="nav-item">
-            <a className="nav-link" href="pages/forms/basic_elements.html">
+            <Link className="nav-link" to="pages/forms/basic_elements.html">
               Basic Elements
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
@@ -49,9 +49,9 @@ function SidebarAdmin() {
       <div className="collapse" id="charts">
         <ul className="nav flex-column sub-menu">
           <li className="nav-item">
-            <a className="nav-link" href="pages/charts/chartjs.html">
+            <Link className="nav-link" to="/chart">
               ChartJs
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
@@ -71,10 +71,15 @@ function SidebarAdmin() {
       <div className="collapse" id="tables">
         <ul className="nav flex-column sub-menu">
           <li className="nav-item">
-            {" "}
-            <a className="nav-link" href="pages/tables/basic-table.html">
-              Basic table
-            </a>
+            <Link className="nav-link" to="/product">
+                Products
+            </Link>
+            <Link className="nav-link" to="/order">
+                Orders
+            </Link>
+            <Link className="nav-link" to="/category">
+                Category
+            </Link>
           </li>
         </ul>
       </div>
@@ -95,18 +100,14 @@ function SidebarAdmin() {
       <div className="collapse" id="auth">
         <ul className="nav flex-column sub-menu">
           <li className="nav-item">
-            {" "}
-            <a className="nav-link" href="pages/samples/login.html">
-              {" "}
-              Login{" "}
-            </a>
+            <Link className="nav-link" to="/login">
+              Login
+            </Link>
           </li>
           <li className="nav-item">
-            {" "}
-            <a className="nav-link" href="pages/samples/register.html">
-              {" "}
-              Register{" "}
-            </a>
+            <Link className="nav-link" to="/register">
+              Register
+            </Link>
           </li>
         </ul>
       </div>
@@ -126,25 +127,20 @@ function SidebarAdmin() {
       <div className="collapse" id="error">
         <ul className="nav flex-column sub-menu">
           <li className="nav-item">
-            {" "}
-            <a className="nav-link" href="pages/samples/error-404.html">
-              {" "}
-              404{" "}
-            </a>
+            <Link className="nav-link" to="pages/samples/error-404.html">
+              404
+            </Link>
           </li>
           <li className="nav-item">
-            {" "}
-            <a className="nav-link" href="pages/samples/error-500.html">
-              {" "}
-              500{" "}
-            </a>
+            <Link className="nav-link" to="pages/samples/error-500.html">
+              500
+            </Link>
           </li>
         </ul>
       </div>
     </li>
   </ul>
 </nav>
-
         </>
     );
 }

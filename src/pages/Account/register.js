@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function Register() {
     const [user, setUser] = useState('');
@@ -62,12 +63,12 @@ function Register() {
                       />
                     </div>
                     <div className="mt-3">
-                      <a
+                      <Link
                         className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn"
-                        href="../../index.html"
+                        to="/submit"
                       >
                         SIGN IN
-                      </a>
+                      </Link>
                     </div>
                     <div className="my-2 d-flex justify-content-between align-items-center">
                       <div className="form-check">
@@ -76,9 +77,9 @@ function Register() {
                           Keep me signed in
                         </label>
                       </div>
-                      <a href="#" className="auth-link text-black">
+                      <Link to="#" className="auth-link text-black">
                         Forgot password?
-                      </a>
+                      </Link>
                     </div>
                     <div className="mb-2">
                       <button
@@ -90,10 +91,10 @@ function Register() {
                       </button>
                     </div>
                     <div className="text-center mt-4 font-weight-light">
-                      Don't have an account?{" "}
-                      <a href="register.html" className="text-primary">
+                      Don't have an account?
+                      <Link to="/register" className="text-primary">
                         Create
-                      </a>
+                      </Link>
                     </div>
                   </form>
                 </div>
