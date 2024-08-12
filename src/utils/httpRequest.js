@@ -36,3 +36,8 @@ httpRequest.interceptors.request.use(
         return Promise.reject(error);
     },
 );
+
+
+export const isAuthenticated = () => {
+    return !!localStorage.getItem('accessToken');
+};
