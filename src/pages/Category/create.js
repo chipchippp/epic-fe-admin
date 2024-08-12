@@ -1,4 +1,33 @@
+import React, { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useNavigate, Link } from 'react-router-dom';
+import axios from 'axios';
+
 function CreateCategory() {
+ 
+  const [data, setData] = useState({
+    categoryName: '',
+    description: '',
+  });
+
+  const navigate = useNavigate();
+
+  const handleCreate = async (event) => {
+    event.preventDefault();
+
+    await axios.post('http://localhost:8082/api/v1/categories', {
+        categoryName: data.categoryName,
+        description: data.description
+    });
+    try {
+        toast.success('Product created successfully');
+        navigate('/category');
+    } catch (error) {
+        toast.error('Failed to create category');
+    }
+};
+
     return (
       <>
       <div className="content-wrapper">
@@ -20,7 +49,7 @@ function CreateCategory() {
 <div className="card-body">
 <h4 className="card-title">Basic form elements</h4>
 <p className="card-description">Basic form elements</p>
-<form className="forms-sample">
+<form className="forms-sample" onSubmit={handleCreate}>
   <div className="form-group">
     <label htmlFor="exampleInputName1">Name</label>
     <input
@@ -28,6 +57,8 @@ function CreateCategory() {
       className="form-control"
       id="exampleInputName1"
       placeholder="Name"
+      value={data.categoryName}
+      onChange={(e) => setData({ ...data, categoryName: e.target.value })}
     />
   </div>
   <div className="form-group">
@@ -36,13 +67,15 @@ function CreateCategory() {
       type="text"
       className="form-control"
       id="exampleInputCity1"
-      placeholder="Location"
+      placeholder="Description"
+      value={data.description}
+      onChange={(e) => setData({ ...data, description: e.target.value })}
     />
   </div>
   <button type="submit" className="btn btn-primary mr-2">
     Submit
   </button>
-  <button className="btn btn-light">Cancel</button>
+  <Link to="/category" className="btn btn-light"> Back </Link>
 </form>
 </div>
 </div>
