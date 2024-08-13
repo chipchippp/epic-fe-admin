@@ -84,61 +84,6 @@ function SidebarAdmin() {
         </ul>
       </div>
     </li>
-    
-    <li className="nav-item">
-      <a
-        className="nav-link"
-        data-toggle="collapse"
-        href="#auth"
-        aria-expanded="false"
-        aria-controls="auth"
-      >
-        <i className="icon-head menu-icon" />
-        <span className="menu-title">User Pages</span>
-        <i className="menu-arrow" />
-      </a>
-      <div className="collapse" id="auth">
-        <ul className="nav flex-column sub-menu">
-          <li className="nav-item">
-            <Link className="nav-link" to="/login">
-              Login
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="/register">
-              Register
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li className="nav-item">
-      <a
-        className="nav-link"
-        data-toggle="collapse"
-        href="#error"
-        aria-expanded="false"
-        aria-controls="error"
-      >
-        <i className="icon-ban menu-icon" />
-        <span className="menu-title">Error pages</span>
-        <i className="menu-arrow" />
-      </a>
-      <div className="collapse" id="error">
-        <ul className="nav flex-column sub-menu">
-          <li className="nav-item">
-            <Link className="nav-link" to="pages/samples/error-404.html">
-              404
-            </Link>
-          </li>
-          <li className="nav-item">
-            <Link className="nav-link" to="pages/samples/error-500.html">
-              500
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </li>
   </ul>
 </nav>
         </>
