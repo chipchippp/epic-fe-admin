@@ -8,42 +8,56 @@ import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 
 function Category() {
-    const [categories, setCategories] = useState([]);
     const [loading, setLoading] = useState(true);
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
+    const [data, setData] = useState([]);
+
     const [search, setSearch] = useState('');
-
+    const [searchedData, setSearchedData] = useState([]);
     useEffect(() => {
+        const filteredData = data.filter((item) =>
+            item.categoryName.toLowerCase().includes(search.toLowerCase())
+        );
+        setSearchedData(filteredData);
+    }, [search, data]);
 
-        const fetchProducts = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8082/api/v1/categories`);
-                setCategories(response.data.content);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching products:', error);
-            }
-        };
+    // Page
+    const [currentPage, setCurrentPage] = useState(1);
+    const recordsPerPage = 7;
+    const lastindex = currentPage * recordsPerPage;
+    const firstIndex = lastindex - recordsPerPage;
+    const records = searchedData.slice(firstIndex, lastindex);
+    const npage = Math.ceil(searchedData.length / recordsPerPage);
+    const numbers = [...Array(npage + 1).keys()].slice(1);
 
-        // fetch('http://localhost:8082/api/v1/categories')
-        //     .then((response) => {
-        //         if (!response.ok) {
-        //             throw new Error('Network response was not ok');
-        //         }
-        //         return response.json();
-        //     })
-        //     .then((data) => {
-        //         setCategories(data.content);
-        //         setLoading(false);
-        //     })
-        //     .catch((error) => {
-        //         console.error('There was a problem with the fetch operation:', error);
-        //         toast.error('Failed to load categories');
-        //         setLoading(false);
-        //     });
-        fetchProducts();
-    }, []);
+    function prePage() {
+        if (currentPage !== 1) {
+            setCurrentPage(currentPage - 1);
+        }
+    }
+    function changeCPage(id) {
+        setCurrentPage(id);
+    }
+    function nextPage() {
+        if (currentPage !== npage) {
+            setCurrentPage(currentPage + 1);
+        }
+    }
+
+        useEffect(() => {
+            const fetchCategory = async () => {
+                try {
+                    const response = await axios.get(`http://localhost:8082/api/v1/categories`);
+                    setData(response.data.content);
+                    setSearchedData(response.data.content);
+                    setLoading(false);
+                } catch (error) {
+                    console.error('Error fetching products:', error);
+                }
+            };
+            fetchCategory();
+        }, []);
 
     const handleDelete = (id) => {
         setDeleteId(id);
@@ -55,7 +69,6 @@ function Category() {
             await axios.delete(`http://localhost:8082/api/v1/categories/${deleteId}`);
             toast.success('Category has been deleted');
             setDeleteShow(false);
-            setCategories(categories.filter(category => category.categoryId !== deleteId));
         } catch (error) {
             toast.error('Failed to delete category');
         }
@@ -66,19 +79,19 @@ function Category() {
     return (
         <>
             <div className="content-wrapper">
-            <div className="row">
-      <div className="col-md-12 grid-margin">
-        <div className="row">
-          <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-            <h3 className="font-weight-bold">Categories</h3>
-            <h6 className="font-weight-normal mb-0">
-              All systems are running smoothly! You have
-              <span className="text-primary">3 unread alerts!</span>
-            </h6>
-          </div>
-        </div>
-      </div>
-    </div>
+                <div className="row">
+                    <div className="col-md-12 grid-margin">
+                        <div className="row">
+                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
+                                <h3 className="font-weight-bold">Categories</h3>
+                                <h6 className="font-weight-normal mb-0">
+                                    All systems are running smoothly! You have
+                                    <span className="text-primary">3 unread alerts!</span>
+                                </h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
@@ -103,7 +116,7 @@ function Category() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {categories.map((item, index) => (
+                                                    {records.map((item, index) => (
                                                         <tr key={item.categoryId}>
                                                             <td>{index + 1}</td>
                                                             <td>{item.categoryName}</td>
@@ -130,7 +143,13 @@ function Category() {
                                                 </tbody>
                                             </table>
                                         </div>
-                                       
+                                        <Pagination
+                                            prePage={prePage}
+                                            nextPage={nextPage}
+                                            changeCPage={changeCPage}
+                                            currentPage={currentPage}
+                                            numbers={numbers}
+                                        />
                                     </>
                                 )}
                             </div>

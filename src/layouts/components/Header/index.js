@@ -4,10 +4,13 @@ import React, { useState, useEffect } from 'react';
 
 function HeaderAdmin() {
     const navigate = useNavigate();
+    const [username, setUsername] = useState('');
     
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
-        if (!storedUsername) {
+        if (storedUsername) {
+            setUsername(storedUsername);
+        } else {
             navigate('/login');
         }
     }, [navigate]);
@@ -126,6 +129,7 @@ function HeaderAdmin() {
         </div>
       </li>
       <li className="nav-item nav-profile dropdown">
+      <div className="d-sm-none d-lg-inline-block">Hi, {username}</div>
         <a
           className="nav-link dropdown-toggle"
           href="#"
