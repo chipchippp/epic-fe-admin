@@ -12,14 +12,12 @@ const routes = {
 
     //      products
     product: '/product',
-    createProduct: '/product/create',
-    editProduct: '/product/edit/:id',
+    
+    productdetail: '/productdetail/:id',
+    createProduct: '/addcreate',
+    editProduct: '/editproduct/:id',
 
-    favoriteProducts: '/favorite',
-
-    detailProduct: '/product/detail/:productId',
-    createProductDetails: '/product/detail/create',
-    editProductDetails: '/product/detail/edit/:id',
+   
     //      Orders
     orders: '/order',
     orderDetail: '/order/detail/:id',
