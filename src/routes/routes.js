@@ -19,6 +19,9 @@ import Order from '~/pages/Order/index';
 
 // Chart
 import Chart from '~/pages/Chart/index';
+import ProductDetail from '~/pages/Product/productdetail';
+import CreateProduct from '~/pages/Product/create';
+import EditProduct from '~/pages/Product/editproduct';
 
 // User
 import User from '~/pages/User/index';
@@ -40,6 +43,13 @@ export const publicRoutes = [
 
     // Product
     { path: config.routes.product, component: Product, layout: AdminLayout },
+    { path: config.routes.createProduct, component: CreateProduct, layout: AdminLayout },
+    { path: config.routes.editProduct, component: EditProduct, layout: AdminLayout },
+
+
+    { path: config.routes.productdetail, component: ProductDetail, layout: AdminLayout },
+
+    
 
     // Order
     {path: config.routes.orders, component: Order, layout: AdminLayout},
