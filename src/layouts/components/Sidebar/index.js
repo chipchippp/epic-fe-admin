@@ -84,6 +84,32 @@ function SidebarAdmin() {
         </ul>
       </div>
     </li>
+
+    <li className="nav-item">
+      <a
+        className="nav-link"
+        data-toggle="collapse"
+        href="#tables"
+        aria-expanded="false"
+        aria-controls="tables"
+      >
+        <i className="icon-grid-2 menu-icon" />
+        <span className="menu-title">User</span>
+        <i className="menu-arrow" />
+      </a>
+      <div className="collapse" id="tables">
+        <ul className="nav flex-column sub-menu">
+          <li className="nav-item">
+            <Link className="nav-link" to="/users">
+                Users
+            </Link>
+            <Link className="nav-link" to="/order">
+                Orders
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </li>
   </ul>
 </nav>
         </>

@@ -20,6 +20,11 @@ import Order from '~/pages/Order/index';
 // Chart
 import Chart from '~/pages/Chart/index';
 
+// User
+import User from '~/pages/User/index';
+import UserCreate from '~/pages/User/create';
+import UserEdit from '~/pages/User/edit';
+
 // Public routes
 export const publicRoutes = [
     //      Home
@@ -41,6 +46,11 @@ export const publicRoutes = [
 
     // Chart
     { path: config.routes.chart, component: Chart, layout: AdminLayout },
+
+    // User
+    { path: config.routes.users, component: User, layout: AdminLayout },
+    { path: config.routes.createUsers, component: UserCreate, layout: AdminLayout },
+    { path: config.routes.editUsers, component: UserEdit, layout: AdminLayout },
 
 ];
 

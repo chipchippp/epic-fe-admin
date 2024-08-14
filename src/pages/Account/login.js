@@ -22,31 +22,31 @@ function Login() {
         if (validate()) {
             try {
                 const response = await httpRequest.post(
-                    'http://localhost:8081/api/v1/auth/login',
+                    'http://localhost:8888/api/v1/auth/login',
                     {
                         username: username,
                         password: password,
                     },
                 );
 
-                if (response && response.data && response.data.accessToken) {
-                    const accessToken = response.data.accessToken;
+                if (response && response.data && response.data.token) {
+                    const token = response.data.token;
                     let decodedToken;
 
                     try {
-                        decodedToken = jwtDecode(accessToken);
+                        decodedToken = jwtDecode(token);
                         console.log('Decoded Token:', decodedToken);
 
                         const id = response.data.id;
-                        const roles = response.data.roles;
+                        const role = response.data.role;
 
-                        if (!roles.includes('ROLE_ADMIN')) {
+                        if (!role.includes('ROLE_ADMIN')) {
                             toast.warn('username and password wrong');
                             return;
                         }
 
-                        localStorage.setItem('roles', roles);
-                        localStorage.setItem('accessToken', accessToken);
+                        localStorage.setItem('role', role);
+                        localStorage.setItem('token', token);
                         localStorage.setItem('id', id);
                         localStorage.setItem('username', username);
 

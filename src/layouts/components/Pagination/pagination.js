@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-function Pagination({ prePage, nextPage, changeCPage, currentPage, numbers }) {
+function Pagination({ prePage, nextPage, changeCPage, currentPage, numbers = [] }) {
+    if (!Array.isArray(numbers) || numbers.length === 0) {
+        return null; 
+    }
+
     return (
         <div className="float-right">
             <nav>
