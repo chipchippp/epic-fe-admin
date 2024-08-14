@@ -35,9 +35,9 @@ const routes = {
     error_404: '/error_404',
 
     //      Users
-    customers: '/customers',
-    createCustomers: '/customers/create',
-    editCustomers: '/customers/edit/:id',
+    users: '/users',
+    createUsers: '/users/create',
+    editUsers: '/users/edit/:id',
 
     admins: '/admins',
     createAdmins: '/admins/create',

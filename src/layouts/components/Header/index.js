@@ -16,8 +16,8 @@ function HeaderAdmin() {
     }, [navigate]);
 
     const handleLogout = () => {
-        localStorage.removeItem('roles');
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem('role');
+        localStorage.removeItem('token');
         localStorage.removeItem('username');
         localStorage.removeItem('id');
         navigate('/login');

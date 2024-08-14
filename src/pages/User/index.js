@@ -7,75 +7,89 @@ import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 
-function Category() {
+function User() {
     const [loading, setLoading] = useState(true);
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [data, setData] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [limit, setLimit] = useState(10);
+    const [numbers, setNumbers] = useState([]);
 
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
+
     useEffect(() => {
         const filteredData = data.filter((item) =>
-            item.categoryName.toLowerCase().includes(search.toLowerCase())
+            item.username.toLowerCase().includes(search.toLowerCase())
         );
+        const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+        setNumbers(pagesArray);
         setSearchedData(filteredData);
-    }, [search, data]);
+    }, [search, data, totalPages]);
 
-    // Page
-    const [currentPage, setCurrentPage] = useState(1);
-    const recordsPerPage = 7;
-    const lastindex = currentPage * recordsPerPage;
-    const firstIndex = lastindex - recordsPerPage;
-    const records = searchedData.slice(firstIndex, lastindex);
-    const npage = Math.ceil(searchedData.length / recordsPerPage);
-    const numbers = [...Array(npage + 1).keys()].slice(1);
-
-    function prePage() {
-        if (currentPage !== 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    }
-    function changeCPage(id) {
-        setCurrentPage(id);
-    }
-    function nextPage() {
-        if (currentPage !== npage) {
-            setCurrentPage(currentPage + 1);
-        }
-    }
-
-        useEffect(() => {
-            const fetchCategory = async () => {
-                try {
-                    const response = await axios.get(`http://localhost:8082/api/v1/categories`);
-                    setData(response.data.content);
-                    setSearchedData(response.data.content);
-                    setLoading(false);
-                } catch (error) {
-                    console.error('Error fetching products:', error);
-                    setLoading(false);
-                }
-            };
-            fetchCategory();
-        }, []);
+    useEffect(() => {
+        const fetchUsers = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(`http://localhost:8081/api/v1/users?page=${currentPage}&limit=${limit}`);
+                setData(response.data.content);
+                setSearchedData(response.data.content);
+                setTotalPages(response.data.totalPages);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                setLoading(false);
+            }
+        };
+        fetchUsers();
+    }, [currentPage, limit]);
 
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
     };
 
+    useEffect(() => {
+        const fetchUsers = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(`http://localhost:8081/api/v1/users`);
+                setData(response.data.content);
+                setSearchedData(response.data.content);
+                setTotalPages(response.data.totalPages);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                setLoading(false);
+            }
+        };
+        fetchUsers();
+    }, []);
+
     const handleDeleteConfirm = async () => {
         try {
-            await axios.delete(`http://localhost:8082/api/v1/categories/${deleteId}`);
-            toast.success('Category has been deleted');
+            await axios.delete(`http://localhost:8080/api/v1/users/${deleteId}`);
+            toast.success('User has been deleted');
             setDeleteShow(false);
+            setData(data.filter((user) => user.id !== deleteId));
         } catch (error) {
-            toast.error('Failed to delete category');
+            toast.error('Failed to delete user');
         }
     };
 
     const handleClose = () => setDeleteShow(false);
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const handleLimitChange = (e) => {
+        setLimit(e.target.value);
+        setCurrentPage(1);
+    };
 
     return (
         <>
@@ -84,7 +98,7 @@ function Category() {
                     <div className="col-md-12 grid-margin">
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Categories</h3>
+                                <h3 className="font-weight-bold">Users</h3>
                                 <h6 className="font-weight-normal mb-0">
                                     All systems are running smoothly! You have
                                     <span className="text-primary">3 unread alerts!</span>
@@ -101,53 +115,63 @@ function Category() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <Link to="/category/create" className="btn btn-primary">
+                                        <Link to="/users/create" className="btn btn-primary mb-3">
                                             <i className="fas fa-plus"></i> New
                                         </Link>
                                         <Search setSearch={setSearch} />
-
+                                        <div className="d-flex justify-content-end mb-3">
+                                            <label className="mr-2">Show:</label>
+                                            <select onChange={handleLimitChange} value={limit}>
+                                                <option value={5}>5</option>
+                                                <option value={10}>10</option>
+                                                <option value={20}>20</option>
+                                                <option value={30}>30</option>
+                                            </select>
+                                        </div>
                                         <div className="table-responsive">
-                                            <table className="table table-striped">
+                                            <Table className="table table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Category Name</th>
-                                                        <th>Description</th>
+                                                        <th>Username</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {records.map((item, index) => (
-                                                        <tr key={item.categoryId}>
-                                                            <td>{index + 1}</td>
-                                                            <td>{item.categoryName}</td>
-                                                            <td>{item.description}</td>
+                                                    {searchedData.map((item, index) => (
+                                                        <tr key={item.id}>
+                                                            <td>{(currentPage - 1) * limit + index + 1}</td>
+                                                            <td>{item.username}</td>
+                                                            <td>{item.email}</td>
+                                                            <td>{item.phoneNumber}</td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/category/edit/${item.categoryId}`}
+                                                                    to={`/users/edit/${item.id}`}
                                                                     className="btn btn-primary"
                                                                     title="Edit"
                                                                 >
                                                                     <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
                                                                 &nbsp;
-                                                                <button
-                                                                    className="btn btn-danger"
-                                                                    onClick={() => handleDelete(item.categoryId)}
+                                                                <Button
+                                                                    variant="danger"
+                                                                    onClick={() => handleDelete(item.id)}
                                                                     title="Delete"
                                                                 >
                                                                     <i className="fas fa-trash"></i>
-                                                                </button>
+                                                                </Button>
                                                             </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
-                                            </table>
+                                            </Table>
                                         </div>
                                         <Pagination
-                                            prePage={prePage}
-                                            nextPage={nextPage}
-                                            changeCPage={changeCPage}
+                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
                                         />
@@ -157,12 +181,12 @@ function Category() {
                         </div>
                     </div>
                 </div>
-                
+
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this category?</Modal.Body>
+                    <Modal.Body>Are you sure you want to delete this user?</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel
@@ -179,4 +203,4 @@ function Category() {
     );
 }
 
-export default Category;
+export default User;

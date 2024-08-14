@@ -1,18 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function Search({ setSearch }) {
+    const [query, setQuery] = useState('');
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setQuery(value);
+        setSearch(value);
+    };
+    
     return (
         <div className="float-right">
-            <form>
+            <form onSubmit={(e) => e.preventDefault()}>
                 <div className="input-group">
                     <input
                         type="text"
                         className="form-control"
                         placeholder="Search"
-                        onChange={(e) => setSearch(e.target.value)}
+                        value={query}
+                        onChange={handleSearchChange}
                     />
                     <div className="input-group-append">
-                        <button className="btn btn-primary">
+                        <button className="btn btn-primary" type="button">
                             <i className="fas fa-search" />
                         </button>
                     </div>
