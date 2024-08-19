@@ -29,24 +29,24 @@ function Login() {
                     },
                 );
 
-                if (response && response.data && response.data.token) {
-                    const token = response.data.token;
+                if (response && response.data && response.data.accessToken) {
+                    const accessToken = response.data.accessToken;
                     let decodedToken;
 
                     try {
-                        decodedToken = jwtDecode(token);
+                        decodedToken = jwtDecode(accessToken);
                         console.log('Decoded Token:', decodedToken);
 
                         const id = response.data.id;
-                        const role = response.data.role;
+                        const roles = response.data.roles;
 
-                        if (!role.includes('ROLE_ADMIN')) {
+                        if (!roles.includes('ROLE_ADMIN')) {
                             toast.warn('username and password wrong');
                             return;
                         }
 
-                        localStorage.setItem('role', role);
-                        localStorage.setItem('token', token);
+                        localStorage.setItem('roles', roles);
+                        localStorage.setItem('accessToken', accessToken);
                         localStorage.setItem('id', id);
                         localStorage.setItem('username', username);
 
