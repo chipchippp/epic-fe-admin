@@ -22,7 +22,7 @@ function Login() {
         if (validate()) {
             try {
                 const response = await httpRequest.post(
-                    'http://localhost:8888/api/v1/auth/login',
+                    'http://localhost:8081/api/v1/auth/login',
                     {
                         username: username,
                         password: password,
