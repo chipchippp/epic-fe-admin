@@ -9,67 +9,66 @@ import Pagination from '~/layouts/components/Pagination';
 
 function Order() {
     const [loading, setLoading] = useState(true);
-    const [data, setData] = useState([]);
 
+    const [status, setStatus] = useState('');   
+    const [data, setData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [limit, setLimit] = useState(15);
+    const [numbers, setNumbers] = useState([]);
+
+    
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
+
     useEffect(() => {
-        const filteredData = data.filter((item) =>
-            item.categoryName.toLowerCase().includes(search.toLowerCase())
-        );
+        let filteredData = data;
+        
+        if(search){
+            filteredData = filteredData.filter(
+                (item) =>
+                item.id.toString().toLowerCase().includes(search.toLowerCase())
+            );
+        }
+        if (status !== '') {
+            filteredData = filteredData.filter((item) => item.status === status);
+        }
+    
+        const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+        setNumbers(pagesArray);
         setSearchedData(filteredData);
-    }, [search, data]);
+    }, [search, data, totalPages, status]);
 
-    // Page
-    const [currentPage, setCurrentPage] = useState(1);
-    const recordsPerPage = 7;
-    const lastindex = currentPage * recordsPerPage;
-    const firstIndex = lastindex - recordsPerPage;
-    const records = searchedData.slice(firstIndex, lastindex);
-    const npage = Math.ceil(searchedData.length / recordsPerPage);
-    const numbers = [...Array(npage + 1).keys()].slice(1);
+    useEffect(() => {
+        const fetchOrder = async () => {
+            setLoading(true);
+            try {
+                const response = await axios.get(`http://localhost:8084/api/v1/orders?page=${currentPage}&limit=${limit}`);
+                setData(response.data.content);
+                setSearchedData(response.data.content);
+                setTotalPages(response.data.totalPages);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+                setLoading(false);
+            }
+        };
+        fetchOrder();
+    }, [currentPage, limit]);
 
-    function prePage() {
-        if (currentPage !== 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    }
-    function changeCPage(id) {
-        setCurrentPage(id);
-    }
-    function nextPage() {
-        if (currentPage !== npage) {
-            setCurrentPage(currentPage + 1);
-        }
-    }
-
-        useEffect(() => {
-            const fetchCategory = async () => {
-                try {
-                    const response = await axios.post(`http://localhost:8084/api/v1/orders/search`);
-                    setData(response.data.content);
-                    setSearchedData(response.data.content);
-                    setLoading(false);
-                } catch (error) {
-                    console.error('Error fetching products:', error);
-                    setLoading(false);
-                }
-            };
-            fetchCategory();
-        }, []);
-
-    const formatDate = (dateString) => {
-        const date = new Date(dateString);
-        return date.toLocaleString('en-US', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
-            hour12: true,
-        });
+    const handleStatusChange = (event) => {
+        setStatus(event.target.value);
     };
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const handleLimitChange = (e) => {
+        setLimit(e.target.value);
+        setCurrentPage(1);
+    };
+
     return (
         <>
             <div className="content-wrapper">
@@ -78,10 +77,9 @@ function Order() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">Orders</h3>
-                                <h6 className="font-weight-normal mb-0">
-                                    All systems are running smoothly! You have
-                                    <span className="text-primary">3 unread alerts!</span>
-                                </h6>
+                                <Link to="/Orders/create" className="btn btn-primary">
+                                    <i className="fas fa-plus"></i> New
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -94,60 +92,78 @@ function Order() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <Link to="/category/create" className="btn btn-primary">
-                                            <i className="fas fa-plus"></i> New
-                                        </Link>
-                                        <Search setSearch={setSearch} />
+                                        <div className="float-left">
+                                            <select
+                                                className="form-control selectric"
+                                                value={status}
+                                                onChange={handleStatusChange}
+                                            >
+                                                <option value="">All</option>
+                                                <option value="CREATED">Created</option>
+                                                <option value="PENDING">Pending</option>
+                                                <option value="PROCESSING">Processing</option>
+                                                <option value="ONDELIVERY">On Delivery</option>
+                                                <option value="DELIVERED">Delivered</option>
+                                                <option value="CANCELLED">Cancelled</option>
+                                            </select>
+                                        </div>
 
+                                        <div className="float-left ml-2">
+                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
+                                                <option value={15}>Show</option>
+                                                <option value={20}>10</option>
+                                                <option value={25}>20</option>
+                                                <option value={30}>30</option>
+                                            </select>
+                                        </div>
+                                        <Search setSearch={setSearch} />
+                                    
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
                                                     <tr>
-                                                        <th>Id</th>
+                                                        <th>#</th>
                                                         <th>OrderCode</th>
-                                                        <th>Email</th>
-                                                        <th>OrderDate</th>
-                                                        <th>Payment</th>
+                                                        <th>UserId</th>
+                                                        <th>Total Price</th>
                                                         <th>Status</th>
-                                                        <th>Actions</th>
+                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                {records.map((item, index) => (
+                                                    {searchedData.map((item, index) => (
                                                         <tr key={item.id}>
-                                                            <td>{index + firstIndex + 1}</td>
-                                                            <td>{item.orderCode}</td>
+                                                            <td>{(currentPage - 1) * limit + index + 1}</td>
+                                                            <td>{item.id}</td>
                                                             <td>{item.userId}</td>
-                                                            <td>{formatDate(item.createdAt)}</td>
+                                                            <td>{item.totalPrice}</td>
                                                             <td>
-                                                                {item.status === 0 && (
-                                                                    <div className="badge badge-warning">Pending</div>
+                                                                {item.status === "CREATED" && (
+                                                                    <div className="badge badge-warning">Created</div>
                                                                 )}
-                                                                {item.status === 1 && (
-                                                                    <div className="badge badge-secondary">
-                                                                        Confirmed
-                                                                    </div>
+                                                                {item.status === "PENDING" && (
+                                                                    <div className="badge badge-secondary">Pending</div>
                                                                 )}
-                                                                {item.status === 2 && (
-                                                                    <div className="badge badge-primary">Shipping</div>
+                                                                {item.status === "PROCESSING" && (
+                                                                    <div className="badge badge-primary">Processing</div>
                                                                 )}
-                                                                {item.status === 3 && (
-                                                                    <div className="badge badge-info">Shipped</div>
+                                                                {item.status === "ONDELIVERY" && (
+                                                                    <div className="badge badge-info">On Delivery</div>
                                                                 )}
-                                                                {item.status === 4 && (
-                                                                    <div className="badge badge-success">Complete</div>
+                                                                {item.status === "DELIVERED" && (
+                                                                    <div className="badge badge-success">Delivered</div>
                                                                 )}
-                                                                {item.status === 5 && (
-                                                                    <div className="badge badge-danger">Cancel</div>
+                                                                {item.status === "CANCELLED" && (
+                                                                    <div className="badge badge-danger">Cancelled</div>
                                                                 )}
                                                             </td>
-                                                            <td colSpan={2}>
+                                                            <td>
                                                                 <Link
-                                                                    to={`/Orders/detail/${item.id}`}
-                                                                    className="btn btn-info"
-                                                                    title="Details"
+                                                                    to={`/orders/edit/${item.id}`}
+                                                                    className="btn btn-primary"
+                                                                    title="Edit"
                                                                 >
-                                                                    <i className="far fa-eye"></i>
+                                                                    <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
                                                             </td>
                                                         </tr>
@@ -156,9 +172,9 @@ function Order() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={prePage}
-                                            nextPage={nextPage}
-                                            changeCPage={changeCPage}
+                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
                                         />

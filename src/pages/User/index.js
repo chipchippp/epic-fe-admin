@@ -12,10 +12,9 @@ function User() {
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [data, setData] = useState([]);
-    const [users, setUsers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [limit, setLimit] = useState(10);
+    const [limit, setLimit] = useState(5);
     const [numbers, setNumbers] = useState([]);
 
     const [search, setSearch] = useState('');
@@ -52,26 +51,9 @@ function User() {
         setDeleteShow(true);
     };
 
-    useEffect(() => {
-        const fetchUsers = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get(`http://localhost:8081/api/v1/users`);
-                setData(response.data.content);
-                setSearchedData(response.data.content);
-                setTotalPages(response.data.totalPages);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-                setLoading(false);
-            }
-        };
-        fetchUsers();
-    }, []);
-
     const handleDeleteConfirm = async () => {
         try {
-            await axios.delete(`http://localhost:8080/api/v1/users/${deleteId}`);
+            await axios.delete(`http://localhost:8081/api/v1/users/${deleteId}`);
             toast.success('User has been deleted');
             setDeleteShow(false);
             setData(data.filter((user) => user.id !== deleteId));
@@ -99,10 +81,9 @@ function User() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">Users</h3>
-                                <h6 className="font-weight-normal mb-0">
-                                    All systems are running smoothly! You have
-                                    <span className="text-primary">3 unread alerts!</span>
-                                </h6>
+                                <Link to="/users/create" className="btn btn-primary mb-3">
+                                    <i className="fas fa-plus"></i> New
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -115,14 +96,10 @@ function User() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <Link to="/users/create" className="btn btn-primary mb-3">
-                                            <i className="fas fa-plus"></i> New
-                                        </Link>
                                         <Search setSearch={setSearch} />
-                                        <div className="d-flex justify-content-end mb-3">
-                                            <label className="mr-2">Show:</label>
-                                            <select onChange={handleLimitChange} value={limit}>
-                                                <option value={5}>5</option>
+                                        <div className="float-left">
+                                            <select onChange={handleLimitChange} className='btn btn-primary form-control selectric' value={limit}>
+                                                <option value={5}>Show</option>
                                                 <option value={10}>10</option>
                                                 <option value={20}>20</option>
                                                 <option value={30}>30</option>
@@ -148,9 +125,9 @@ function User() {
                                                             <td>{item.phoneNumber}</td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/users/edit/${item.id}`}
+                                                                    to={`/users/detail/${item.id}`}
                                                                     className="btn btn-primary"
-                                                                    title="Edit"
+                                                                    title="Details"
                                                                 >
                                                                     <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
