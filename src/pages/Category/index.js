@@ -12,45 +12,31 @@ function Category() {
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [data, setData] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const [limit, setLimit] = useState(5);
+    const [numbers, setNumbers] = useState([]);
 
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
+
     useEffect(() => {
         const filteredData = data.filter((item) =>
             item.categoryName.toLowerCase().includes(search.toLowerCase())
         );
+        const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+        setNumbers(pagesArray);
         setSearchedData(filteredData);
-    }, [search, data]);
-
-    // Page
-    const [currentPage, setCurrentPage] = useState(1);
-    const recordsPerPage = 7;
-    const lastindex = currentPage * recordsPerPage;
-    const firstIndex = lastindex - recordsPerPage;
-    const records = searchedData.slice(firstIndex, lastindex);
-    const npage = Math.ceil(searchedData.length / recordsPerPage);
-    const numbers = [...Array(npage + 1).keys()].slice(1);
-
-    function prePage() {
-        if (currentPage !== 1) {
-            setCurrentPage(currentPage - 1);
-        }
-    }
-    function changeCPage(id) {
-        setCurrentPage(id);
-    }
-    function nextPage() {
-        if (currentPage !== npage) {
-            setCurrentPage(currentPage + 1);
-        }
-    }
+    }, [search, data, totalPages]);
 
         useEffect(() => {
             const fetchCategory = async () => {
+                setLoading(true);
                 try {
-                    const response = await axios.get(`http://localhost:8082/api/v1/categories`);
+                    const response = await axios.get(`http://localhost:8082/api/v1/categories?page=${currentPage}&limit=${limit}`);
                     setData(response.data.content);
                     setSearchedData(response.data.content);
+                    setTotalPages(response.data.totalPages);
                     setLoading(false);
                 } catch (error) {
                     console.error('Error fetching products:', error);
@@ -58,7 +44,7 @@ function Category() {
                 }
             };
             fetchCategory();
-        }, []);
+        }, [currentPage, limit]);
 
     const handleDelete = (id) => {
         setDeleteId(id);
@@ -77,6 +63,14 @@ function Category() {
 
     const handleClose = () => setDeleteShow(false);
 
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const handleLimitChange = (e) => {
+        setLimit(e.target.value);
+        setCurrentPage(1);
+    };
     return (
         <>
             <div className="content-wrapper">
@@ -85,10 +79,9 @@ function Category() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">Categories</h3>
-                                <h6 className="font-weight-normal mb-0">
-                                    All systems are running smoothly! You have
-                                    <span className="text-primary">3 unread alerts!</span>
-                                </h6>
+                                <Link to="/category/create" className="btn btn-primary">
+                                    <i className="fas fa-plus"></i> New
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -101,11 +94,16 @@ function Category() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <Link to="/category/create" className="btn btn-primary">
-                                            <i className="fas fa-plus"></i> New
-                                        </Link>
+                                        <div className="float-left">
+                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
+                                                <option value={5}>Show</option>
+                                                <option value={10}>10</option>
+                                                <option value={20}>20</option>
+                                                <option value={30}>30</option>
+                                            </select>
+                                        </div>
                                         <Search setSearch={setSearch} />
-
+                                    
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -117,9 +115,9 @@ function Category() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {records.map((item, index) => (
+                                                    {searchedData.map((item, index) => (
                                                         <tr key={item.categoryId}>
-                                                            <td>{index + 1}</td>
+                                                            <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.categoryName}</td>
                                                             <td>{item.description}</td>
                                                             <td>
@@ -145,9 +143,9 @@ function Category() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={prePage}
-                                            nextPage={nextPage}
-                                            changeCPage={changeCPage}
+                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
                                         />
