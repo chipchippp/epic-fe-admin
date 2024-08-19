@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
 function Product() {
@@ -17,6 +18,19 @@ function Product() {
         fetchProducts();
     }, []);
 
+    const handleDelete = async (productId) => {
+        if (window.confirm('Are you sure you want to delete this product?')) {
+            try {
+                await axios.delete(`http://localhost:8082/api/v1/products/${productId}`);
+                setProducts(products.filter(product => product.productId !== productId));
+                alert('Product deleted successfully');
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                alert('Failed to delete product');
+            }
+        }
+    };
+
     return (
         <>
             <div className="content-wrapper">
@@ -26,7 +40,9 @@ function Product() {
                             <div className="card-body">
                                 <h4 className="card-title">Striped Table</h4>
                                 <p className="card-description">
-                                    Add class <code>.table-striped</code>
+                                    <a href="/addcreate" className="btn btn-primary">
+                                        Add Product
+                                    </a>
                                 </p>
                                 <div className="table-responsive">
                                     <table className="table table-striped">
@@ -38,23 +54,41 @@ function Product() {
                                                 <th>Price</th>
                                                 <th>Category</th>
                                                 <th>Stock Quantity</th>
+                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {products.map((product) => (
                                                 <tr key={product.productId}>
                                                     <td>{product.productId}</td>
-                                                    <td>{product.name}</td>
+                                                    <td> <Link to={`/productdetail/${product.productId}`}>{product.name}</Link></td>
                                                     <td>
-                                                    {product.images.length > 0 ? (
-                                                    <img src={`http://localhost:8082/api/v1/product-images/images/${product.images[0].imageUrl}`} alt={product.name} style={{ width: '50px', height: '50px' }} />
-                                                      ) : (
-                                                        'No Image'
-                                                            )}
+                                                        {product.images.length > 0 ? (
+                                                            <img src={`http://localhost:8082/api/v1/product-images/images/${product.images[0].imageUrl}`} alt={product.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                        ) : (
+                                                            'No Image'
+                                                        )}
                                                     </td>
                                                     <td>{product.price}$</td>
                                                     <td>{product.category ? product.category.categoryName : 'N/A'}</td>
                                                     <td>{product.stockQuantity}</td>
+                                                    <td>
+                                                        <Link
+                                                            to={`/editproduct/${product.productId}`}
+                                                            className="btn btn-primary"
+                                                            title="Edit"
+                                                        >
+                                                            <i className="fas fa-pencil-alt"></i>
+                                                        </Link>
+                                                        &nbsp;
+                                                        <button
+                                                            className="btn btn-danger"
+                                                            onClick={() => handleDelete(product.productId)}
+                                                            title="Delete"
+                                                        >
+                                                            <i className="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
