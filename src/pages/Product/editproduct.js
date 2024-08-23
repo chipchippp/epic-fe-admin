@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
 const EditProduct = () => {
@@ -8,7 +8,8 @@ const EditProduct = () => {
   const [categories, setCategories] = useState([]); // Khởi tạo là mảng rỗng
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  const [images, setImages] = useState([]);
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -34,6 +35,7 @@ const EditProduct = () => {
     fetchProduct();
     fetchCategories();
   }, [id]);
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -53,8 +55,7 @@ const EditProduct = () => {
         categoryId: product.category.categoryId // Đảm bảo categoryId được gửi lên API
       };
       await axios.put(`http://localhost:8082/api/v1/products/${id}`, updatedProduct);
-      navigate('/product');
-      
+      alert('Product updated successfully');
     } catch (error) {
       alert('Failed to update product');
     }
