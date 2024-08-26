@@ -11,7 +11,7 @@ function CreateProduct() {
         manufacturer: '',
         size: '',
         weight: '',
-        images: []
+        images: [],
     });
     const [categories, setCategories] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -36,6 +36,7 @@ function CreateProduct() {
 
     const handleFileChange = (e) => {
         setSelectedFiles(e.target.files);
+        console.log(e.target.files);
     };
 
     const handleSubmit = async (e) => {
@@ -49,8 +50,8 @@ function CreateProduct() {
 
             await axios.post('http://localhost:8082/api/v1/products', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+                    'Content-Type': 'multipart/form-data',
+                },
             });
 
             alert('Product created successfully');
@@ -70,20 +71,49 @@ function CreateProduct() {
                             <form onSubmit={handleSubmit}>
                                 <div className="form-group">
                                     <label>Product Name</label>
-                                    <input type="text" name="name" className="form-control" value={product.name} onChange={handleInputChange} required />
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        className="form-control"
+                                        value={product.name}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                                 <div className="form-group">
                                     <label>Description</label>
-                                    <input type="text" name="description" className="form-control" value={product.description} onChange={handleInputChange} required />
+                                    <input
+                                        type="text"
+                                        name="description"
+                                        className="form-control"
+                                        value={product.description}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                                 <div className="form-group">
                                     <label>Price</label>
-                                    <input type="number" name="price" className="form-control" value={product.price} onChange={handleInputChange} required />
+                                    <input
+                                        type="number"
+                                        name="price"
+                                        className="form-control"
+                                        value={product.price}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                                 <div className="form-group">
                                     <label>Category</label>
-                                    <select name="categoryId" className="form-control" value={product.categoryId} onChange={handleInputChange} required>
-                                        <option value="" disabled>Select Category</option>
+                                    <select
+                                        name="categoryId"
+                                        className="form-control"
+                                        value={product.categoryId}
+                                        onChange={handleInputChange}
+                                        required
+                                    >
+                                        <option value="" disabled>
+                                            Select Category
+                                        </option>
                                         {categories.map((category) => (
                                             <option key={category.categoryId} value={category.categoryId}>
                                                 {category.categoryName}
@@ -93,25 +123,62 @@ function CreateProduct() {
                                 </div>
                                 <div className="form-group">
                                     <label>Stock Quantity</label>
-                                    <input type="number" name="stockQuantity" className="form-control" value={product.stockQuantity} onChange={handleInputChange} required />
+                                    <input
+                                        type="number"
+                                        name="stockQuantity"
+                                        className="form-control"
+                                        value={product.stockQuantity}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                                 <div className="form-group">
                                     <label>Manufacturer</label>
-                                    <input type="text" name="manufacturer" className="form-control" value={product.manufacturer} onChange={handleInputChange} required />
+                                    <input
+                                        type="text"
+                                        name="manufacturer"
+                                        className="form-control"
+                                        value={product.manufacturer}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                                 <div className="form-group">
                                     <label>Size</label>
-                                    <input type="text" name="size" className="form-control" value={product.size} onChange={handleInputChange} required />
+                                    <input
+                                        type="text"
+                                        name="size"
+                                        className="form-control"
+                                        value={product.size}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                                 <div className="form-group">
                                     <label>Weight</label>
-                                    <input type="text" name="weight" className="form-control" value={product.weight} onChange={handleInputChange} required />
+                                    <input
+                                        type="text"
+                                        name="weight"
+                                        className="form-control"
+                                        value={product.weight}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
                                 </div>
                                 <div className="form-group">
                                     <label>Images</label>
-                                    <input type="file" name="images" className="form-control" multiple onChange={handleFileChange} required />
+                                    <input
+                                        type="file"
+                                        name="images"
+                                        className="form-control"
+                                        multiple
+                                        onChange={handleFileChange}
+                                        required
+                                    />
                                 </div>
-                                <button type="submit" className="btn btn-primary">Create</button>
+                                <button type="submit" className="btn btn-primary">
+                                    Create
+                                </button>
                             </form>
                         </div>
                     </div>
