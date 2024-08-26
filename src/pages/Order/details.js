@@ -50,7 +50,7 @@ function OrderDetail() {
                     <div className="col-md-12 grid-margin">
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Edit Category</h3>
+                                <h3 className="font-weight-bold">Detail Category</h3>
                                 <h6 className="font-weight-normal mb-0">
                                     All systems are running smoothly! You have
                                     <span className="text-primary"> 3 unread alerts!</span>
@@ -62,36 +62,137 @@ function OrderDetail() {
                 <div className="col-12 grid-margin stretch-card">
                     <div className="card">
                         <div className="card-body">
-                            <h4 className="card-title">Basic form elements</h4>
-                            <p className="card-description">Edit the category details below</p>
-                            <form className="forms-sample" onSubmit={handleUpdate}>
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputName1">Name</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="exampleInputName1"
-                                        placeholder="Name"
-                                        value={data.categoryName}
-                                        onChange={(e) => setData({ ...data, categoryName: e.target.value })}
-                                    />
+                        <div className="invoice">
+                    <div className="invoice-print">
+                        <div className="row">
+                            <div className="col-lg-12">
+                                <div className="invoice-title">
+                                    <h2>Order #{data.id}</h2>
                                 </div>
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputCity1">Description</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="exampleInputCity1"
-                                        placeholder="Description"
-                                        value={data.description}
-                                        onChange={(e) => setData({ ...data, description: e.target.value })}
-                                    />
+                                <hr />
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <address>
+                                            <strong>Billed To:</strong>
+                                            <p>User: {data.name}</p>
+                                            <p>Email: {data.email}</p>
+                                            <p>Telephone: {data.tel}</p>
+                                            <p>OrderCode: {data.orderCode}</p>
+                                        </address>
+                                    </div>
+                                    <div className="col-md-6 text-md-right">
+                                        <address>
+                                            <strong>Shipped To:</strong>
+                                            <p>Address: {data.address}</p>
+                                        </address>
+                                    </div>
                                 </div>
-                                <button type="submit" className="btn btn-primary mr-2">
-                                    Submit
-                                </button>
-                                <Link to="/category" className="btn btn-light">Back</Link>
-                            </form>
+                                <div className="row">
+                                    <div className="col-md-6">
+                                        <address>
+                                            <p>Payment Method: {data.payment_method}</p>
+                                        </address>
+                                    </div>
+                                    <div className="col-md-6 text-md-right">
+                                        <address>
+                                            <strong>Order Date:</strong>
+                                            {/* <p>{formatDate(data.orderDate)}</p> */}
+                                        </address>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <form onSubmit={handleUpdate}>
+                            <div className="row mb-4">
+                                <div className="col-md-2">
+                                    {/* <select
+                                        className="form-control"
+                                        id="status"
+                                        value={tempStatus}
+                                        onChange={(e) => setTempStatus(parseInt(e.target.value))}
+                                        disabled={data.status !== tempStatus || data.status === 4 || data.status === 5}
+                                    >
+                                        {getSelectableOptions().map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select> */}
+                                </div>
+                                <div className="col-md-6">
+                                    <button className="btn btn-primary" type="submit">
+                                        Update Status
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div className="row mt-4">
+                            <div className="col-md-12">
+                                <div className="section-title">Order Summary</div>
+                                <p className="section-lead">All items here cannot be deleted.</p>
+                                <div className="table-responsive">
+                                    <table className="table table-striped table-hover table-md">
+                                        <tbody>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Products</th>
+                                                <th>Name</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Subtotal</th>
+                                            </tr>
+                                            {/* {products.map((item, index) => (
+                                                <tr key={index}>
+                                                    <td>{index + 1}</td>
+                                                    <td>
+                                                        <img
+                                                            src={item.product.imageSrc}
+                                                            style={{ width: '100px', height: 'auto' }}
+                                                            alt={item.image}
+                                                        />
+                                                    </td>
+                                                    <td>{item.product.name}</td>
+                                                    <td>${item.product.price}</td>
+                                                    <td>{item.quantity}</td>
+                                                    <td>${data.totalAmount}</td>
+                                                </tr>
+                                            ))} */}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className="row mt-4">
+                                    <div className="col-lg-8">
+                                        <div className="section-title">Payment Method</div>
+                                        <p className="section-lead">
+                                            The payment method that we provide is to make it easier for you to pay
+                                            invoices.
+                                        </p>
+                                    </div>
+                                    <div className="col-lg-4 text-right">
+                                        <div className="invoice-detail-item">
+                                            <div className="invoice-detail-name">Subtotal</div>
+                                            <div className="invoice-detail-value">${data.totalAmount}</div>
+                                        </div>
+                                        <hr className="mt-2 mb-2" />
+                                        <div className="invoice-detail-item">
+                                            <div className="invoice-detail-name">Total</div>
+                                            <div className="invoice-detail-value invoice-detail-value-lg">
+                                                ${data.totalAmount}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div className="text-md-right">
+                        <Link to={`/orders/invoice/${id}`} className="btn btn-primary me-1">
+                            <i className="fa-solid fa-download"></i> Invoice
+                        </Link>
+                    </div>
+                </div>
                         </div>
                     </div>
                 </div>

@@ -159,11 +159,11 @@ function Order() {
                                                             </td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/orders/edit/${item.id}`}
+                                                                    to={`/order/detail`}
                                                                     className="btn btn-primary"
-                                                                    title="Edit"
+                                                                    title="Detail"
                                                                 >
-                                                                    <i className="fas fa-pencil-alt"></i>
+                                                                    <i className="far fa-eye"></i>
                                                                 </Link>
                                                             </td>
                                                         </tr>

@@ -20,7 +20,7 @@ const routes = {
    
     //      Orders
     orders: '/order',
-    orderDetail: '/order/detail/:id',
+    orderDetail: '/order/detail',
     invoice: '/order/invoice/:id',
 
     // feedbacks: '/feedbacks',
