@@ -12,17 +12,13 @@ const EditProduct = () => {
     const [imagesOld, setImagesOld] = useState([]);
     const [imagesNew, setImagesNew] = useState([]);
 
-    console.log('images', imagesOld);
-    console.log('files', selectedFiles);
-    console.log('products', product);
-
     useEffect(() => {
         const fetchProduct = async () => {
             try {
                 const response = await axios.get(`http://localhost:8082/api/v1/products/${id}`);
-                setProduct(response.data);
-                console.log(response.data);
-                setImagesOld(response.data.images.map((img) => img));
+                setProduct(response.data.data);
+                setImagesOld(response.data.data.images);
+                console.log(response.data.data);
             } catch (error) {
                 setError('Failed to fetch product details');
             } finally {
@@ -33,7 +29,7 @@ const EditProduct = () => {
         const fetchCategories = async () => {
             try {
                 const response = await axios.get('http://localhost:8082/api/v1/categories');
-                setCategories(response.data.content);
+                setCategories(response.data.data.content);
             } catch (error) {
                 setError('Failed to fetch categories');
             }
@@ -88,8 +84,6 @@ const EditProduct = () => {
                 categoryId: product.category.categoryId,
                 images: imagesOld,
             };
-
-            console.log('updated product: ', updatedProduct);
 
             const formData = new FormData();
             formData.append('productDTO', new Blob([JSON.stringify(updatedProduct)], { type: 'application/json' }));
