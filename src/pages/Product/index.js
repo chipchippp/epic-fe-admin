@@ -22,22 +22,20 @@ function Product() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get(`http://localhost:8082/api/v1/products`, {
-                    params: {
-                        page: currentPage,
-                        limit: limit,
-                        search: search
-                    }
-                });
-                setProducts(response.data.content);
-                setTotalPages(response.data.totalPages); // Cập nhật totalPages
+                const response = selectedCategory
+                    ? await fetch(`http://localhost:8082/api/v1/products/category/${selectedCategory}?page=${currentPage}&limit=${limit}&search=${search}`)
+                    : await fetch(`http://localhost:8082/api/v1/products?page=${currentPage}&limit=${limit}&search=${search}`);
+                
+                const data = await response.json();
+                setProducts(data.content);
+                setTotalPages(data.totalPages);
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
         };
 
         fetchProducts();
-    }, [currentPage, limit, search]); // Thêm currentPage, limit và search vào dependency array
+    }, [currentPage, limit, search, selectedCategory]); // Thêm currentPage, limit và search vào dependency array
 
     useEffect(() => {
         const applyFilters = () => {
@@ -54,6 +52,28 @@ function Product() {
 
         applyFilters();
     }, [search, priceRange, products]);
+
+    // Lấy danh sách categories
+    useEffect(() => {
+        fetch('http://localhost:8082/api/v1/categories')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setCategories(data.content);
+            })
+            .catch((error) => {
+                console.error('Error fetching categories:', error.message);
+            });
+    }, []);
+
+    const handleCategoryChange = (categoryId) => {
+        setSelectedCategory(categoryId);
+        setCurrentPage(1);
+    };
 
     const handleDelete = async (productId) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
@@ -122,6 +142,16 @@ function Product() {
                                         </select>
                                     </div>
                                     <Search setSearch={setSearch} />
+                                    <div className="float-left ml-2">
+    <select onChange={(e) => handleCategoryChange(e.target.value)} className="form-control selectric">
+        <option value="">All</option> 
+        {categories.map((category) => (
+            <option key={category.categoryId} value={category.categoryId}>
+                {category.categoryName}
+            </option>
+        ))}
+    </select>
+                                    </div>
                                     <div className="filter-sort-group">
                                         <div className="filter-container">
                                             <div className="price-labels">
@@ -141,9 +171,11 @@ function Product() {
                                             </div>
                                         </div>
                                         <div className="sort-container">
-                                            <button className="sort-button" onClick={() => handleSort('asc')}>Sort Ascending</button>
-                                            <button className="sort-button" onClick={() => handleSort('desc')}>Sort Descending</button>
-                                        </div>
+    <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
+        <option value="asc">Sort Ascending</option>
+        <option value="desc">Sort Descending</option>
+    </select>
+</div>
                                     </div>
                                 </div>
                                 <div className="table-responsive">

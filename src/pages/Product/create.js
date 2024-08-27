@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
 
 function CreateProduct() {
+    const navigate = useNavigate();
     const [product, setProduct] = useState({
         name: '',
         description: '',
@@ -54,7 +56,7 @@ function CreateProduct() {
                 },
             });
 
-            alert('Product created successfully');
+            navigate('/product');
         } catch (error) {
             console.error('Error creating product:', error);
             alert('Failed to create product');

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const EditProduct = () => {
+    const navigate = useNavigate();
     const { id } = useParams();
     const [categories, setCategories] = useState([]); // Khởi tạo là mảng rỗng
     const [error, setError] = useState(null);
@@ -107,7 +108,8 @@ const EditProduct = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            alert('Product updated successfully');
+            
+            navigate('/product');
         } catch (error) {
             alert('Failed to update product');
         }
@@ -235,71 +237,85 @@ const EditProduct = () => {
                                             />
                                         </td>
                                     </tr>
-                                    <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-                                        <h4>List of available products: </h4>
-                                        {imagesOld.length > 0 ? (
-                                            imagesOld.map((image, index) => (
-                                                <div key={index} style={{ position: 'relative', marginRight: '10px' }}>
-                                                    <img
-                                                        src={`http://localhost:8082/api/v1/product-images/images/${image.imageUrl}`}
-                                                        alt={product.name}
-                                                        style={{
-                                                            width: '100px',
-                                                            height: '100px',
-                                                            borderRadius: '0px',
-                                                        }}
-                                                    />
-                                                    <button
-                                                        onClick={(e) => handleRemoveOldImage(e, index)}
-                                                        style={{
-                                                            position: 'absolute',
-                                                            top: '0',
-                                                            right: '0',
-                                                            background: 'red',
-                                                            color: 'white',
-                                                            border: 'none',
-                                                            borderRadius: '50%',
-                                                            width: '20px',
-                                                            height: '20px',
-                                                            cursor: 'pointer',
-                                                        }}
-                                                    >
-                                                        X
-                                                    </button>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            <p>No Images</p>
-                                        )}
-
-                                        <br />
-                                        <h4>List of new products: </h4>
-                                        {imagesNew.map((image, index) => (
-                                            <div key={index} style={{ position: 'relative', marginRight: '10px' }}>
-                                                <img
-                                                    src={image.imageSrc}
-                                                    alt="Product"
-                                                    style={{
-                                                        width: '100px',
-                                                        height: '100px',
-                                                        borderRadius: '0px',
-                                                    }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
+                                    
                                     <tr>
-                                        <th>Images</th>
-                                        <td>
-                                            <input
-                                                type="file"
-                                                className="form-control"
-                                                multiple
-                                                onChange={handleFileChange}
-                                                // required
-                                            />
-                                        </td>
-                                    </tr>
+    <th>Images</th>
+    <td>
+        <input
+            type="file"
+            className="form-control"
+            multiple
+            onChange={handleFileChange}
+            // required
+        />
+    </td>
+</tr>
+<div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
+    <div>
+        <h4>List of available products:</h4>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+            {imagesOld.length > 0 ? (
+                imagesOld.map((image, index) => (
+                    <div key={index} style={{ position: 'relative', marginRight: '10px' }}>
+                        <img
+                            src={`http://localhost:8082/api/v1/product-images/images/${image.imageUrl}`}
+                            alt={product.name}
+                            style={{
+                                width: '100px',
+                                height: '100px',
+                                borderRadius: '4px',
+                                objectFit: 'cover',
+                                border: '1px solid #ccc',
+                            }}
+                        />
+                        <button
+                            onClick={(e) => handleRemoveOldImage(e, index)}
+                            style={{
+                                position: 'absolute',
+                                top: '5px',
+                                right: '5px',
+                                background: 'red',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: '20px',
+                                height: '20px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            X
+                        </button>
+                    </div>
+                ))
+            ) : (
+                <p>No Images</p>
+            )}
+        </div>
+    </div>
+    <div>
+        <h4>List of new products:</h4>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+            {imagesNew.map((image, index) => (
+                <div key={index} style={{ position: 'relative', marginRight: '10px' }}>
+                    <img
+                        src={image.imageSrc}
+                        alt="Product"
+                        style={{
+                            width: '100px',
+                            height: '100px',
+                            borderRadius: '4px',
+                            objectFit: 'cover',
+                            border: '1px solid #ccc',
+                        }}
+                    />
+                </div>
+            ))}
+        </div>
+    </div>
+</div>
                                 </tbody>
                             </table>
                             <button type="submit" className="btn btn-primary">

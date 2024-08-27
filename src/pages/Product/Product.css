@@ -11,7 +11,7 @@
 }
 .float-right {
     margin-top: 20px;
-    margin-right: 320px;
+    margin-right: 200px;
 }
 
 .search-container {
@@ -81,16 +81,22 @@
     margin-top: 0px;
 }
 
-.sort-button {
-    margin-left: 10px;
-    padding: 5px 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
+.sort-dropdown {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #0056b3;
+    border-radius: 4px;
+    background-color: #fff;
     cursor: pointer;
+    transition: border-color 0.3s;
 }
 
-.sort-button:hover {
-    background-color: #0056b3;
+.sort-dropdown:hover {
+    border-color: #0056b3;
 }
+
+.sort-dropdown:focus {
+    outline: none;
+    border-color: #0056b3;
+}
+
