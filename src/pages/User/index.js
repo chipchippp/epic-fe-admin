@@ -34,9 +34,9 @@ function User() {
             setLoading(true);
             try {
                 const response = await axios.get(`http://localhost:8081/api/v1/users?page=${currentPage}&limit=${limit}`);
-                setData(response.data.content);
-                setSearchedData(response.data.content);
-                setTotalPages(response.data.totalPages);
+                setData(response.data.data.content);
+                setSearchedData(response.data.data.content);
+                setTotalPages(response.data.data.totalPages);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching users:', error);
