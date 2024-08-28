@@ -16,28 +16,6 @@ function SidebarAdmin() {
       <a
         className="nav-link"
         data-toggle="collapse"
-        href="#form-elements"
-        aria-expanded="false"
-        aria-controls="form-elements"
-      >
-        <i className="icon-columns menu-icon" />
-        <span className="menu-title">Form elements</span>
-        <i className="menu-arrow" />
-      </a>
-      <div className="collapse" id="form-elements">
-        <ul className="nav flex-column sub-menu">
-          <li className="nav-item">
-            <Link className="nav-link" to="pages/forms/basic_elements.html">
-              Basic Elements
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </li>
-    <li className="nav-item">
-      <a
-        className="nav-link"
-        data-toggle="collapse"
         href="#charts"
         aria-expanded="false"
         aria-controls="charts"
@@ -84,20 +62,20 @@ function SidebarAdmin() {
         </ul>
       </div>
     </li>
-
     <li className="nav-item">
       <a
         className="nav-link"
         data-toggle="collapse"
-        href="#tables"
+        href="#auth"
         aria-expanded="false"
-        aria-controls="tables"
+        aria-controls="auth"
       >
-        <i className="icon-grid-2 menu-icon" />
+        <i className="icon-head menu-icon"></i>
+
         <span className="menu-title">User</span>
         <i className="menu-arrow" />
       </a>
-      <div className="collapse" id="tables">
+      <div className="collapse" id="auth">
         <ul className="nav flex-column sub-menu">
           <li className="nav-item">
             <Link className="nav-link" to="/users">

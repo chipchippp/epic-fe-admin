@@ -44,9 +44,10 @@ function Order() {
             setLoading(true);
             try {
                 const response = await axios.get(`http://localhost:8084/api/v1/orders?page=${currentPage}&limit=${limit}`);
-                setData(response.data.content);
-                setSearchedData(response.data.content);
-                setTotalPages(response.data.totalPages);
+                console.log('response', response.data.data.content);
+                setData(response.data.data.content);
+                setSearchedData(response.data.data.content);
+                setTotalPages(response.data.data.totalPages);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -107,7 +108,6 @@ function Order() {
                                                 <option value="CANCELLED">Cancelled</option>
                                             </select>
                                         </div>
-
                                         <div className="float-left ml-2">
                                             <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
                                                 <option value={15}>Show</option>
@@ -116,8 +116,7 @@ function Order() {
                                                 <option value={30}>30</option>
                                             </select>
                                         </div>
-                                        <Search setSearch={setSearch} />
-                                    
+                                        <Search  className="float-left ml-2" setSearch={setSearch} />
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -159,11 +158,11 @@ function Order() {
                                                             </td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/orders/edit/${item.id}`}
+                                                                    to={`/order/detail/${item.id}`}
                                                                     className="btn btn-primary"
-                                                                    title="Edit"
+                                                                    title="Detail"
                                                                 >
-                                                                    <i className="fas fa-pencil-alt"></i>
+                                                                    <i className="far fa-eye"></i>
                                                                 </Link>
                                                             </td>
                                                         </tr>

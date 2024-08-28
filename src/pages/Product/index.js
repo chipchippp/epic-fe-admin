@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import './Product.css'; // Import the CSS file
+import './Product.css';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 
@@ -12,9 +12,9 @@ function Product() {
     const [priceRange, setPriceRange] = useState([0, 90905.00]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [sortOrder, setSortOrder] = useState('asc');
-    const [limit, setLimit] = useState(5); // Thêm state limit
-    const [currentPage, setCurrentPage] = useState(1); // Thêm state currentPage
-    const [totalPages, setTotalPages] = useState(0); // Thêm state totalPages
+    const [limit, setLimit] = useState(5);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const [search, setSearch] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -22,22 +22,20 @@ function Product() {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get(`http://localhost:8082/api/v1/products`, {
-                    params: {
-                        page: currentPage,
-                        limit: limit,
-                        search: search
-                    }
-                });
-                setProducts(response.data.content);
-                setTotalPages(response.data.totalPages); // Cập nhật totalPages
+                const response = selectedCategory
+                    ? await fetch(`http://localhost:8082/api/v1/products/category/${selectedCategory}?page=${currentPage}&limit=${limit}&search=${search}`)
+                    : await fetch(`http://localhost:8082/api/v1/products?page=${currentPage}&limit=${limit}&search=${search}`);
+                
+                const data = await response.json();
+                setProducts(data.data.content);
+                setTotalPages(data.data.totalPages);
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
         };
 
         fetchProducts();
-    }, [currentPage, limit, search]); // Thêm currentPage, limit và search vào dependency array
+    }, [currentPage, limit, search, selectedCategory]);
 
     useEffect(() => {
         const applyFilters = () => {
@@ -55,6 +53,27 @@ function Product() {
         applyFilters();
     }, [search, priceRange, products]);
 
+    useEffect(() => {
+        fetch('http://localhost:8082/api/v1/categories')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then((data) => {
+                setCategories(data.data.content);
+            })
+            .catch((error) => {
+                console.error('Error fetching categories:', error.message);
+            });
+    }, []);
+
+    const handleCategoryChange = (categoryId) => {
+        setSelectedCategory(categoryId);
+        setCurrentPage(1);
+    };
+
     const handleDelete = async (productId) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
@@ -62,7 +81,6 @@ function Product() {
                 setProducts(products.filter(product => product.productId !== productId));
                 alert('Product deleted successfully');
             } catch (error) {
-                console.error('Error deleting product:', error);
                 alert('Failed to delete product');
             }
         }
@@ -80,7 +98,7 @@ function Product() {
 
     const handleLimitChange = (e) => {
         setLimit(e.target.value);
-        setCurrentPage(1); // Reset currentPage về 1 khi thay đổi limit
+        setCurrentPage(1);
     };
 
     const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -121,7 +139,16 @@ function Product() {
                                             <option value={30}>30</option>
                                         </select>
                                     </div>
-                                    <Search setSearch={setSearch} />
+                                    <div className="float-left ml-2">
+    <select onChange={(e) => handleCategoryChange(e.target.value)} className="form-control selectric">
+        <option value="">All</option> 
+        {categories.map((category) => (
+            <option key={category.categoryId} value={category.categoryId}>
+                {category.categoryName}
+            </option>
+        ))}
+    </select>
+                                    </div>
                                     <div className="filter-sort-group">
                                         <div className="filter-container">
                                             <div className="price-labels">
@@ -140,11 +167,9 @@ function Product() {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="sort-container">
-                                            <button className="sort-button" onClick={() => handleSort('asc')}>Sort Ascending</button>
-                                            <button className="sort-button" onClick={() => handleSort('desc')}>Sort Descending</button>
-                                        </div>
                                     </div>
+                                    <Search className="float-left ml-2" setSearch={setSearch} />
+
                                 </div>
                                 <div className="table-responsive">
                                     <table className="table table-striped">
@@ -166,10 +191,9 @@ function Product() {
                                                     <td> <Link to={`/productdetail/${product.productId}`}>{product.name}</Link></td>
                                                     <td>
                                                         {product.images.length > 0 ? (
-                                                            <img src={`http://localhost:8082/api/v1/product-images/images/${product.images[0].imageUrl}`} alt={product.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
-                                                        ) : (
-                                                            'No Image'
-                                                        )}
+                                                            <img src={`http://localhost:8082/api/v1/product-images/images/${product.images[0].imageUrl}`}
+                                                             alt={product.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                        ) : ('No Image')}
                                                     </td>
                                                     <td>{product.price}$</td>
                                                     <td>{product.category ? product.category.categoryName : 'N/A'}</td>

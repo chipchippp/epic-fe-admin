@@ -34,9 +34,10 @@ function Category() {
                 setLoading(true);
                 try {
                     const response = await axios.get(`http://localhost:8082/api/v1/categories?page=${currentPage}&limit=${limit}`);
-                    setData(response.data.content);
-                    setSearchedData(response.data.content);
-                    setTotalPages(response.data.totalPages);
+                    console.log('response:', response.data.data);
+                    setData(response.data.data.content);
+                    setSearchedData(response.data.data.content);
+                    setTotalPages(response.data.data.totalPages);
                     setLoading(false);
                 } catch (error) {
                     console.error('Error fetching products:', error);
