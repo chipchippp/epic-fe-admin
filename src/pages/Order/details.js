@@ -5,7 +5,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
 function OrderDetail() {
-    const [products, setProducts] = useState([]); // Initial state as an empty array
+    const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({
         id: '',
@@ -34,7 +34,7 @@ function OrderDetail() {
                 const result = await axios.get(`http://localhost:8084/api/v1/orders/${id}`);
                 console.log('result', result.data.data);
                 setData(result.data.data);
-                setProducts(result.data.data.orderDetails); // Set products to orderDetails
+                setProducts(result.data.data.orderDetails);
                 setLoading(false);
             } catch (error) {
                 toast.error('Failed to fetch order data');
@@ -44,6 +44,22 @@ function OrderDetail() {
         };
         fetchData();
     }, [id]);
+
+    const handleUpdate = async (event) => {
+        event.preventDefault();
+        try {
+            const result = await axios.put(`http://localhost:8084/api/v1/orders/${id}`, {
+                status: tempStatus,
+            });
+            console.log('result', result);
+            toast.success('Order status updated successfully');
+            navigate(`/orders/${id}`);
+        }
+        catch (error) {
+            toast.error('Failed to update order status');
+            console.error('Update error:', error);
+        }
+    };
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -56,6 +72,32 @@ function OrderDetail() {
             second: '2-digit',
             hour12: true,
         });
+    };
+
+    const getSelectableOptions = () => {
+        const options = [
+            { value: 0, label: 'Pending' },
+            { value: 1, label: 'Confirmed' },
+            { value: 2, label: 'Shipping' },
+            { value: 3, label: 'Shipped' },
+            { value: 4, label: 'Complete' },
+            { value: 5, label: 'Canceled' },
+        ];
+
+        switch (tempStatus) {
+            case 0:
+                return options.filter((option) => ![2, 3, 4].includes(option.value));
+            case 1:
+                return options.filter((option) => ![0, 3, 4].includes(option.value));
+            case 2:
+                return options.filter((option) => ![0, 1, 4, 5].includes(option.value));
+            case 3:
+                return options.filter((option) => ![0, 1, 2, 5].includes(option.value));
+            case 4:
+                return options.filter((option) => ![0, 1, 2, 3].includes(option.value));
+            default:
+                return options;
+        }
     };
 
     if (loading) {
@@ -109,6 +151,30 @@ function OrderDetail() {
                                                     </address>
                                                 </div>
                                             </div>
+                                            <form onSubmit={handleUpdate}>
+                            <div className="row mb-4">
+                                <div className="col-md-2">
+                                    <select
+                                        className="form-control"
+                                        id="status"
+                                        value={tempStatus}
+                                        onChange={(e) => setTempStatus(parseInt(e.target.value))}
+                                        disabled={data.status !== tempStatus || data.status === 4 || data.status === 5}
+                                    >
+                                        {getSelectableOptions().map((option) => (
+                                            <option key={option.value} value={option.value}>
+                                                {option.label}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-md-6">
+                                    <button className="btn btn-primary" type="submit">
+                                        Update Status
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                                             <div className="row mt-4">
                                                 <div className="col-md-12">
                                                     <div className="section-title">Order Summary</div>
@@ -131,13 +197,15 @@ function OrderDetail() {
                                                                     <tr key={index}>
                                                                         <td>{index + 1}</td>
                                                                         <td>
-                                                                            {item.productDTO.images.length > 0 ? (
-                                                                            <img src={`http://localhost:8082/api/v1/product-images/images/${item.productDTO.images[0].imageUrl}`}
-                                                                             alt={item.productDTO.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
-                                                                            ) : ('No Image' )}
+                                                                            <img
+                                                                                src={item.product.image}
+                                                                                alt={item.product.name}
+                                                                                className="img-fluid"
+                                                                                style={{ width: '100px' }}
+                                                                            />
                                                                         </td>
-                                                                        <td>{item.productDTO.name}</td>
-                                                                        <td>{item.productDTO.category.categoryName}</td>
+                                                                        <td>{item.product.name}</td>
+                                                                        <td>{item.product.category.categoryName}</td>
                                                                         <td>${item.unitPrice}</td>
                                                                         <td>{item.quantity}</td>
                                                                         <td>${item.unitPrice * item.quantity}</td>

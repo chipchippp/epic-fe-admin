@@ -13,7 +13,7 @@ const BarChart = () => {
     useEffect(() => {
         const fetchChartData = async () => {
             try {
-                const response = await fetch('http://localhost:8084/api/v1/orders');
+                const response = await fetch('http://localhost:8084/api/v1/orders?page=1&limit=10');
                 if (!response.ok) {
                     throw new Error('Failed to fetch chart data');
                 }

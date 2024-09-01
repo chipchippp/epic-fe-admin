@@ -17,7 +17,6 @@ function Order() {
     const [limit, setLimit] = useState(15);
     const [numbers, setNumbers] = useState([]);
 
-    
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
