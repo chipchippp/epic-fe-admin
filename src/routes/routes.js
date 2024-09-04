@@ -16,6 +16,7 @@ import Product from '~/pages/Product/index';
 
 // Order
 import Order from '~/pages/Order/index';
+import OrderDetail from '~/pages/Order/details';
 
 // Chart
 import Chart from '~/pages/Chart/index';
@@ -50,10 +51,9 @@ export const publicRoutes = [
 
     { path: config.routes.productdetail, component: ProductDetail, layout: AdminLayout },
 
-    
-
     // Order
     {path: config.routes.orders, component: Order, layout: AdminLayout},
+    {path: config.routes.orderDetail, component: OrderDetail, layout: AdminLayout},
 
     // Chart
     { path: config.routes.chart, component: Chart, layout: AdminLayout },

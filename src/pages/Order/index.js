@@ -9,25 +9,22 @@ import Pagination from '~/layouts/components/Pagination';
 
 function Order() {
     const [loading, setLoading] = useState(true);
-
     const [status, setStatus] = useState('');   
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(15);
     const [numbers, setNumbers] = useState([]);
-
-    
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
     useEffect(() => {
         let filteredData = data;
         
-        if(search){
+        if (search) {
             filteredData = filteredData.filter(
                 (item) =>
-                item.id.toString().toLowerCase().includes(search.toLowerCase())
+                    item.id.toString().toLowerCase().includes(search.toLowerCase())
             );
         }
         if (status !== '') {
@@ -44,9 +41,10 @@ function Order() {
             setLoading(true);
             try {
                 const response = await axios.get(`http://localhost:8084/api/v1/orders?page=${currentPage}&limit=${limit}`);
-                setData(response.data.content);
-                setSearchedData(response.data.content);
-                setTotalPages(response.data.totalPages);
+                console.log('response', response.data.data.content);
+                setData(response.data.data.content);
+                setSearchedData(response.data.data.content);
+                setTotalPages(response.data.data.totalPages);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -104,20 +102,19 @@ function Order() {
                                                 <option value="PROCESSING">Processing</option>
                                                 <option value="ONDELIVERY">On Delivery</option>
                                                 <option value="DELIVERED">Delivered</option>
-                                                <option value="CANCELLED">Cancelled</option>
+                                                <option value="CANCEL">Cancelled</option>
+                                                <option value="COMPLETE">Complete</option>
                                             </select>
                                         </div>
-
                                         <div className="float-left ml-2">
                                             <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
                                                 <option value={15}>Show</option>
-                                                <option value={20}>10</option>
-                                                <option value={25}>20</option>
+                                                <option value={10}>10</option>
+                                                <option value={20}>20</option>
                                                 <option value={30}>30</option>
                                             </select>
                                         </div>
-                                        <Search setSearch={setSearch} />
-                                    
+                                        <Search className="float-left ml-2" setSearch={setSearch} />
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -135,7 +132,7 @@ function Order() {
                                                         <tr key={item.id}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.id}</td>
-                                                            <td>{item.userId}</td>
+                                                            <td>{item.firstName}</td>
                                                             <td>{item.totalPrice}</td>
                                                             <td>
                                                                 {item.status === "CREATED" && (
@@ -153,17 +150,20 @@ function Order() {
                                                                 {item.status === "DELIVERED" && (
                                                                     <div className="badge badge-success">Delivered</div>
                                                                 )}
-                                                                {item.status === "CANCELLED" && (
+                                                                {item.status === "CANCEL" && (
                                                                     <div className="badge badge-danger">Cancelled</div>
+                                                                )}
+                                                                {item.status === "COMPLETE" && (
+                                                                    <div className="badge badge-success">Complete</div>
                                                                 )}
                                                             </td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/orders/edit/${item.id}`}
+                                                                    to={`/order/detail/${item.id}`}
                                                                     className="btn btn-primary"
-                                                                    title="Edit"
+                                                                    title="Detail"
                                                                 >
-                                                                    <i className="fas fa-pencil-alt"></i>
+                                                                    <i className="far fa-eye"></i>
                                                                 </Link>
                                                             </td>
                                                         </tr>

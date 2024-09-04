@@ -1,28 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { Link } from 'react-router-dom';
 import dayjs from 'dayjs';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
 const BarChart = () => {
-    const [chartData, setChartData] = useState(null);
+    const [chartData, setChartData] = useState([]);
     const [timeRange, setTimeRange] = useState('Date');
 
     useEffect(() => {
         const fetchChartData = async () => {
             try {
-                const response = await fetch('http://localhost:8084/api/v1/orders');
+                const response = await fetch('http://localhost:8084/api/v1/orders?page=1&limit=1000');
                 if (!response.ok) {
                     throw new Error('Failed to fetch chart data');
                 }
                 const jsonData = await response.json();
-                const filteredData = jsonData.filter((order) => order.status === 4);
+                const filteredData = jsonData.data.content.filter(order => order.status === 'COMPLETE');
 
                 const processData = (data, format, unit, totalUnits, fixedLabels) => {
                     const latestOrderDate = data.reduce((latestDate, item) => {
-                        const orderDate = dayjs(item.orderDate);
+                        const orderDate = dayjs(item.createdAt);
                         return orderDate.isAfter(latestDate) ? orderDate : latestDate;
                     }, dayjs('2000-01-01'));
 
@@ -33,12 +32,12 @@ const BarChart = () => {
                         ).reverse();
 
                     const revenueByTime = data.reduce((acc, item) => {
-                        const time = dayjs(item.orderDate).format(format);
+                        const time = dayjs(item.createdAt).format(format);
                         if (!acc[time]) {
                             acc[time] = { orderCount: 0, totalRevenue: 0 };
                         }
                         acc[time].orderCount += 1;
-                        acc[time].totalRevenue += item.totalAmount;
+                        acc[time].totalRevenue += item.totalPrice;
                         return acc;
                     }, {});
 
@@ -76,14 +75,14 @@ const BarChart = () => {
         fetchChartData();
     }, [timeRange]);
 
-    if (!chartData) {
+    if (!chartData || chartData.length === 0) {
         return <div>Loading...</div>;
     }
 
     const labels = chartData.map((data) => data.time);
     const orderCount = chartData.map((data) => data.orderCount);
     const totalRevenue = chartData.map((data) => data.totalRevenue);
-
+    
     const data = {
         labels,
         datasets: [

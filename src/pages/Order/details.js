@@ -5,23 +5,41 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 
 function OrderDetail() {
-    const { id } = useParams();
+    const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [data, setData] = useState({
-        categoryId: '',
-        categoryName: '',
-        description: '',
+        id: '',
+        userId: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        address: '',
+        phone: '',
+        country: '',
+        postalCode: '',
+        note: '',
+        totalPrice: '',
+        status: '',
+        createdAt: '',
+        updatedAt: '',
     });
 
+    const [tempStatus, setTempStatus] = useState('');
+    const { id } = useParams();
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await axios.get(`http://localhost:8082/api/v1/orders/${id}`);
-                setData(result.data);
+                const result = await axios.get(`http://localhost:8084/api/v1/orders/${id}`);
+                console.log('result', result.data.data);
+                setData(result.data.data);
+                setProducts(result.data.data.orderDetails);
+                setLoading(false);
             } catch (error) {
-                toast.error('Failed to fetch category data');
+                toast.error('Failed to fetch order data');
                 console.error('Fetch error:', error);
+                setLoading(false);
             }
         };
         fetchData();
@@ -29,19 +47,64 @@ function OrderDetail() {
 
     const handleUpdate = async (event) => {
         event.preventDefault();
-
         try {
-            await axios.put(`http://localhost:8082/api/v1/orders/${id}`, {
-                categoryName: data.categoryName,
-                description: data.description,
+            const result = await axios.put(`http://localhost:8084/api/v1/orders/changeStatus/${id}`, null, {
+                params: { status: tempStatus },
             });
-            toast.success('orders updated successfully');
-            navigate('/orders');
-        } catch (error) {
-            toast.error('Failed to update orders');
+            toast.success('Order status updated successfully');
+            navigate(`/order/detail/${id}`);
+            window.location.reload();
+        }
+        catch (error) {
+            toast.error('Failed to update order status');
             console.error('Update error:', error);
         }
     };
+    
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true,
+        });
+    };
+    const getSelectableOptions = () => {
+        const options = [
+            { value: 'CREATED', label: 'Created' },
+            { value: 'PENDING', label: 'Pending' },
+            { value: 'PROCESSING', label: 'Processing' },
+            { value: 'ONDELIVERY', label: 'On Delivery' },
+            { value: 'DELIVERED', label: 'Delivered' },
+            { value: 'COMPLETE', label: 'Complete' },
+            { value: 'CANCEL', label: 'Cancel' },
+        ];
+   
+        switch (data.status) {
+            case 'CREATED':
+                return options.filter((option) => ['CREATED','PENDING', 'PROCESSING', 'CANCEL'].includes(option.value));
+            case 'PENDING':
+                return options.filter((option) => ['PENDING','PROCESSING', 'CANCEL'].includes(option.value));
+            case 'PROCESSING':
+                return options.filter((option) => ['PROCESSING','ONDELIVERY'].includes(option.value));
+            case 'ONDELIVERY':
+                return options.filter((option) => ['ONDELIVERY','DELIVERED'].includes(option.value));
+            case 'DELIVERED':
+                return options.filter((option) => ['DELIVERED','COMPLETE'].includes(option.value));
+            default:
+                return options;
+        }
+    };
+   
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <>
@@ -50,7 +113,7 @@ function OrderDetail() {
                     <div className="col-md-12 grid-margin">
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Edit Category</h3>
+                                <h3 className="font-weight-bold">Order Details</h3>
                                 <h6 className="font-weight-normal mb-0">
                                     All systems are running smoothly! You have
                                     <span className="text-primary"> 3 unread alerts!</span>
@@ -62,36 +125,133 @@ function OrderDetail() {
                 <div className="col-12 grid-margin stretch-card">
                     <div className="card">
                         <div className="card-body">
-                            <h4 className="card-title">Basic form elements</h4>
-                            <p className="card-description">Edit the category details below</p>
-                            <form className="forms-sample" onSubmit={handleUpdate}>
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputName1">Name</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="exampleInputName1"
-                                        placeholder="Name"
-                                        value={data.categoryName}
-                                        onChange={(e) => setData({ ...data, categoryName: e.target.value })}
-                                    />
+                            <div className="invoice">
+                                <div className="invoice-print">
+                                    <div className="row">
+                                        <div className="col-lg-12">
+                                            <div className="invoice-title">
+                                                <h4>Order #{id}</h4>
+                                            </div>
+                                            <hr />
+                                            <div className="row">
+                                                <div className="col-md-6">
+                                                    <address>
+                                                        <strong>Billed To:</strong>
+                                                        <p>FullName: {data.firstName} {data.lastName}</p>
+                                                        <p>Email: {data.email}</p>
+                                                        <p>Telephone: {data.phone}</p>
+                                                        <p>Status: {data.status}</p>
+                                                    </address>
+                                                </div>
+                                                <div className="col-md-6 text-md-right">
+                                                    <address>
+                                                        <strong>Shipped To:</strong>
+                                                        <p>Address: {data.address}</p>
+                                                    </address>
+                                                    <address>
+                                                        <strong>Order Date:</strong>
+                                                        <p>{formatDate(data.createdAt)}</p>
+                                                    </address>
+                                                </div>
+                                            </div>
+                                            <form onSubmit={handleUpdate}>
+                            <div className="row mb-4">
+                                <div className="col-md-2">
+                                <select
+    className="form-control"
+    id="status"
+    value={tempStatus}
+    onChange={(e) => setTempStatus(e.target.value)}
+    disabled={ data.status === 'COMPLETE' || data.status === 'CANCEL'}
+>
+    {getSelectableOptions().map((option) => (
+        <option key={option.value} value={option.value}>
+            {option.label}
+        </option>
+    ))}
+</select>
+
                                 </div>
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputCity1">Description</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="exampleInputCity1"
-                                        placeholder="Description"
-                                        value={data.description}
-                                        onChange={(e) => setData({ ...data, description: e.target.value })}
-                                    />
+                                <div className="col-md-6">
+                                    <button className="btn btn-primary" type="submit">
+                                        Update Status
+                                    </button>
                                 </div>
-                                <button type="submit" className="btn btn-primary mr-2">
-                                    Submit
-                                </button>
-                                <Link to="/category" className="btn btn-light">Back</Link>
-                            </form>
+                            </div>
+                        </form>
+                                            <div className="row mt-4">
+                                                <div className="col-md-12">
+                                                    <div className="section-title">Order Summary</div>
+                                                    <p className="section-lead">All items here cannot be deleted.</p>
+                                                    <div className="table-responsive">
+                                                        <table className="table table-striped table-hover table-md">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>#</th>
+                                                                    <th>Image</th>
+                                                                    <th>Name</th>
+                                                                    <th>Category</th>
+                                                                    <th>Price</th>
+                                                                    <th>Quantity</th>
+                                                                    <th>Subtotal</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {Array.isArray(products) && products.map((item, index) => (
+                                                                    <tr key={index}>
+                                                                        <td>{index + 1}</td>
+                                                                        <td>
+                                                                            <img
+                                                                                src={item.product.image}
+                                                                                alt={item.product.name}
+                                                                                className="img-fluid"
+                                                                                style={{ width: '100px' }}
+                                                                            />
+                                                                        </td>
+                                                                        <td>{item.product.name}</td>
+                                                                        <td>{item.product.category.categoryName}</td>
+                                                                        <td>${item.unitPrice}</td>
+                                                                        <td>{item.quantity}</td>
+                                                                        <td>${item.unitPrice * item.quantity}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <div className="row mt-4">
+                                                        <div className="col-lg-8">
+                                                            <div className="section-title">Payment Method</div>
+                                                            <p className="section-lead">
+                                                                The payment method that we provide is to make it easier for you to pay
+                                                                invoices.
+                                                            </p>
+                                                        </div>
+                                                        <div className="col-lg-4 text-right">
+                                                            <div className="invoice-detail-item">
+                                                                <div className="invoice-detail-name">Subtotal</div>
+                                                                <div className="invoice-detail-value">${data.totalPrice}</div>
+                                                            </div>
+                                                            <hr className="mt-2 mb-2" />
+                                                            <div className="invoice-detail-item">
+                                                                <div className="invoice-detail-name">Total</div>
+                                                                <div className="invoice-detail-value invoice-detail-value-lg">
+                                                                    ${data.totalPrice}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className="text-md-right">
+                                            <Link to={`/order/invoice/${id}`} className="btn btn-primary me-1">
+                                                <i className="fa-solid fa-download"></i> Invoice
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
