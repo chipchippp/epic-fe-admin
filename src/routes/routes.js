@@ -28,6 +28,7 @@ import EditProduct from '~/pages/Product/editproduct';
 import User from '~/pages/User/index';
 import UserCreate from '~/pages/User/create';
 import UserEdit from '~/pages/User/edit';
+import UserDetail from '~/pages/User/userdetail';
 
 // Public routes
 export const publicRoutes = [
@@ -61,6 +62,7 @@ export const publicRoutes = [
     { path: config.routes.users, component: User, layout: AdminLayout },
     { path: config.routes.createUsers, component: UserCreate, layout: AdminLayout },
     { path: config.routes.editUsers, component: UserEdit, layout: AdminLayout },
+    { path: config.routes.userdetail, component: UserDetail, layout: AdminLayout },
 
 ];
 

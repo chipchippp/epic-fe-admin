@@ -127,18 +127,10 @@ function User() {
                                                                 <Link
                                                                     to={`/users/detail/${item.id}`}
                                                                     className="btn btn-primary"
-                                                                    title="Details"
+                                                                    title="Detail"
                                                                 >
-                                                                    <i className="fas fa-pencil-alt"></i>
+                                                                    <i className="far fa-eye"></i>
                                                                 </Link>
-                                                                &nbsp;
-                                                                <Button
-                                                                    variant="danger"
-                                                                    onClick={() => handleDelete(item.id)}
-                                                                    title="Delete"
-                                                                >
-                                                                    <i className="fas fa-trash"></i>
-                                                                </Button>
                                                             </td>
                                                         </tr>
                                                     ))}
