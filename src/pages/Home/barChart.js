@@ -17,21 +17,21 @@ const BarChart = () => {
                     throw new Error('Failed to fetch chart data');
                 }
                 const jsonData = await response.json();
-                const filteredData = jsonData.data.content.filter(order => order.status === 'COMPLETE');
+                const filteredData = jsonData.data.content.filter((order) => order.status === "COMPLETE");
 
                 const processData = (data, format, unit, totalUnits, fixedLabels) => {
                     const latestOrderDate = data.reduce((latestDate, item) => {
                         const orderDate = dayjs(item.createdAt);
                         return orderDate.isAfter(latestDate) ? orderDate : latestDate;
                     }, dayjs('2000-01-01'));
-
+                
                     const latestUnits =
                         fixedLabels ||
                         Array.from({ length: totalUnits }, (_, index) =>
                             latestOrderDate.subtract(index, unit).format(format),
                         ).reverse();
-
-                    const revenueByTime = data.reduce((acc, item) => {
+                
+                        const revenueByTime = data.reduce((acc, item) => {
                         const time = dayjs(item.createdAt).format(format);
                         if (!acc[time]) {
                             acc[time] = { orderCount: 0, totalRevenue: 0 };
@@ -40,7 +40,7 @@ const BarChart = () => {
                         acc[time].totalRevenue += item.totalPrice;
                         return acc;
                     }, {});
-
+                
                     const chartData = latestUnits.map((time) => {
                         const dailyData = revenueByTime[time];
                         return {
@@ -49,9 +49,9 @@ const BarChart = () => {
                             totalRevenue: dailyData ? dailyData.totalRevenue : 0,
                         };
                     });
-
+                
                     return chartData;
-                };
+                };                
 
                 let chartData;
                 if (timeRange === 'Date') {
@@ -82,7 +82,7 @@ const BarChart = () => {
     const labels = chartData.map((data) => data.time);
     const orderCount = chartData.map((data) => data.orderCount);
     const totalRevenue = chartData.map((data) => data.totalRevenue);
-    
+
     const data = {
         labels,
         datasets: [
@@ -92,6 +92,7 @@ const BarChart = () => {
                 backgroundColor: 'rgba(255, 99, 132, 0.2)',
                 borderColor: 'rgba(255, 99, 132, 1)',
                 borderWidth: 1,
+                yAxisID: 'y',
             },
             {
                 label: 'Revenue',
@@ -99,15 +100,24 @@ const BarChart = () => {
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1,
+                yAxisID: 'y1',
             },
         ],
     };
-
+    
     const options = {
         maintainAspectRatio: false,
         scales: {
             y: {
                 beginAtZero: true,
+                position: 'left',
+            },
+            y1: {
+                beginAtZero: true,
+                position: 'right',
+                grid: {
+                    drawOnChartArea: false,
+                },
             },
         },
         plugins: {
@@ -133,6 +143,7 @@ const BarChart = () => {
             },
         },
     };
+    
 
     return (
         <div className="section-body">
