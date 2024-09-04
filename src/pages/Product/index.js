@@ -27,8 +27,8 @@ function Product() {
                     : await fetch(`http://localhost:8082/api/v1/products?page=${currentPage}&limit=${limit}&search=${search}`);
                 
                 const data = await response.json();
-                setProducts(data.content);
-                setTotalPages(data.totalPages);
+                setProducts(data.data.content);
+                setTotalPages(data.data.totalPages);
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
@@ -63,7 +63,7 @@ function Product() {
                 return response.json();
             })
             .then((data) => {
-                setCategories(data.content);
+                setCategories(data.data.content);
             })
             .catch((error) => {
                 console.error('Error fetching categories:', error.message);
