@@ -48,18 +48,19 @@ function OrderDetail() {
     const handleUpdate = async (event) => {
         event.preventDefault();
         try {
-            const result = await axios.put(`http://localhost:8084/api/v1/orders/${id}`, {
-                status: tempStatus,
+            const result = await axios.put(`http://localhost:8084/api/v1/orders/changeStatus/${id}`, null, {
+                params: { status: tempStatus },
             });
-            console.log('result', result);
             toast.success('Order status updated successfully');
-            navigate(`/orders/${id}`);
+            navigate(`/order/detail/${id}`);
+            window.location.reload();
         }
         catch (error) {
             toast.error('Failed to update order status');
             console.error('Update error:', error);
         }
     };
+    
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -73,32 +74,33 @@ function OrderDetail() {
             hour12: true,
         });
     };
-
     const getSelectableOptions = () => {
         const options = [
-            { value: 0, label: 'Pending' },
-            { value: 1, label: 'Confirmed' },
-            { value: 2, label: 'Shipping' },
-            { value: 3, label: 'Shipped' },
-            { value: 4, label: 'Complete' },
-            { value: 5, label: 'Canceled' },
+            { value: 'CREATED', label: 'Created' },
+            { value: 'PENDING', label: 'Pending' },
+            { value: 'PROCESSING', label: 'Processing' },
+            { value: 'ONDELIVERY', label: 'On Delivery' },
+            { value: 'DELIVERED', label: 'Delivered' },
+            { value: 'COMPLETE', label: 'Complete' },
+            { value: 'CANCEL', label: 'Cancel' },
         ];
-
-        switch (tempStatus) {
-            case 0:
-                return options.filter((option) => ![2, 3, 4].includes(option.value));
-            case 1:
-                return options.filter((option) => ![0, 3, 4].includes(option.value));
-            case 2:
-                return options.filter((option) => ![0, 1, 4, 5].includes(option.value));
-            case 3:
-                return options.filter((option) => ![0, 1, 2, 5].includes(option.value));
-            case 4:
-                return options.filter((option) => ![0, 1, 2, 3].includes(option.value));
+   
+        switch (data.status) {
+            case 'CREATED':
+                return options.filter((option) => ['CREATED','PENDING', 'PROCESSING', 'CANCEL'].includes(option.value));
+            case 'PENDING':
+                return options.filter((option) => ['PENDING','PROCESSING', 'CANCEL'].includes(option.value));
+            case 'PROCESSING':
+                return options.filter((option) => ['PROCESSING','ONDELIVERY'].includes(option.value));
+            case 'ONDELIVERY':
+                return options.filter((option) => ['ONDELIVERY','DELIVERED'].includes(option.value));
+            case 'DELIVERED':
+                return options.filter((option) => ['DELIVERED','COMPLETE'].includes(option.value));
             default:
                 return options;
         }
     };
+   
 
     if (loading) {
         return <div>Loading...</div>;
@@ -138,6 +140,7 @@ function OrderDetail() {
                                                         <p>FullName: {data.firstName} {data.lastName}</p>
                                                         <p>Email: {data.email}</p>
                                                         <p>Telephone: {data.phone}</p>
+                                                        <p>Status: {data.status}</p>
                                                     </address>
                                                 </div>
                                                 <div className="col-md-6 text-md-right">
@@ -154,19 +157,20 @@ function OrderDetail() {
                                             <form onSubmit={handleUpdate}>
                             <div className="row mb-4">
                                 <div className="col-md-2">
-                                    <select
-                                        className="form-control"
-                                        id="status"
-                                        value={tempStatus}
-                                        onChange={(e) => setTempStatus(parseInt(e.target.value))}
-                                        disabled={data.status !== tempStatus || data.status === 4 || data.status === 5}
-                                    >
-                                        {getSelectableOptions().map((option) => (
-                                            <option key={option.value} value={option.value}>
-                                                {option.label}
-                                            </option>
-                                        ))}
-                                    </select>
+                                <select
+    className="form-control"
+    id="status"
+    value={tempStatus}
+    onChange={(e) => setTempStatus(e.target.value)}
+    disabled={ data.status === 'COMPLETE' || data.status === 'CANCEL'}
+>
+    {getSelectableOptions().map((option) => (
+        <option key={option.value} value={option.value}>
+            {option.label}
+        </option>
+    ))}
+</select>
+
                                 </div>
                                 <div className="col-md-6">
                                     <button className="btn btn-primary" type="submit">
@@ -241,7 +245,7 @@ function OrderDetail() {
                                         </div>
                                         <hr />
                                         <div className="text-md-right">
-                                            <Link to={`/orders/invoice/${id}`} className="btn btn-primary me-1">
+                                            <Link to={`/order/invoice/${id}`} className="btn btn-primary me-1">
                                                 <i className="fa-solid fa-download"></i> Invoice
                                             </Link>
                                         </div>
