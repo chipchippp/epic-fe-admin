@@ -36,6 +36,7 @@ const routes = {
     users: '/users',
     createUsers: '/users/create',
     editUsers: '/users/edit/:id',
+    userdetail: '/users/detail/:userId',
 
     admins: '/admins',
     createAdmins: '/admins/create',
