@@ -121,9 +121,10 @@ function Order() {
                                                     <tr>
                                                         <th>#</th>
                                                         <th>OrderCode</th>
-                                                        <th>UserId</th>
+                                                        <th>FirstName</th>
                                                         <th>Total Price</th>
                                                         <th>Status</th>
+                                                        <th>Created At</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -157,6 +158,8 @@ function Order() {
                                                                     <div className="badge badge-success">Complete</div>
                                                                 )}
                                                             </td>
+                                                            <td>{item.createdAt}</td>
+
                                                             <td>
                                                                 <Link
                                                                     to={`/order/detail/${item.id}`}

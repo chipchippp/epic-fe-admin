@@ -13,6 +13,14 @@ import CategoryEdit from '~/pages/Category/edit';
 
 // Product
 import Product from '~/pages/Product/index';
+import CreateProduct from '~/pages/Product/create';
+import ProductDetail from '~/pages/Product/productdetail';
+import EditProduct from '~/pages/Product/editproduct';
+
+// Inventory
+import Inventory from '~/pages/Inventory/index';
+import InventoryCreate from '~/pages/Inventory/create';
+import InventoryEdit from '~/pages/Inventory/edit';
 
 // Order
 import Order from '~/pages/Order/index';
@@ -20,9 +28,6 @@ import OrderDetail from '~/pages/Order/details';
 
 // Chart
 import Chart from '~/pages/Chart/index';
-import ProductDetail from '~/pages/Product/productdetail';
-import CreateProduct from '~/pages/Product/create';
-import EditProduct from '~/pages/Product/editproduct';
 
 // User
 import User from '~/pages/User/index';
@@ -47,9 +52,12 @@ export const publicRoutes = [
     { path: config.routes.product, component: Product, layout: AdminLayout },
     { path: config.routes.createProduct, component: CreateProduct, layout: AdminLayout },
     { path: config.routes.editProduct, component: EditProduct, layout: AdminLayout },
-
-
     { path: config.routes.productdetail, component: ProductDetail, layout: AdminLayout },
+
+    // Inventory
+    {path: config.routes.inventory, component: Inventory, layout: AdminLayout},
+    {path: config.routes.createInventory, component: InventoryCreate, layout: AdminLayout},
+    {path: config.routes.editInventory, component: InventoryEdit, layout: AdminLayout},
 
     // Order
     {path: config.routes.orders, component: Order, layout: AdminLayout},
