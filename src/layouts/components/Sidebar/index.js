@@ -49,14 +49,17 @@ function SidebarAdmin() {
       <div className="collapse" id="tables">
         <ul className="nav flex-column sub-menu">
           <li className="nav-item">
+          <Link className="nav-link" to="/category">
+                Category
+            </Link>
             <Link className="nav-link" to="/product">
                 Products
             </Link>
+            <Link className="nav-link" to="/inventory">
+                Inventory
+            </Link>
             <Link className="nav-link" to="/order">
                 Orders
-            </Link>
-            <Link className="nav-link" to="/category">
-                Category
             </Link>
           </li>
         </ul>
@@ -80,9 +83,6 @@ function SidebarAdmin() {
           <li className="nav-item">
             <Link className="nav-link" to="/users">
                 Users
-            </Link>
-            <Link className="nav-link" to="/order">
-                Orders
             </Link>
           </li>
         </ul>
