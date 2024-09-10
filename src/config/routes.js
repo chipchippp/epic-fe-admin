@@ -34,7 +34,6 @@ const routes = {
     //      Manager
     calendar: '/calendar',
     calendars: '/calendars',
-    error_404: '/error_404',
 
     //      Users
     users: '/users',
@@ -47,6 +46,10 @@ const routes = {
     editAdmins: '/admins/edit/:id',
 
     profile: '/profile',
+
+    //      Trash
+    trashCategories: '/trash/categories',
+    trashProducts: '/trash/products',
 };
 
 export default routes;

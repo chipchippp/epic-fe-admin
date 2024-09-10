@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
@@ -36,10 +36,6 @@ function CreateCategory() {
   <div className="row">
     <div className="col-12 col-xl-8 mb-4 mb-xl-0">
       <h3 className="font-weight-bold">New Category</h3>
-      <h6 className="font-weight-normal mb-0">
-        All systems are running smoothly! You have
-        <span className="text-primary">3 unread alerts!</span>
-      </h6>
     </div>
   </div>
 </div>
@@ -47,8 +43,7 @@ function CreateCategory() {
       <div className="col-12 grid-margin stretch-card">
 <div className="card">
 <div className="card-body">
-<h4 className="card-title">Basic form elements</h4>
-<p className="card-description">Basic form elements</p>
+<h4 className="card-title">Category </h4>
 <form className="forms-sample" onSubmit={handleCreate}>
   <div className="form-group">
     <label htmlFor="exampleInputName1">Name</label>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
@@ -35,6 +35,7 @@ function Inventory() {
                 try {
                     const response = await axios.get(`http://localhost:8888/api/v1/inventory?page=${currentPage}&limit=${limit}`);
                     setData(response.data.data.content);
+                    console.log(response.data.data.content);
                     setSearchedData(response.data.data.content);
                     setTotalPages(response.data.data.totalPages);
                     setLoading(false);

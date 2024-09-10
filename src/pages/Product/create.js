@@ -71,49 +71,52 @@ function CreateProduct() {
                         <div className="card-body">
                             <h4 className="card-title">Create Product</h4>
                             <form onSubmit={handleSubmit}>
-                                <div className="form-group">
-                                    <label>Product Name</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        className="form-control"
-                                        value={product.name}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
+                                <div className="row mb-4">
+                                        <div className="col-md-6">
+                                            <label className="col-form-label text-md-right">Name</label>
+                                            <input
+                                               type="text"
+                                               name="name"
+                                               className="form-control"
+                                               value={product.name}
+                                               onChange={handleInputChange}
+                                               required
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="col-form-label text-md-right">Description</label>
+                                            <input
+                                                type="text"
+                                                name="description"
+                                                className="form-control"
+                                                value={product.description}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
                                 </div>
-                                <div className="form-group">
-                                    <label>Description</label>
-                                    <input
-                                        type="text"
-                                        name="description"
-                                        className="form-control"
-                                        value={product.description}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Price</label>
-                                    <input
-                                        type="number"
-                                        name="price"
-                                        className="form-control"
-                                        value={product.price}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Category</label>
-                                    <select
+                                <div className="row mb-4">
+                                        <div className="col-md-6">
+                                            <label className="col-form-label text-md-right">Price</label>
+                                            <input
+                                              type="number"
+                                              name="price"
+                                              className="form-control"
+                                              value={product.price}
+                                              onChange={handleInputChange}
+                                              required
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="col-form-label text-md-right">Category</label>
+                                            <select
                                         name="categoryId"
                                         className="form-control"
                                         value={product.categoryId}
                                         onChange={handleInputChange}
                                         required
                                     >
-                                        <option value="" disabled>
+                                             <option value="" disabled>
                                             Select Category
                                         </option>
                                         {categories.map((category) => (
@@ -122,50 +125,55 @@ function CreateProduct() {
                                             </option>
                                         ))}
                                     </select>
+                                    </div>                                     
                                 </div>
-                                <div className="form-group">
-                                    <label>Stock Quantity</label>
-                                    <input
-                                        type="number"
-                                        name="stockQuantity"
-                                        className="form-control"
-                                        value={product.stockQuantity}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
+                                <div className="row mb-4">
+                                        <div className="col-md-6">
+                                            <label className="col-form-label text-md-right">Stock Quantity</label>
+                                            <input
+                                              type="number"
+                                              name="stockQuantity"
+                                              className="form-control"
+                                              value={product.stockQuantity}
+                                              onChange={handleInputChange}
+                                              required
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="col-form-label text-md-right">Manufacturer</label>
+                                            <input
+                                                type="text"
+                                                name="manufacturer"
+                                                className="form-control"
+                                                value={product.manufacturer}
+                                                onChange={handleInputChange}
+                                                required
+                                            />
+                                        </div>
                                 </div>
-                                <div className="form-group">
-                                    <label>Manufacturer</label>
-                                    <input
-                                        type="text"
-                                        name="manufacturer"
-                                        className="form-control"
-                                        value={product.manufacturer}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Size</label>
-                                    <input
-                                        type="text"
-                                        name="size"
-                                        className="form-control"
-                                        value={product.size}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label>Weight</label>
-                                    <input
-                                        type="text"
-                                        name="weight"
-                                        className="form-control"
-                                        value={product.weight}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
+                                <div className="row mb-4">
+                                        <div className="col-md-6">
+                                            <label className="col-form-label text-md-right">Size</label>
+                                            <input
+                                             type="text"
+                                             name="size"
+                                             className="form-control"
+                                             value={product.size}
+                                             onChange={handleInputChange}
+                                             required
+                                            />
+                                        </div>
+                                        <div className="col-md-6">
+                                            <label className="col-form-label text-md-right">Weight</label>
+                                            <input
+                                                  type="text"
+                                                  name="weight"
+                                                  className="form-control"
+                                                  value={product.weight}
+                                                  onChange={handleInputChange}
+                                                  required
+                                            />
+                                        </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Images</label>

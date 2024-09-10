@@ -88,6 +88,34 @@ function SidebarAdmin() {
         </ul>
       </div>
     </li>
+
+    <li className="nav-item">
+      <a
+        className="nav-link"
+        data-toggle="collapse"
+        href="#trash"
+        aria-expanded="false"
+        aria-controls="trash"
+      >
+        <i class="fas fa-trash menu-icon"></i>
+
+        <span className="menu-title">Trash</span>
+        <i className="menu-arrow" />
+        
+      </a>
+      <div className="collapse" id="trash">
+        <ul className="nav flex-column sub-menu">
+          <li className="nav-item">
+            <Link className="nav-link" to="/trash/categories">
+                Trash Category
+            </Link>
+            <Link className="nav-link" to="/trash/products">
+                Trash Products
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </li>
   </ul>
 </nav>
         </>

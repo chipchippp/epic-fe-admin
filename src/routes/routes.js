@@ -20,7 +20,6 @@ import EditProduct from '~/pages/Product/editproduct';
 // Inventory
 import Inventory from '~/pages/Inventory/index';
 import InventoryCreate from '~/pages/Inventory/create';
-import InventoryEdit from '~/pages/Inventory/edit';
 
 // Order
 import Order from '~/pages/Order/index';
@@ -34,6 +33,10 @@ import User from '~/pages/User/index';
 import UserCreate from '~/pages/User/create';
 import UserEdit from '~/pages/User/edit';
 import UserDetail from '~/pages/User/userdetail';
+
+// Trash
+import TrashCategory from '~/pages/Trash/category';
+import TrashProduct from '~/pages/Trash/product';
 
 // Public routes
 export const publicRoutes = [
@@ -57,7 +60,6 @@ export const publicRoutes = [
     // Inventory
     {path: config.routes.inventory, component: Inventory, layout: AdminLayout},
     {path: config.routes.createInventory, component: InventoryCreate, layout: AdminLayout},
-    {path: config.routes.editInventory, component: InventoryEdit, layout: AdminLayout},
 
     // Order
     {path: config.routes.orders, component: Order, layout: AdminLayout},
@@ -72,6 +74,9 @@ export const publicRoutes = [
     { path: config.routes.editUsers, component: UserEdit, layout: AdminLayout },
     { path: config.routes.userdetail, component: UserDetail, layout: AdminLayout },
 
+    // Trash
+    {path: config.routes.trashCategories, component: TrashCategory, layout: AdminLayout},
+    {path: config.routes.trashProducts, component: TrashProduct, layout: AdminLayout},
 ];
 
 // Private routes

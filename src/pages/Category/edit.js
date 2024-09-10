@@ -18,7 +18,7 @@ function EditCategory() {
         const fetchData = async () => {
             try {
                 const result = await axios.get(`http://localhost:8082/api/v1/categories/${id}`);
-                setData(result.data);
+                setData(result.data.data);
             } catch (error) {
                 toast.error('Failed to fetch category data');
                 console.error('Fetch error:', error);
@@ -32,6 +32,7 @@ function EditCategory() {
 
         try {
             await axios.put(`http://localhost:8082/api/v1/categories/${id}`, {
+                categoryId: data.categoryId,
                 categoryName: data.categoryName,
                 description: data.description,
             });
@@ -65,6 +66,18 @@ function EditCategory() {
                             <h4 className="card-title">Basic form elements</h4>
                             <p className="card-description">Edit the category details below</p>
                             <form className="forms-sample" onSubmit={handleUpdate}>
+                                <div className="form-group">
+                                    <label htmlFor="exampleInputName1">Id</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="exampleInputName1"
+                                        placeholder="Id"
+                                        disabled
+                                        value={data.categoryId}
+                                        onChange={(e) => setData({ ...data, categoryId: e.target.value })}
+                                    />
+                                </div>
                                 <div className="form-group">
                                     <label htmlFor="exampleInputName1">Name</label>
                                     <input

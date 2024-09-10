@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import './Product.css';
+// import './Product.css';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 

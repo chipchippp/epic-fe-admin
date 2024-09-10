@@ -10,7 +10,8 @@ function ManageInventory() {
   const [data, setData] = useState({
     productId: '',
     quantity: '',
-    type: '',
+    status: '',
+    reason: '',
   });
 
   const navigate = useNavigate();
@@ -35,15 +36,13 @@ function ManageInventory() {
       await axios.post('http://localhost:8888/api/v1/inventory', {
         productId: data.productId,
         quantity: data.quantity,
-        type: data.type
+        status: data.status,
+        reason: data.reason
       });
-      console.log(data);
       toast.success('Inventory create successfully');
       navigate('/inventory');
     } catch (error) {
-      console.log(data);
-      console.error(error.response?.data);
-      toast.error('Failed to update inventory');
+      toast.error('Failed to create inventory');
     }
   };
 
@@ -70,7 +69,7 @@ function ManageInventory() {
                     <option>Select product</option>
                     {products.map((product) => (
                       <option key={product.id} value={product.id}>
-                        {product.name}
+                        {product.id}
                       </option>                    
                     ))}
                   </select>
@@ -87,17 +86,26 @@ function ManageInventory() {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="type">Type</label>
-                  <select
+                  <label htmlFor="status">Status</label>
+                  <input
+                    type="text"
                     className="form-control"
-                    id="type"
-                    value={data.type}
-                    onChange={(e) => setData({ ...data, type: e.target.value })}
-                  >
-                    <option value="">Select type</option>
-                    <option value="IN">IN</option>
-                    <option value="OUT">OUT</option>
-                  </select>
+                    id="status"
+                    placeholder="status"
+                    value={data.status}
+                    onChange={(e) => setData({ ...data, status: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="reason">Reason</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="reason"
+                    placeholder="reason"
+                    value={data.reason}
+                    onChange={(e) => setData({ ...data, reason: e.target.value })}
+                  />
                 </div>
                 <button type="submit" className="btn btn-primary mr-2">
                   Save

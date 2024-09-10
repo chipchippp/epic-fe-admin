@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal } from 'react-bootstrap';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -13,7 +12,7 @@ function Order() {
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [limit, setLimit] = useState(15);
+    const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
@@ -38,7 +37,6 @@ function Order() {
 
     useEffect(() => {
         const fetchOrder = async () => {
-            setLoading(true);
             try {
                 const response = await axios.get(`http://localhost:8084/api/v1/orders?page=${currentPage}&limit=${limit}`);
                 console.log('response', response.data.data.content);
@@ -75,9 +73,6 @@ function Order() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">Orders</h3>
-                                <Link to="/Orders/create" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
                             </div>
                         </div>
                     </div>
@@ -97,12 +92,11 @@ function Order() {
                                                 onChange={handleStatusChange}
                                             >
                                                 <option value="">All</option>
-                                                <option value="CREATED">Created</option>
                                                 <option value="PENDING">Pending</option>
                                                 <option value="PROCESSING">Processing</option>
                                                 <option value="ONDELIVERY">On Delivery</option>
                                                 <option value="DELIVERED">Delivered</option>
-                                                <option value="CANCEL">Cancelled</option>
+                                                <option value="CANCEL">Cancel</option>
                                                 <option value="COMPLETE">Complete</option>
                                             </select>
                                         </div>
@@ -123,8 +117,8 @@ function Order() {
                                                         <th>OrderCode</th>
                                                         <th>FirstName</th>
                                                         <th>Total Price</th>
-                                                        <th>Status</th>
                                                         <th>Created At</th>
+                                                        <th>Status</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -135,10 +129,8 @@ function Order() {
                                                             <td>{item.id}</td>
                                                             <td>{item.firstName}</td>
                                                             <td>{item.totalPrice}</td>
+                                                            <td>{item.createdAt}</td>
                                                             <td>
-                                                                {item.status === "CREATED" && (
-                                                                    <div className="badge badge-warning">Created</div>
-                                                                )}
                                                                 {item.status === "PENDING" && (
                                                                     <div className="badge badge-secondary">Pending</div>
                                                                 )}
@@ -152,14 +144,12 @@ function Order() {
                                                                     <div className="badge badge-success">Delivered</div>
                                                                 )}
                                                                 {item.status === "CANCEL" && (
-                                                                    <div className="badge badge-danger">Cancelled</div>
+                                                                    <div className="badge badge-danger">Cancel</div>
                                                                 )}
                                                                 {item.status === "COMPLETE" && (
                                                                     <div className="badge badge-success">Complete</div>
                                                                 )}
                                                             </td>
-                                                            <td>{item.createdAt}</td>
-
                                                             <td>
                                                                 <Link
                                                                     to={`/order/detail/${item.id}`}

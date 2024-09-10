@@ -3,6 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from 'axios';
+import { Colors } from 'chart.js';
 
 function OrderDetail() {
     const [products, setProducts] = useState([]);
@@ -32,7 +33,6 @@ function OrderDetail() {
         const fetchData = async () => {
             try {
                 const result = await axios.get(`http://localhost:8084/api/v1/orders/${id}`);
-                console.log('result', result.data.data);
                 setData(result.data.data);
                 setProducts(result.data.data.orderDetails);
                 setLoading(false);
@@ -76,7 +76,6 @@ function OrderDetail() {
     };
     const getSelectableOptions = () => {
         const options = [
-            { value: 'CREATED', label: 'Created' },
             { value: 'PENDING', label: 'Pending' },
             { value: 'PROCESSING', label: 'Processing' },
             { value: 'ONDELIVERY', label: 'On Delivery' },
@@ -86,8 +85,6 @@ function OrderDetail() {
         ];
    
         switch (data.status) {
-            case 'CREATED':
-                return options.filter((option) => ['CREATED','PENDING', 'PROCESSING', 'CANCEL'].includes(option.value));
             case 'PENDING':
                 return options.filter((option) => ['PENDING','PROCESSING', 'CANCEL'].includes(option.value));
             case 'PROCESSING':
@@ -114,10 +111,6 @@ function OrderDetail() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">Order Details</h3>
-                                <h6 className="font-weight-normal mb-0">
-                                    All systems are running smoothly! You have
-                                    <span className="text-primary"> 3 unread alerts!</span>
-                                </h6>
                             </div>
                         </div>
                     </div>
@@ -130,8 +123,7 @@ function OrderDetail() {
                                     <div className="row">
                                         <div className="col-lg-12">
                                             <div className="invoice-title">
-                                                <h4>Order #{id}</h4>
-                                            </div>
+                                            <h4>Order <span style={{ color: 'gray' }}>#{id}</span></h4>                                            </div>
                                             <hr />
                                             <div className="row">
                                                 <div className="col-md-6">
@@ -181,8 +173,6 @@ function OrderDetail() {
                         </form>
                                             <div className="row mt-4">
                                                 <div className="col-md-12">
-                                                    <div className="section-title">Order Summary</div>
-                                                    <p className="section-lead">All items here cannot be deleted.</p>
                                                     <div className="table-responsive">
                                                         <table className="table table-striped table-hover table-md">
                                                             <thead>
@@ -197,25 +187,30 @@ function OrderDetail() {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                {Array.isArray(products) && products.map((item, index) => (
-                                                                    <tr key={index}>
-                                                                        <td>{index + 1}</td>
-                                                                        <td>
-                                                                            <img
-                                                                                src={item.product.image}
-                                                                                alt={item.product.name}
-                                                                                className="img-fluid"
-                                                                                style={{ width: '100px' }}
-                                                                            />
-                                                                        </td>
-                                                                        <td>{item.product.name}</td>
-                                                                        <td>{item.product.category.categoryName}</td>
-                                                                        <td>${item.unitPrice}</td>
-                                                                        <td>{item.quantity}</td>
-                                                                        <td>${item.unitPrice * item.quantity}</td>
-                                                                    </tr>
-                                                                ))}
-                                                            </tbody>
+    {Array.isArray(products) && products.map((item, index) => (
+        <tr key={index}>
+            <td>{index + 1}</td>
+            <td>
+    {item.product && item.product.images && item.product.images.length > 0 ? (
+        <img 
+            src={`http://localhost:8082/api/v1/product-images/images/${item.product.images[0].imageUrl}`}
+            alt={item.product.name} 
+            style={{ width: '70px', height: '70px', borderRadius: '0px' }} 
+        />
+    ) : (
+        'No Image'
+    )}
+</td>
+
+            <td>{item.product.name}</td>
+            <td>{item.product.category.categoryName}</td>
+            <td>${item.unitPrice}</td>
+            <td>{item.quantity}</td>
+            <td>${item.unitPrice * item.quantity}</td>
+        </tr>
+    ))}
+</tbody>
+
                                                         </table>
                                                     </div>
                                                     <div className="row mt-4">
