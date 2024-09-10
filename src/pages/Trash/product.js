@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-// import './Product.css';
+import './Product.css';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 
@@ -12,9 +12,9 @@ function Product() {
     const [priceRange, setPriceRange] = useState([0, 90905.00]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [sortOrder, setSortOrder] = useState('asc');
-    const [limit, setLimit] = useState(10); // Thêm state limit
-    const [currentPage, setCurrentPage] = useState(1); // Thêm state currentPage
-    const [totalPages, setTotalPages] = useState(0); // Thêm state totalPages
+    const [limit, setLimit] = useState(10);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const [search, setSearch] = useState('');
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('');
@@ -23,9 +23,9 @@ function Product() {
         const fetchProducts = async () => {
             try {
                 const response = selectedCategory
-                    ? await fetch(`http://localhost:8082/api/v1/products/category/${selectedCategory}?page=${currentPage}&limit=${limit}&search=${search}`)
-                    : await fetch(`http://localhost:8082/api/v1/products?page=${currentPage}&limit=${limit}&search=${search}`);
-                
+                    ? await fetch(`http://localhost:8082/api/v1/products?category=${selectedCategory}&page=${currentPage}&limit=${limit}&search=${search}`)
+                    : await fetch(`http://localhost:8082/api/v1/products/trash?page=${currentPage}&limit=${limit}&search=${search}`);
+           
                 const data = await response.json();
                 setProducts(data.data.content);
                 setTotalPages(data.data.totalPages);
@@ -33,9 +33,10 @@ function Product() {
                 console.error('Error fetching products:', error);
             }
         };
-
+    
         fetchProducts();
     }, [currentPage, limit, search, selectedCategory]);
+    
 
     useEffect(() => {
         const applyFilters = () => {
@@ -54,7 +55,7 @@ function Product() {
     }, [search, priceRange, products]);
 
     useEffect(() => {
-        fetch('http://localhost:8082/api/v1/categories')
+        fetch('http://localhost:8082/api/v1/categories/trash')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -77,7 +78,7 @@ function Product() {
     const handleDelete = async (productId) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
-                await axios.delete(`http://localhost:8082/api/v1/products/in-trash/${productId}`);
+                await axios.delete(`http://localhost:8082/api/v1/products/${productId}`);
                 setProducts(products.filter(product => product.productId !== productId));
                 alert('Product deleted successfully');
             } catch (error) {
@@ -93,23 +94,21 @@ function Product() {
         }
     };
 
-    const handleSort = (order) => {
-        setSortOrder(order);
-    };
-
     const handleLimitChange = (e) => {
         setLimit(e.target.value);
-        setCurrentPage(1); 
+        setCurrentPage(1);
+    };
+
+    const handlePageChange = (page) => {
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     const sortedProducts = [...filteredProducts].sort((a, b) => {
         const priceA = parseFloat(a.price);
         const priceB = parseFloat(b.price);
-        if (sortOrder === 'asc') {
-            return priceA - priceB;
-        } else {
-            return priceB - priceA;
-        }
+        return sortOrder === 'asc' ? priceA - priceB : priceB - priceA;
     });
 
     return (
@@ -119,10 +118,7 @@ function Product() {
                     <div className="col-md-12 grid-margin">
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Products</h3>
-                                <Link to="/addcreate" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
+                                <h3 className="font-weight-bold">Trash Products</h3>
                             </div>
                         </div>
                     </div>
@@ -134,21 +130,22 @@ function Product() {
                                 <div className="filter-product">
                                     <div className="float-left">
                                         <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                            <option value={10}>Show</option>
+                                            <option value={5}>Show</option>
+                                            <option value={10}>10</option>
                                             <option value={20}>20</option>
                                             <option value={30}>30</option>
                                         </select>
                                     </div>
                                     <Search setSearch={setSearch} />
                                     <div className="float-left ml-2">
-    <select onChange={(e) => handleCategoryChange(e.target.value)} className="form-control selectric">
-        <option value="">Sort Categories</option> 
-        {categories.map((category) => (
-            <option key={category.categoryId} value={category.categoryId}>
-                {category.categoryName}
-            </option>
-        ))}
-    </select>
+                                        <select onChange={(e) => handleCategoryChange(e.target.value)} className="form-control selectric">
+                                            <option value="">All</option> 
+                                            {categories.map((category) => (
+                                                <option key={category.categoryId} value={category.categoryId}>
+                                                    {category.categoryName}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </div>
                                     <div className="filter-sort-group">
                                         <div className="filter-container">
@@ -168,12 +165,6 @@ function Product() {
                                                 />
                                             </div>
                                         </div>
-                                        <div className="sort-container">
-    <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
-        <option value="asc">Sort Ascending</option>
-        <option value="desc">Sort Descending</option>
-    </select>
-</div>
                                     </div>
                                 </div>
                                 <div className="table-responsive">
@@ -193,7 +184,9 @@ function Product() {
                                             {sortedProducts.map((item, index) => (
                                                 <tr key={item.productId}>
                                                     <td>{(currentPage - 1) * limit + index + 1}</td>
-                                                    <td> <Link to={`/productdetail/${item.productId}`}>{item.name}</Link></td>
+                                                    <td>
+                                                        <Link to={`/productdetail/${item.productId}`}>{item.name}</Link>
+                                                    </td>
                                                     <td>
                                                         {item.images.length > 0 ? (
                                                             <img src={`http://localhost:8082/api/v1/product-images/images/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
@@ -205,21 +198,13 @@ function Product() {
                                                     <td>{item.category ? item.category.categoryName : 'N/A'}</td>
                                                     <td>{item.stockQuantity}</td>
                                                     <td>
-                                                        <Link
-                                                            to={`/editproduct/${item.productId}`}
-                                                            className="btn btn-primary"
-                                                            title="Edit"
-                                                        >
+                                                        {/* {/* <Link to={`/editproduct/${item.productId}`} className="btn btn-primary" title="Edit">
                                                             <i className="fas fa-pencil-alt"></i>
-                                                        </Link>
+                                                        </Link> */}
                                                         &nbsp;
-                                                        <button
-                                                            className="btn btn-danger"
-                                                            onClick={() => handleDelete(item.productId)}
-                                                            title="Delete"
-                                                        >
+                                                        <button className="btn btn-danger" onClick={() => handleDelete(item.productId)} title="Delete">
                                                             <i className="fas fa-trash"></i>
-                                                        </button>
+                                                        </button> 
                                                     </td>
                                                 </tr>
                                             ))}
@@ -227,9 +212,9 @@ function Product() {
                                     </table>
                                 </div>
                                 <Pagination
-                                    prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                    nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                                    changeCPage={setCurrentPage}
+                                    prePage={() => handlePageChange(currentPage - 1)}
+                                    nextPage={() => handlePageChange(currentPage + 1)}
+                                    changeCPage={handlePageChange}
                                     currentPage={currentPage}
                                     numbers={Array.from({ length: totalPages }, (_, i) => i + 1)}
                                 />

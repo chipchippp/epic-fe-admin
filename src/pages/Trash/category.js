@@ -3,7 +3,6 @@ import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 
@@ -121,21 +120,13 @@ function Category() {
                                                             <td>{item.categoryName}</td>
                                                             <td>{item.description}</td>
                                                             <td>
-                                                                <Link
-                                                                    to={`/category/edit/${item.categoryId}`}
-                                                                    className="btn btn-primary"
-                                                                    title="Edit"
-                                                                >
-                                                                    <i className="fas fa-pencil-alt"></i>
-                                                                </Link>
-                                                                &nbsp;
-                                                                {/* <button
+                                                                <button
                                                                     className="btn btn-danger"
                                                                     onClick={() => handleDelete(item.categoryId)}
-                                                                    title="Delete"
+                                                                    title="Update"
                                                                 >
                                                                     <i className="fas fa-trash"></i>
-                                                                </button> */}
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -158,15 +149,15 @@ function Category() {
                 
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Confirm Delete</Modal.Title>
+                        <Modal.Title>Confirm update</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this category?</Modal.Body>
+                    <Modal.Body>Are you sure you want to update this category?</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel
                         </Button>
                         <Button variant="danger" onClick={handleDeleteConfirm}>
-                            Delete
+                            Update
                         </Button>
                     </Modal.Footer>
                 </Modal>

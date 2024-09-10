@@ -112,7 +112,8 @@ function Inventory() {
                                                         <th>#</th>
                                                         <th>ProductId</th>
                                                         <th>Quantity</th>
-                                                        <th>Type</th>
+                                                        <th>Status</th>
+                                                        <th>Reason</th>
                                                         <th>Date</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -123,7 +124,8 @@ function Inventory() {
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.productId}</td>
                                                             <td>{item.quantity}</td>
-                                                            <td>{item.type}</td>
+                                                            <td>{item.status}</td>
+                                                            <td>{item.reason}</td>
                                                             <td>{item.date}</td>
                                                             <td>
                                                                 <button
