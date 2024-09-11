@@ -9,6 +9,9 @@ import Pagination from '~/layouts/components/Pagination';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './Product.css';
+import debounce from 'lodash.debounce';
+import throttle from 'lodash.throttle';
+
 
 function Product() {
     const [loading, setLoading] = useState(true);
@@ -29,6 +32,22 @@ function Product() {
     const [selectedCategory, setSelectedCategory] = useState('');
 
     useEffect(() => {
+        const applyFilters = () => {
+            const [minPrice, maxPrice] = priceRange;
+            const filteredData = data.filter((item) => {
+                const price = parseFloat(item.price);
+                return (
+                    item.name.toLowerCase().includes(search.toLowerCase()) &&
+                    price >= minPrice && price <= maxPrice
+                );
+            });
+            setFilteredProducts(filteredData);
+        };
+
+        applyFilters();
+    }, [search, priceRange, data]);
+
+    useEffect(() => {
         fetchCategories();
     }, []);
 
@@ -41,7 +60,7 @@ function Product() {
             const response = await axios.get('http://localhost:8082/api/v1/categories');
             setCategories(response.data.data.content);
         } catch (error) {
-            console.error('Error fetching categories:', error.message);
+            toast.error('Failed to fetch categories');
         }
     };
 
@@ -53,19 +72,13 @@ function Product() {
                 sort: `productId:${sortOrder}`,
             };
     
-            // Add product search filter
             if (search) {
                 params.product = `name~${search}`;
             }
     
-            // Add category filter
             if (selectedCategory) {
-                params.categoryId = selectedCategory;  // Change this based on API specification
+                params.categoryId = selectedCategory;
             }
-    
-            // Add price range filter
-            params.minPrice = priceRange[0];
-            params.maxPrice = priceRange[1];
     
             const response = await axios.get('http://localhost:8082/api/v1/products/search-by-specification', { params });
     
@@ -94,8 +107,9 @@ function Product() {
     const handleCategoryChange = (event) => {
         const categoryId = event.target.value;
         setSelectedCategory(categoryId);
-        setCurrentPage(1); // Reset to the first page
+        setCurrentPage(1);
     };
+    
 
     const handleDeleteConfirm = async () => {
         try {
@@ -108,10 +122,14 @@ function Product() {
         }
     };
 
-    const handleSliderChange = (value) => {
+    const debouncedHandleSliderChange = debounce((value) => {
         if (value[0] <= value[1]) {
             setPriceRange(value);
         }
+    }, 300);
+    
+    const handleSliderChange = (value) => {
+        debouncedHandleSliderChange(value);
     };
 
     const handleSort = (order) => {
@@ -123,7 +141,7 @@ function Product() {
     };
 
     const handleLimitChange = (e) => {
-        setLimit(Number(e.target.value));
+        setLimit(e.target.value);
         setCurrentPage(1);
     };
 
@@ -171,7 +189,7 @@ function Product() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="float-left ml-2">
+                                    {/* <div className="float-left ml-2">
                                         <select onChange={handleCategoryChange} className="form-control selectric">
                                             <option value="">All Categories</option>
                                             {categories.map((category) => (
@@ -180,7 +198,7 @@ function Product() {
                                                 </option>
                                             ))}
                                         </select>
-                                    </div>
+                                    </div> */}
                                     <Search setSearch={setSearch} />
                                     <div className="filter-sort-group">
                                         <div className="sort-container">
