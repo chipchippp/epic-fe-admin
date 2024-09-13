@@ -3,7 +3,6 @@ import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 
@@ -35,18 +34,17 @@ function Category() {
 
     const getData = async () => {
         try {
-            const response = await axios.get(`http://localhost:8082/api/v1/categories?page=${currentPage}&limit=${limit}`);
+            const response = await axios.get(`http://localhost:8082/api/v1/categories/trash?page=${currentPage}&limit=${limit}`);
             setData(response.data.data.content);
             setSearchedData(response.data.data.content);
             setTotalPages(response.data.data.totalPages);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching products:', error);
+            toast.error('Failed to category');
             setLoading(false);
         }
     };
     
-
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
@@ -54,7 +52,7 @@ function Category() {
 
     const handleDeleteConfirm = async () => {
         try {
-            await axios.delete(`http://localhost:8082/api/v1/categories/in-trash/${deleteId}`)
+            await axios.delete(`http://localhost:8082/api/v1/categories/${deleteId}`)
             .then(() => {
                 toast.success('CategoryParents has been deleted');
                 handleClose();
@@ -83,9 +81,6 @@ function Category() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">Categories</h3>
-                                <Link to="/category/create" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
                             </div>
                         </div>
                     </div>
@@ -125,18 +120,10 @@ function Category() {
                                                             <td>{item.categoryName}</td>
                                                             <td>{item.description}</td>
                                                             <td>
-                                                                <Link
-                                                                    to={`/category/edit/${item.categoryId}`}
-                                                                    className="btn btn-primary"
-                                                                    title="Edit"
-                                                                >
-                                                                    <i className="fas fa-pencil-alt"></i>
-                                                                </Link>
-                                                                &nbsp;
                                                                 <button
                                                                     className="btn btn-danger"
                                                                     onClick={() => handleDelete(item.categoryId)}
-                                                                    title="Delete"
+                                                                    title="Update"
                                                                 >
                                                                     <i className="fas fa-trash"></i>
                                                                 </button>
@@ -162,15 +149,15 @@ function Category() {
                 
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Confirm Delete</Modal.Title>
+                        <Modal.Title>Confirm update</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this category?</Modal.Body>
+                    <Modal.Body>Are you sure you want to update this category?</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel
                         </Button>
                         <Button variant="danger" onClick={handleDeleteConfirm}>
-                            Delete
+                            Update
                         </Button>
                     </Modal.Footer>
                 </Modal>

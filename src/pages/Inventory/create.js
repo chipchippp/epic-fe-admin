@@ -6,11 +6,11 @@ import axios from 'axios';
 
 function ManageInventory() {
   const [products, setProducts] = useState([]);
-
   const [data, setData] = useState({
     productId: '',
     quantity: '',
-    type: '',
+    status: '', 
+    reason: '',
   });
 
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ function ManageInventory() {
         const productJson = await productData.json();
         setProducts(productJson.data.content);
       } catch (error) {
-      toast.error('Failed to select product');
+        toast.error('Failed to fetch products');
       }
     };
     fetchData();
@@ -33,17 +33,15 @@ function ManageInventory() {
     event.preventDefault();
     try {
       await axios.post('http://localhost:8888/api/v1/inventory', {
-        productId: data.productId,
-        quantity: data.quantity,
-        type: data.type
+        productId: parseInt(data.productId, 10),
+        quantity: parseInt(data.quantity, 10),
+        status: data.status,
+        reason: data.reason,
       });
-      console.log(data);
-      toast.success('Inventory create successfully');
+      toast.success('Inventory created successfully');
       navigate('/inventory');
     } catch (error) {
-      console.log(data);
-      console.error(error.response?.data);
-      toast.error('Failed to update inventory');
+      toast.error('Failed to create inventory');
     }
   };
 
@@ -61,43 +59,49 @@ function ManageInventory() {
               <h4 className="card-title">Inventory Form</h4>
               <form className="forms-sample" onSubmit={handleSave}>
                 <div className="form-group">
-                  <label className="col-form-label text-md-right">Product</label>
+                  <label>Product</label>
                   <select
-                    className="form-control selectric"
-                    value={data.productId}
-                    onChange={(e) => setData({ ...data, productId: e.target.value })}
-                  >
-                    <option>Select product</option>
-                    {products.map((product) => (
-                      <option key={product.id} value={product.id}>
-                        {product.name}
-                      </option>                    
-                    ))}
-                  </select>
+  className="form-control selectric"
+  value={data.productId}
+  onChange={(e) => setData({ ...data, productId: e.target.value })}
+>
+  <option value="">Select product</option>
+  {products.map((product) => (
+    <option key={product.productId} value={product.productId}>
+      {product.name}
+    </option>
+  ))}
+</select>
                 </div>
                 <div className="form-group">
-                  <label htmlFor="quantity">Quantity</label>
+                  <label>Quantity</label>
                   <input
                     type="number"
                     className="form-control"
-                    id="quantity"
                     placeholder="Quantity"
                     value={data.quantity}
                     onChange={(e) => setData({ ...data, quantity: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="type">Type</label>
-                  <select
+                  <label>Status</label>
+                  <input
+                    type="text"
                     className="form-control"
-                    id="type"
-                    value={data.type}
-                    onChange={(e) => setData({ ...data, type: e.target.value })}
-                  >
-                    <option value="">Select type</option>
-                    <option value="IN">IN</option>
-                    <option value="OUT">OUT</option>
-                  </select>
+                    placeholder="Status"
+                    value={data.status}
+                    onChange={(e) => setData({ ...data, status: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="reason">Reason</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Reason"
+                    value={data.reason}
+                    onChange={(e) => setData({ ...data, reason: e.target.value })}
+                  />
                 </div>
                 <button type="submit" className="btn btn-primary mr-2">
                   Save

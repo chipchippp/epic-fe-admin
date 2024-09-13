@@ -85,14 +85,12 @@ const ProductDetail = () => {
           <tr>
             <th>Images</th>
             <td>
-              {product.images.length > 0 ? (
-                product.images.map((image, index) => (
-                  <img key={index} src={`http://localhost:8082/api/v1/product-images/images/${image.imageUrl}`} alt={product.name} style={{ width: '100px', height: '100px', marginRight: '10px',borderRadius: '0px' }} />
-                ))
-              ) : (
-                <p>No Images</p>
-              )}
-            </td>
+                                                        {product.images > 0 ? (
+                                                            <img src={`http://localhost:8082/api/v1/product-images/images/${product.images[0].imageUrl}`} alt={product.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                        ) : (
+                                                            'No Image'
+                                                        )}
+                                                    </td>
           </tr>
         </tbody>
       </table>
