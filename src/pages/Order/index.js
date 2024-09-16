@@ -5,6 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
+import { getOrders } from '~/services/Orders/orderService';
 
 function Order() {
     const [loading, setLoading] = useState(true);
@@ -38,11 +39,10 @@ function Order() {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const response = await axios.get(`http://localhost:8084/api/v1/orders?page=${currentPage}&limit=${limit}`);
-                console.log('response', response.data.data.content);
-                setData(response.data.data.content);
-                setSearchedData(response.data.data.content);
-                setTotalPages(response.data.data.totalPages);
+                const response = await getOrders(currentPage, limit);
+                setData(response.data.content);
+                setSearchedData(response.data.content);
+                setTotalPages(response.data.totalPages);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching products:', error);

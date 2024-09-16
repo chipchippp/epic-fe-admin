@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import axios from 'axios';
-import { Colors } from 'chart.js';
+import { editOrders, updateOrders } from '~/services/Orders/orderService';
 
 function OrderDetail() {
     const [products, setProducts] = useState([]);
@@ -32,9 +31,9 @@ function OrderDetail() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await axios.get(`http://localhost:8084/api/v1/orders/${id}`);
-                setData(result.data.data);
-                setProducts(result.data.data.orderDetails);
+                const result = await editOrders(id);
+                setData(result.data);
+                setProducts(result.data.orderDetails);
                 setLoading(false);
             } catch (error) {
                 toast.error('Failed to fetch order data');
@@ -45,22 +44,18 @@ function OrderDetail() {
         fetchData();
     }, [id]);
 
-    const handleUpdate = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const result = await axios.put(`http://localhost:8084/api/v1/orders/changeStatus/${id}`, null, {
-                params: { status: tempStatus },
-            });
+            await updateOrders(id, tempStatus);
             toast.success('Order status updated successfully');
             navigate(`/order/detail/${id}`);
             window.location.reload();
-        }
-        catch (error) {
+        } catch (error) {
             toast.error('Failed to update order status');
             console.error('Update error:', error);
         }
     };
-    
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -74,6 +69,7 @@ function OrderDetail() {
             hour12: true,
         });
     };
+
     const getSelectableOptions = () => {
         const options = [
             { value: 'PENDING', label: 'Pending' },
@@ -83,21 +79,20 @@ function OrderDetail() {
             { value: 'COMPLETE', label: 'Complete' },
             { value: 'CANCEL', label: 'Cancel' },
         ];
-   
+
         switch (data.status) {
             case 'PENDING':
-                return options.filter((option) => ['PENDING','PROCESSING', 'CANCEL'].includes(option.value));
+                return options.filter((option) => ['PENDING', 'PROCESSING', 'CANCEL'].includes(option.value));
             case 'PROCESSING':
-                return options.filter((option) => ['PROCESSING','ONDELIVERY'].includes(option.value));
+                return options.filter((option) => ['PROCESSING', 'ONDELIVERY'].includes(option.value));
             case 'ONDELIVERY':
-                return options.filter((option) => ['ONDELIVERY','DELIVERED'].includes(option.value));
+                return options.filter((option) => ['ONDELIVERY', 'DELIVERED'].includes(option.value));
             case 'DELIVERED':
-                return options.filter((option) => ['DELIVERED','COMPLETE'].includes(option.value));
+                return options.filter((option) => ['DELIVERED', 'COMPLETE'].includes(option.value));
             default:
                 return options;
         }
     };
-   
 
     if (loading) {
         return <div>Loading...</div>;
@@ -111,6 +106,9 @@ function OrderDetail() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">Order Details</h3>
+                                <Link to="/order" className="btn btn-primary mb-3">
+                                    <i className="fas fa-plus"></i> Back
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -123,7 +121,8 @@ function OrderDetail() {
                                     <div className="row">
                                         <div className="col-lg-12">
                                             <div className="invoice-title">
-                                            <h4>Order <span style={{ color: 'gray' }}>#{id}</span></h4>                                            </div>
+                                                <h4>Order <span style={{ color: 'gray' }}>#{id}</span></h4>
+                                            </div>
                                             <hr />
                                             <div className="row">
                                                 <div className="col-md-6">
@@ -146,31 +145,30 @@ function OrderDetail() {
                                                     </address>
                                                 </div>
                                             </div>
-                                            <form onSubmit={handleUpdate}>
-                            <div className="row mb-4">
-                                <div className="col-md-2">
-                                <select
-    className="form-control"
-    id="status"
-    value={tempStatus}
-    onChange={(e) => setTempStatus(e.target.value)}
-    disabled={ data.status === 'COMPLETE' || data.status === 'CANCEL'}
->
-    {getSelectableOptions().map((option) => (
-        <option key={option.value} value={option.value}>
-            {option.label}
-        </option>
-    ))}
-</select>
-
-                                </div>
-                                <div className="col-md-6">
-                                    <button className="btn btn-primary" type="submit">
-                                        Update Status
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
+                                            <form onSubmit={handleSubmit}>
+                                                <div className="row mb-4">
+                                                    <div className="col-md-2">
+                                                        <select
+                                                            className="form-control"
+                                                            id="status"
+                                                            value={tempStatus}
+                                                            onChange={(e) => setTempStatus(e.target.value)}
+                                                            disabled={data.status === 'COMPLETE' || data.status === 'CANCEL'}
+                                                        >
+                                                            {getSelectableOptions().map((option) => (
+                                                                <option key={option.value} value={option.value}>
+                                                                    {option.label}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+                                                    <div className="col-md-6">
+                                                        <button className="btn btn-primary" type="submit">
+                                                            Update Status
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                             <div className="row mt-4">
                                                 <div className="col-md-12">
                                                     <div className="table-responsive">
@@ -187,30 +185,28 @@ function OrderDetail() {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-    {Array.isArray(products) && products.map((item, index) => (
-        <tr key={index}>
-            <td>{index + 1}</td>
-            <td>
-    {item.product && item.product.images && item.product.images.length > 0 ? (
-        <img 
-            src={`http://localhost:8082/api/v1/product-images/images/${item.product.images[0].imageUrl}`}
-            alt={item.product.name} 
-            style={{ width: '70px', height: '70px', borderRadius: '0px' }} 
-        />
-    ) : (
-        'No Image'
-    )}
-</td>
-
-            <td>{item.product.name}</td>
-            <td>{item.product.category.categoryName}</td>
-            <td>${item.unitPrice}</td>
-            <td>{item.quantity}</td>
-            <td>${item.unitPrice * item.quantity}</td>
-        </tr>
-    ))}
-</tbody>
-
+                                                                {Array.isArray(products) && products.map((item, index) => (
+                                                                    <tr key={index}>
+                                                                        <td>{index + 1}</td>
+                                                                        <td>
+                                                                            {item.product && item.product.images && item.product.images.length > 0 ? (
+                                                                                <img
+                                                                                    src={`http://localhost:8080/api/v1/product-images/images/${item.product.images[0].imageUrl}`}
+                                                                                    alt={item.product.name}
+                                                                                    style={{ width: '70px', height: '70px', borderRadius: '0px' }}
+                                                                                />
+                                                                            ) : (
+                                                                                'No Image'
+                                                                            )}
+                                                                        </td>
+                                                                        <td>{item.product.name}</td>
+                                                                        <td>{item.product.category.categoryName}</td>
+                                                                        <td>${item.unitPrice}</td>
+                                                                        <td>{item.quantity}</td>
+                                                                        <td>${item.unitPrice * item.quantity}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
                                                         </table>
                                                     </div>
                                                     <div className="row mt-4">
