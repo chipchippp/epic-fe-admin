@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
+import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
+import { getTrashCategory, deleteCategory } from '~/services/Category/categoryService';
 
 function Category() {
     const [loading, setLoading] = useState(true);
@@ -32,19 +33,23 @@ function Category() {
             getData();
         }, [currentPage, limit]);
 
-    const getData = async () => {
-        try {
-            const response = await axios.get(`http://localhost:8082/api/v1/categories/trash?page=${currentPage}&limit=${limit}`);
-            setData(response.data.data.content);
-            setSearchedData(response.data.data.content);
-            setTotalPages(response.data.data.totalPages);
-            setLoading(false);
-        } catch (error) {
-            toast.error('Failed to category');
-            setLoading(false);
-        }
-    };
-    
+        const getData = async () => {
+            try {
+                const response = await getTrashCategory(currentPage, limit);
+        
+                if (response && response.data && response.data.content) {
+                    setData(response.data.content);
+                    setSearchedData(response.data.content);
+                    setTotalPages(response.data.totalPages);
+                } else {
+                    toast.error('Invalid response structure from server');
+                }
+                setLoading(false);
+            } catch (error) {
+                toast.error('Failed to fetch categories');
+            }
+        };
+        
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
@@ -52,7 +57,7 @@ function Category() {
 
     const handleDeleteConfirm = async () => {
         try {
-            await axios.delete(`http://localhost:8082/api/v1/categories/${deleteId}`)
+            deleteCategory(deleteId)
             .then(() => {
                 toast.success('CategoryParents has been deleted');
                 handleClose();
@@ -80,7 +85,7 @@ function Category() {
                     <div className="col-md-12 grid-margin">
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Categories</h3>
+                                <h3 className="font-weight-bold">Trash Categories</h3>
                             </div>
                         </div>
                     </div>
@@ -120,10 +125,18 @@ function Category() {
                                                             <td>{item.categoryName}</td>
                                                             <td>{item.description}</td>
                                                             <td>
+                                                                <Link
+                                                                    to={`/category/edit/${item.categoryId}`}
+                                                                    className="btn btn-primary"
+                                                                    title="Edit"
+                                                                >
+                                                                    <i className="fas fa-pencil-alt"></i>
+                                                                </Link>
+                                                                &nbsp;
                                                                 <button
                                                                     className="btn btn-danger"
                                                                     onClick={() => handleDelete(item.categoryId)}
-                                                                    title="Update"
+                                                                    title="Delete"
                                                                 >
                                                                     <i className="fas fa-trash"></i>
                                                                 </button>
@@ -149,15 +162,15 @@ function Category() {
                 
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Confirm update</Modal.Title>
+                        <Modal.Title>Confirm Delete</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Are you sure you want to update this category?</Modal.Body>
+                    <Modal.Body>Are you sure you want to delete this category?</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel
                         </Button>
                         <Button variant="danger" onClick={handleDeleteConfirm}>
-                            Update
+                            Delete
                         </Button>
                     </Modal.Footer>
                 </Modal>

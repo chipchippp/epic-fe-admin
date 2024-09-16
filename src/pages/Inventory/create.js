@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import { createInventory } from '~/services/Inventory/inventoryService';
 
 function ManageInventory() {
   const [products, setProducts] = useState([]);
@@ -18,7 +18,7 @@ function ManageInventory() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const productData = await fetch('http://localhost:8082/api/v1/products?page=1&limit=100');
+        const productData = await fetch('http://localhost:8080/api/v1/products/getAll?page=1&limit=100');
         const productJson = await productData.json();
         setProducts(productJson.data.content);
       } catch (error) {
@@ -32,16 +32,16 @@ function ManageInventory() {
   const handleSave = async (event) => {
     event.preventDefault();
     try {
-      await axios.post('http://localhost:8888/api/v1/inventory', {
-        productId: parseInt(data.productId, 10),
-        quantity: parseInt(data.quantity, 10),
-        status: data.status,
-        reason: data.reason,
-      });
+      const inventoryData = {
+        ...data,
+        productId: Number(data.productId),
+        quantity: Number(data.quantity), 
+      };
+      await createInventory(inventoryData);
       toast.success('Inventory created successfully');
       navigate('/inventory');
     } catch (error) {
-      toast.error('Failed to create inventory');
+      toast.error(`Failed to create inventory: ${error.message}`);
     }
   };
 
@@ -51,6 +51,9 @@ function ManageInventory() {
         <div className="row">
           <div className="col-md-12 grid-margin">
             <h3 className="font-weight-bold">Manage Inventory</h3>
+            <Link to="/inventory" className="btn btn-primary mb-3">
+                    <i className="fas fa-plus"></i> Back
+            </Link>
           </div>
         </div>
         <div className="col-12 grid-margin stretch-card">
@@ -61,17 +64,17 @@ function ManageInventory() {
                 <div className="form-group">
                   <label>Product</label>
                   <select
-  className="form-control selectric"
-  value={data.productId}
-  onChange={(e) => setData({ ...data, productId: e.target.value })}
->
-  <option value="">Select product</option>
-  {products.map((product) => (
-    <option key={product.productId} value={product.productId}>
-      {product.name}
-    </option>
-  ))}
-</select>
+                    className="form-control selectric"
+                    value={data.productId}
+                    onChange={(e) => setData({ ...data, productId: e.target.value })}
+                  >
+                    <option value="">Select product</option>
+                    {products.map((product) => (
+                      <option key={product.productId} value={product.productId}>
+                        {product.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
                 <div className="form-group">
                   <label>Quantity</label>
