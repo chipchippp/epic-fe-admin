@@ -8,11 +8,10 @@ const ProductDetail = () => {
   const [error, setError] = useState(null); // Khai báo state cho error
   const [loading, setLoading] = useState(true); // Khai báo state cho loading
 
-  console.log('productId', id);
   useEffect(() => {
     const fetchProduct = async () => {
         try {
-            const response = await axios.get(`http://localhost:8082/api/v1/products/${id}`);
+            const response = await axios.get(`http://localhost:8080/api/v1/products/${id}`);
             setProduct(response.data);
         } catch (error) {
             setError('Failed to fetch product details');
@@ -34,7 +33,9 @@ const ProductDetail = () => {
           <div className="row">
             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
               <h2 className="font-weight-bold">{product.name}</h2>
-              
+                <Link to="/product" className="btn btn-primary mb-3">
+                    <i className="fas fa-plus"></i> Back
+                </Link>
             </div>
           </div>
         </div>
@@ -86,7 +87,7 @@ const ProductDetail = () => {
             <th>Images</th>
             <td>
                                                         {product.images > 0 ? (
-                                                            <img src={`http://localhost:8082/api/v1/product-images/images/${product.images[0].imageUrl}`} alt={product.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                            <img src={`http://localhost:8080/api/v1/product-images/images/${product.images[0].imageUrl}`} alt={product.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
                                                         ) : (
                                                             'No Image'
                                                         )}

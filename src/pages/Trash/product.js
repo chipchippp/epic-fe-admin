@@ -23,8 +23,8 @@ function Product() {
         const fetchProducts = async () => {
             try {
                 const response = selectedCategory
-                    ? await fetch(`http://localhost:8082/api/v1/products?category=${selectedCategory}&page=${currentPage}&limit=${limit}&search=${search}`)
-                    : await fetch(`http://localhost:8082/api/v1/products/trash?page=${currentPage}&limit=${limit}&search=${search}`);
+                    ? await fetch(`http://localhost:8080/api/v1/products?category=${selectedCategory}&page=${currentPage}&limit=${limit}&search=${search}`)
+                    : await fetch(`http://localhost:8080/api/v1/products/trash?page=${currentPage}&limit=${limit}&search=${search}`);
            
                 const data = await response.json();
                 setProducts(data.data.content);
@@ -55,7 +55,7 @@ function Product() {
     }, [search, priceRange, products]);
 
     useEffect(() => {
-        fetch('http://localhost:8082/api/v1/categories/trash')
+        fetch('http://localhost:8080/api/v1/categories/trash')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -78,7 +78,7 @@ function Product() {
     const handleDelete = async (productId) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
-                await axios.delete(`http://localhost:8082/api/v1/products/${productId}`);
+                await axios.delete(`http://localhost:8080/api/v1/products/${productId}`);
                 setProducts(products.filter(product => product.productId !== productId));
                 alert('Product deleted successfully');
             } catch (error) {

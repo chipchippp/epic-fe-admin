@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
@@ -10,8 +9,7 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import './Product.css';
 import debounce from 'lodash.debounce';
-import throttle from 'lodash.throttle';
-
+import { getFilteredProducts, deleteProduct, getCategories } from '~/services/Product/productService';
 
 function Product() {
     const [loading, setLoading] = useState(true);
@@ -57,8 +55,8 @@ function Product() {
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get('http://localhost:8082/api/v1/categories');
-            setCategories(response.data.data.content);
+            const response = await getCategories();
+            setCategories(response.data.content);
         } catch (error) {
             toast.error('Failed to fetch categories');
         }
@@ -75,32 +73,17 @@ function Product() {
             if (search) {
                 params.product = `name~${search}`;
             }
-    
+
             if (selectedCategory) {
                 params.categoryId = selectedCategory;
             }
     
-            const response = await axios.get('http://localhost:8082/api/v1/products/search-by-specification', { params });
-    
-            setData(response.data.data.content);
-    
-            const totalItems = response.data.data.totalElements;
-            const totalPages = Math.ceil(totalItems / limit);
-            setTotalPages(totalPages);
-            const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
-            setNumbers(pagesArray);
-    
-            setFilteredProducts(response.data.data.content);
-            setLoading(false);
+            const response = await getFilteredProducts(params);
+            setData(response.data.content);
+            setTotalPages(response.data.totalPages);
+            setNumbers([...Array(response.data.totalPages).keys()].map(i => i + 1));
         } catch (error) {
-            setLoading(false);
-            if (error.response) {
-                toast.error(`Server error: ${error.response.data.message || error.response.statusText}`);
-            } else if (error.request) {
-                toast.error('No response from the server. Please check the server or try again later.');
-            } else {
-                toast.error('Unexpected error occurred while fetching data. Please try again.');
-            }
+            toast.error('Failed to fetch products');
         }
     };
 
@@ -109,14 +92,13 @@ function Product() {
         setSelectedCategory(categoryId);
         setCurrentPage(1);
     };
-    
 
     const handleDeleteConfirm = async () => {
         try {
-            await axios.delete(`http://localhost:8082/api/v1/products/in-trash/${deleteId}`);
-            toast.success('Product has been deleted');
-            handleClose();
-            setData(prevData => prevData.filter(product => product.productId !== deleteId));
+            await deleteProduct(deleteId);
+            setDeleteShow(false);
+            toast.success('Product deleted successfully');
+            getFilteredData();
         } catch (error) {
             toast.error('Failed to delete product');
         }
@@ -131,6 +113,10 @@ function Product() {
     const handleSliderChange = (value) => {
         debouncedHandleSliderChange(value);
     };
+
+    const handleSearch = useCallback(debounce((value) => {
+        setSearch(value);
+    }, 500), []);
 
     const handleSort = (order) => {
         setSortOrder(order);
@@ -189,7 +175,7 @@ function Product() {
                                             />
                                         </div>
                                     </div>
-                                    {/* <div className="float-left ml-2">
+                                     <div className="float-left ml-2">
                                         <select onChange={handleCategoryChange} className="form-control selectric">
                                             <option value="">All Categories</option>
                                             {categories.map((category) => (
@@ -198,8 +184,8 @@ function Product() {
                                                 </option>
                                             ))}
                                         </select>
-                                    </div> */}
-                                    <Search setSearch={setSearch} />
+                                    </div>
+                                    <Search setSearch={handleSearch} />
                                     <div className="filter-sort-group">
                                         <div className="sort-container">
                                             <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
@@ -213,7 +199,7 @@ function Product() {
                                     <table className="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Product ID</th>
+                                                <th>Id</th>
                                                 <th>Name</th>
                                                 <th>Images</th>
                                                 <th>Price</th>
@@ -231,7 +217,7 @@ function Product() {
                                                     </td>
                                                     <td>
                                                         {item.images.length > 0 ? (
-                                                            <img src={`http://localhost:8082/api/v1/product-images/images/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                            <img src={`http://localhost:8080/api/v1/product-images/images/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
                                                         ) : (
                                                             'No Image'
                                                         )}

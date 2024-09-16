@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { editProduct, updateProduct, getCategories } from '~/services/Product/productService';
+import { toast } from 'react-toastify';
 
 const EditProduct = () => {
     const navigate = useNavigate();
@@ -15,27 +16,31 @@ const EditProduct = () => {
 
     useEffect(() => {
         const fetchProduct = async () => {
+            setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:8082/api/v1/products/${id}`);
-                setProduct(response.data.data);
-                setImagesOld(response.data.data.images || []);
-                console.log(response.data.data);
+                const response = await editProduct(id);
+                const productData = response.data;
+                if (productData.category && productData.category.categoryId) {
+                    productData.categoryId = productData.category.categoryId;
+                }
+                setProduct(productData);
+                setImagesOld(productData.images || []);
             } catch (error) {
                 setError('Failed to fetch product details');
             } finally {
                 setLoading(false);
             }
         };
-
+    
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('http://localhost:8082/api/v1/categories');
-                setCategories(response.data.data.content || []);
+                const response = await getCategories();
+                setCategories(response.data.content || []);
             } catch (error) {
-                setError('Failed to fetch categories');
+                toast('Failed to fetch categories');
             }
         };
-
+    
         fetchProduct();
         fetchCategories();
     }, [id]);
@@ -82,26 +87,21 @@ const EditProduct = () => {
         try {
             const updatedProduct = {
                 ...product,
-                categoryId: product.category.categoryId,
-                images: imagesOld,
+                categoryId: product.categoryId || (product.category && product.category.categoryId),
             };
-
+    
             const formData = new FormData();
             formData.append('productDTO', new Blob([JSON.stringify(updatedProduct)], { type: 'application/json' }));
-
+    
             if (selectedFiles.length > 0) {
                 selectedFiles.forEach((file) => formData.append('files', file));
             }
-
-            await axios.put(`http://localhost:8082/api/v1/products/${id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
+    
+            await updateProduct(id, formData);
+    
             navigate('/product');
         } catch (error) {
-            alert('Failed to update product');
+            toast('Failed to update product');
         }
     };
 
@@ -118,6 +118,9 @@ const EditProduct = () => {
             <div className="row">
                 <div className="col-md-12 grid-margin">
                     <h2 className="font-weight-bold">{product.name}</h2>
+                <Link to="/product" className="btn btn-primary mb-3">
+                    <i className="fas fa-plus"></i> Back
+                </Link>
                 </div>
             </div>
             <div className="col-12 grid-margin stretch-card">
@@ -166,7 +169,7 @@ const EditProduct = () => {
                                     <select
                                         name="categoryId"
                                         className="form-control"
-                                        value={product.category.categoryId}
+                                        value={product.category?.categoryId || ''}
                                         onChange={handleCategoryChange}
                                         required
                                     >
