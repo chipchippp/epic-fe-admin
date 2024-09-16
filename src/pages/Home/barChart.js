@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import dayjs from 'dayjs';
+import { getAllOrders } from '~/services/Orders/orderService';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -12,13 +13,14 @@ const BarChart = () => {
     useEffect(() => {
         const fetchChartData = async () => {
             try {
-                const response = await fetch('http://localhost:8084/api/v1/orders?page=1&limit=1000');
+                const response = await getAllOrders();
                 if (!response.ok) {
                     throw new Error('Failed to fetch chart data');
                 }
                 const jsonData = await response.json();
                 const filteredData = jsonData.data.content.filter((order) => order.status === "COMPLETE");
 
+                console.log('filteredData:', filteredData);
                 const processData = (data, format, unit, totalUnits, fixedLabels) => {
                     const latestOrderDate = data.reduce((latestDate, item) => {
                         const orderDate = dayjs(item.createdAt);
