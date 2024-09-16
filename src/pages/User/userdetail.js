@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import { Link, useParams } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
+import { getOrderUser } from '~/services/User/userService';
 
 function UserDetail() {
-    const { userId } = useParams(); // Get userId from URL parameters
+    const { userId } = useParams();
     const [loading, setLoading] = useState(true);
     const [status, setStatus] = useState('');   
     const [data, setData] = useState([]);
@@ -18,7 +17,7 @@ function UserDetail() {
     const [numbers, setNumbers] = useState([]);
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
-    const [userName, setUserName] = useState(''); // State to store the user's name
+    const [userName, setUserName] = useState('');
 
     useEffect(() => {
         let filteredData = data;
@@ -42,23 +41,22 @@ function UserDetail() {
         const fetchOrders = async () => {
             setLoading(true);
             try {
-                const response = await axios.get(`http://localhost:8084/api/v1/orders/user/${userId}`);
-                console.log('response', response.data.data);
-                const orderDetails = response.data.data.orderDetails || []; // Ensure it's an array
+                const response = await getOrderUser(userId);
+                console.log('response', response);
+                const orderDetails = response.orderDetails || [];
                 const enrichedOrderDetails = orderDetails.map(detail => ({
                     ...detail,
-                    orderCode: response.data.data.id,
-                    userId: response.data.data.userId,
-                    totalPrice: response.data.data.totalPrice,
-                    status: response.data.data.status
+                    orderCode: response.id,
+                    userId: response.userId,
+                    totalPrice: response.totalPrice,
+                    status: response.status
                 }));
                 setData(enrichedOrderDetails);
                 setSearchedData(enrichedOrderDetails);
-                setTotalPages(response.data.data.totalPages || 1); // Assuming totalPages is part of the response
-                setUserName(`${response.data.data.firstName} ${response.data.data.lastName}`); // Set the user's name
+                setTotalPages(response.totalPages || 1);
+                setUserName(`${response.firstName} ${response.lastName}`);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching orders:', error);
                 setLoading(false);
             }
         };
@@ -85,10 +83,10 @@ function UserDetail() {
                     <div className="col-md-12 grid-margin">
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold"> Order of {userName}</h3>
-                                <Link to="/Orders/create" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
+                                <h3 className="font-weight-bold"> UserDetails {userName}</h3>
+                            <Link to="/users" className="btn btn-primary mb-3">
+                                <i className="fas fa-plus"></i> Back
+                            </Link>
                             </div>
                         </div>
                     </div>

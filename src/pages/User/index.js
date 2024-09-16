@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Table, Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
+import { getUsers, deleteUsers } from '~/services/User/userService';
 
 function User() {
     const [loading, setLoading] = useState(true);
@@ -30,21 +30,21 @@ function User() {
     }, [search, data, totalPages]);
 
     useEffect(() => {
-        const fetchUsers = async () => {
-            setLoading(true);
-            try {
-                const response = await axios.get(`http://localhost:8081/api/v1/users?page=${currentPage}&limit=${limit}`);
-                setData(response.data.data.content);
-                setSearchedData(response.data.data.content);
-                setTotalPages(response.data.data.totalPages);
-                setLoading(false);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-                setLoading(false);
-            }
-        };
-        fetchUsers();
+        getData();
     }, [currentPage, limit]);
+
+    const getData = async () => {
+        try {
+            const response = await getUsers(currentPage, limit);
+            setData(response.data.content);
+            setSearchedData(response.data.content);
+            setTotalPages(response.data.totalPages);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            setLoading(false);
+        }
+    };
 
     const handleDelete = (id) => {
         setDeleteId(id);
@@ -53,10 +53,12 @@ function User() {
 
     const handleDeleteConfirm = async () => {
         try {
-            await axios.delete(`http://localhost:8081/api/v1/users/${deleteId}`);
-            toast.success('User has been deleted');
-            setDeleteShow(false);
-            setData(data.filter((user) => user.id !== deleteId));
+            await deleteUsers(deleteId)
+            .then(() => {
+                toast.success('users has been deleted');
+                handleClose();
+                getData();
+            })
         } catch (error) {
             toast.error('Failed to delete user');
         }
@@ -126,10 +128,18 @@ function User() {
                                                             <td>
                                                                 <Link
                                                                     to={`/users/detail/${item.id}`}
-                                                                    className="btn btn-primary"
+                                                                    className="btn btn-warning"
                                                                     title="Detail"
                                                                 >
                                                                     <i className="far fa-eye"></i>
+                                                                </Link>
+                                                                &nbsp;
+                                                                <Link
+                                                                    to={`/users/edit/${item.id}`}
+                                                                    className="btn btn-primary"
+                                                                    title="Edit"
+                                                                >
+                                                                    <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
                                                             </td>
                                                         </tr>
