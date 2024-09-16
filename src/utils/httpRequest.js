@@ -26,7 +26,7 @@ export const del = async (path, options = {}) => {
 
 httpRequest.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('accessToken');
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         }
@@ -37,6 +37,18 @@ httpRequest.interceptors.request.use(
     },
 );
 
+httpRequest.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        if (error.response && error.response.status === 403) {
+            alert('Access denied. Please log in with a valid access token.');
+            window.location.href = '/login';
+        }
+        return Promise.reject(error);
+    },
+);
 
 export const isAuthenticated = () => {
     return !!localStorage.getItem('accessToken');

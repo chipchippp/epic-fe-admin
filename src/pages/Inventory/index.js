@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
+import { getInventory, deleteInventory } from '~/services/Inventory/inventoryService';
 
 function Inventory() {
     const [loading, setLoading] = useState(true);
@@ -29,23 +29,20 @@ function Inventory() {
         setSearchedData(filteredData);
     }, [search, data, totalPages]);
 
-        useEffect(() => {
-            const fetchInventory = async () => {
-                setLoading(true);
-                try {
-                    const response = await axios.get(`http://localhost:8888/api/v1/inventory?page=${currentPage}&limit=${limit}`);
-                    setData(response.data.data.content);
-                    console.log(response.data.data.content);
-                    setSearchedData(response.data.data.content);
-                    setTotalPages(response.data.data.totalPages);
-                    setLoading(false);
-                } catch (error) {
-                    console.error('Error fetching products:', error);
-                    setLoading(false);
-                }
-            };
-            fetchInventory();
-        }, [currentPage, limit]);
+    useEffect(() => {
+        const fetchInventory = async () => {
+            try {
+                const response = await getInventory(currentPage, limit);
+                setData(response.data.content);
+                setSearchedData(response.data.content);
+                setTotalPages(response.data.totalPages);
+            } catch (error) {
+                toast.error(`Failed to fetch inventory: ${error.message}`);
+            }
+            setLoading(false);
+        };
+        fetchInventory();
+    }, [currentPage, limit]);
 
     const handleDelete = (id) => {
         setDeleteId(id);
@@ -54,11 +51,11 @@ function Inventory() {
 
     const handleDeleteConfirm = async () => {
         try {
-            await axios.delete(`http://localhost:8888/api/v1/inventory/${deleteId}`);
-            toast.success('inventory has been deleted');
+            await deleteInventory(deleteId);
+            toast.success('Inventory has been deleted');
             setDeleteShow(false);
         } catch (error) {
-            toast.error('Failed to delete inventory');
+            toast.error(`Failed to delete inventory: ${error.message}`);
         }
     };
 
@@ -72,6 +69,7 @@ function Inventory() {
         setLimit(e.target.value);
         setCurrentPage(1);
     };
+
     return (
         <>
             <div className="content-wrapper">
