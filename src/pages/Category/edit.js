@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import axios from 'axios';
+import { editCategory, updateCategory } from '~/services/Category/categoryService';
 
 function EditCategory() {
     const { id } = useParams();
@@ -17,8 +17,12 @@ function EditCategory() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await axios.get(`http://localhost:8082/api/v1/categories/${id}`);
-                setData(result.data.data);
+                const result = await editCategory(id);
+                setData({
+                    categoryId: result.categoryId,
+                    categoryName: result.categoryName,
+                    description: result.description,
+                });
             } catch (error) {
                 toast.error('Failed to fetch category data');
                 console.error('Fetch error:', error);
@@ -27,15 +31,11 @@ function EditCategory() {
         fetchData();
     }, [id]);
 
-    const handleUpdate = async (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         try {
-            await axios.put(`http://localhost:8082/api/v1/categories/${id}`, {
-                categoryId: data.categoryId,
-                categoryName: data.categoryName,
-                description: data.description,
-            });
+            await updateCategory(id, data);
             toast.success('Category updated successfully');
             navigate('/category');
         } catch (error) {
@@ -52,10 +52,9 @@ function EditCategory() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">Edit Category</h3>
-                                <h6 className="font-weight-normal mb-0">
-                                    All systems are running smoothly! You have
-                                    <span className="text-primary"> 3 unread alerts!</span>
-                                </h6>
+                                <Link to="/category" className="btn btn-primary mb-3">
+                                    <i className="fas fa-plus"></i> Back
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -65,7 +64,7 @@ function EditCategory() {
                         <div className="card-body">
                             <h4 className="card-title">Basic form elements</h4>
                             <p className="card-description">Edit the category details below</p>
-                            <form className="forms-sample" onSubmit={handleUpdate}>
+                            <form className="forms-sample" onSubmit={handleSubmit}>
                                 <div className="form-group">
                                     <label htmlFor="exampleInputName1">Id</label>
                                     <input
