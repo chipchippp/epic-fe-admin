@@ -41,8 +41,8 @@ function UserDetail() {
         const fetchOrders = async () => {
             setLoading(true);
             try {
-                const response = await getOrderUser(userId);
-                console.log('response', response);
+                const response = await getOrderUser(userId, data = { page: currentPage, limit: limit, status: status });
+                console.log('response: ', response);
                 const orderDetails = response.orderDetails || [];
                 const enrichedOrderDetails = orderDetails.map(detail => ({
                     ...detail,
@@ -57,6 +57,7 @@ function UserDetail() {
                 setUserName(`${response.firstName} ${response.lastName}`);
                 setLoading(false);
             } catch (error) {
+                console.error('Error fetching Orders user data:', error);
                 setLoading(false);
             }
         };

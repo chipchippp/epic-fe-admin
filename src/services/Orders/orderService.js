@@ -1,5 +1,4 @@
 import { get, post, put, del } from '~/utils/httpRequest';
-import { toast } from 'react-toastify';
 
 export const getOrders = async (currentPage = 1, limit = 10) => {
     try {
@@ -23,7 +22,7 @@ export const getAllOrders = async () => {
 
 export const createOrders = async (data) => {
     try {  
-        const response = await post(`/orders`, data);
+        const response = await post(`/orders/search`, data);
         return response;
     } catch (error) {
         console.error('Failed to create Orders', error);

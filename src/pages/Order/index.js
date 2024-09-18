@@ -5,7 +5,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { getOrders } from '~/services/Orders/orderService';
+import { getOrders, createOrders } from '~/services/Orders/orderService';
 
 function Order() {
     const [loading, setLoading] = useState(true);
@@ -39,13 +39,14 @@ function Order() {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const response = await getOrders(currentPage, limit);
+                const response = await createOrders(data = { page: currentPage, limit: limit, status: status });
+                console.log('Response:', response);
                 setData(response.data.content);
                 setSearchedData(response.data.content);
                 setTotalPages(response.data.totalPages);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching products:', error);
+                console.error('Error fetching orders:', error);
                 setLoading(false);
             }
         };

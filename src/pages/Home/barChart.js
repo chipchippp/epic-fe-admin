@@ -2,23 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import dayjs from 'dayjs';
+import { getAllOrders } from '~/services/Orders/orderService';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
 const BarChart = () => {
     const [chartData, setChartData] = useState([]);
     const [timeRange, setTimeRange] = useState('Date');
-
+    
     useEffect(() => {
         const fetchChartData = async () => {
             try {
-                const response = await fetch('http://localhost:8084/api/v1/orders?page=1&limit=1000');
-                if (!response.ok) {
+                const response = await getAllOrders();
+                if (response.code !== 200) {
                     throw new Error('Failed to fetch chart data');
                 }
-                const jsonData = await response.json();
-                const filteredData = jsonData.data.content.filter((order) => order.status === "COMPLETE");
-
+    
+                const jsonData = response.data;
+                console.log('JSON Data:', jsonData);
+    
+                const filteredData = jsonData.content.filter((order) => order.status === "COMPLETE");
+                console.log('Filtered Data:', filteredData);
+    
                 const processData = (data, format, unit, totalUnits, fixedLabels) => {
                     const latestOrderDate = data.reduce((latestDate, item) => {
                         const orderDate = dayjs(item.createdAt);
@@ -31,7 +36,7 @@ const BarChart = () => {
                             latestOrderDate.subtract(index, unit).format(format),
                         ).reverse();
                 
-                        const revenueByTime = data.reduce((acc, item) => {
+                    const revenueByTime = data.reduce((acc, item) => {
                         const time = dayjs(item.createdAt).format(format);
                         if (!acc[time]) {
                             acc[time] = { orderCount: 0, totalRevenue: 0 };
@@ -51,8 +56,8 @@ const BarChart = () => {
                     });
                 
                     return chartData;
-                };                
-
+                };
+    
                 let chartData;
                 if (timeRange === 'Date') {
                     chartData = processData(filteredData, 'YYYY-MM-DD', 'day', 7);
@@ -65,13 +70,13 @@ const BarChart = () => {
                 } else if (timeRange === 'Year') {
                     chartData = processData(filteredData, 'YYYY', 'year', 7);
                 }
-
+    
                 setChartData(chartData);
             } catch (error) {
                 console.error('Error fetching chart data:', error);
             }
         };
-
+    
         fetchChartData();
     }, [timeRange]);
 
