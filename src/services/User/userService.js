@@ -10,9 +10,9 @@ export const getUsers = async (currentPage = 1, limit = 10) => {
     }
 };
 
-export const getOrderUser = async (id) => {
+export const getOrderUser = async (id, data) => {
     try {
-        const response = await get(`/orders/user/${id}`);
+        const response = await post(`/orders/user/${id}`, data);
         return response;
     } catch (error) {
         console.error('Error fetching orders Users data:', error);
