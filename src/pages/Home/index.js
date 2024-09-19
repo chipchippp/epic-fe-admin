@@ -1,92 +1,101 @@
 import BarChart from './barChart';
-
-
+import React, { useState, useEffect } from 'react';
+import { getProducts, getOrders, getUsers } from '~/services/Dashboard/dashService';
 
 function HomeAdmin() {
+  const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getOrderData();
+    getProductData();
+    getUserData();
+  }, []);
+
+  const getOrderData = () => {
+    getOrders()
+      .then((data) => {
+        setOrders(data.data.content);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+  const getProductData = () => {
+    getProducts()
+      .then((data) => {
+        setProducts(data.data.content);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+  const getUserData = () => {
+    getUsers()
+      .then((data) => {
+        setUsers(data.data.content);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
   return (
     <>
-  <div className="content-wrapper">
-    <div className="row">
-      <div className="col-md-12 grid-margin">
-        <div className="row">
-          <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-            <h3 className="font-weight-bold">Welcome Aamir</h3>
-            <h6 className="font-weight-normal mb-0">
-              All systems are running smoothly! You have
-              <span className="text-primary">3 unread alerts!</span>
-            </h6>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div className="row">
-      <div className="col-md-6 grid-margin stretch-card">
-        <div className="card tale-bg">
-          <div className="card-people mt-auto">
-            <img src="/src/assets/images/dashboard/people.svg" alt="people" />
-            <div className="weather-info">
-              <div className="d-flex">
-                <div>
-                  <h2 className="mb-0 font-weight-normal">
-                    <i className="icon-sun mr-2" />
-                    31<sup>C</sup>
-                  </h2>
-                </div>
-                <div className="ml-2">
-                  <h4 className="location font-weight-normal">Bangalore</h4>
-                  <h6 className="font-weight-normal">India</h6>
-                </div>
-              </div>
+      <div className="content-wrapper">
+        <div className="row mb-4">
+          <div className="col-12">
+            <div className="d-flex justify-content-between align-items-center">
+              <h3 className="font-weight-bold">Welcome Aamir</h3>
+              <h6 className="font-weight-normal mb-0">
+                All systems are running smoothly! You have
+                <span className="text-primary"> 3 unread alerts!</span>
+              </h6>
             </div>
           </div>
         </div>
-      </div>
-      <div className="col-md-6 grid-margin transparent">
+
         <div className="row">
-          <div className="col-md-6 mb-4 stretch-card transparent">
+          <div className="col-md-6 mb-4">
             <div className="card card-tale">
               <div className="card-body">
-                <p className="mb-4">Today’s Bookings</p>
-                <p className="fs-30 mb-2">4006</p>
-                <p>10.00% (30 days)</p>
+                <p className="mb-4 fs-30">Order Statistics</p>
+                <p className="fs-20 mb-2">CREATED {orders.filter((order) => order.status === "CREATED").length}</p>
+                <p className="fs-20 mb-2">PENDING {orders.filter((order) => order.status === "PENDING").length}</p>
+                <p className="fs-20 mb-2">PROCESSING {orders.filter((order) => order.status === "PROCESSING").length}</p>
+                <p className="fs-20 mb-2">ONDELIVERY {orders.filter((order) => order.status === "ONDELIVERY").length}</p>
+                <p className="fs-20 mb-2">DELIVERED {orders.filter((order) => order.status === "DELIVERED").length}</p>
+                <p className="fs-20 mb-2">CANCEL {orders.filter((order) => order.status === "CANCEL").length}</p>
+                <p className="fs-20 mb-2">COMPLETED {orders.filter((order) => order.status === "COMPLETED").length}</p>
               </div>
             </div>
           </div>
-          <div className="col-md-6 mb-4 stretch-card transparent">
-            <div className="card card-dark-blue">
+
+          <div className="col-md-6 mb-4">
+            <div className="card card-tale">
               <div className="card-body">
-                <p className="mb-4">Total Bookings</p>
-                <p className="fs-30 mb-2">61344</p>
-                <p>22.00% (30 days)</p>
+                <p className="mb-4 fs-30">Total Product {products.length}</p>
+                <p className="mb-4 fs-30">User Statistics</p>
+                <p className="fs-20 mb-2">User {users.filter((user) => user.roles.some(role => role.name === "ROLE_USER")).length}</p>
+                <p className="fs-20 mb-2">Admin {users.filter((user) => user.roles.some(role => role.name === "ROLE_ADMIN")).length}</p>
+                <p className="fs-20 mb-2">Designer {users.filter((user) => user.roles.some(role => role.name === "ROLE_DESIGNER")).length}</p>
+                <p className="fs-20 mb-2">Employee {users.filter((user) => user.roles.some(role => role.name === "ROLE_EMPLOYEE")).length}</p>
               </div>
             </div>
           </div>
         </div>
+
         <div className="row">
-          <div className="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
-            <div className="card card-light-blue">
-              <div className="card-body">
-                <p className="mb-4">Number of Meetings</p>
-                <p className="fs-30 mb-2">34040</p>
-                <p>2.00% (30 days)</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6 stretch-card transparent">
-            <div className="card card-light-danger">
-              <div className="card-body">
-                <p className="mb-4">Number of Clients</p>
-                <p className="fs-30 mb-2">47033</p>
-                <p>0.22% (30 days)</p>
-              </div>
-            </div>
+          <div className="col-12">
+            {/* <BarChart /> */}
           </div>
         </div>
       </div>
-    </div>
-    <BarChart />
-  </div>
     </>
   );
 }
+
 export default HomeAdmin;
