@@ -56,7 +56,10 @@ function Product() {
     const fetchCategories = async () => {
         try {
             const response = await getCategories();
-            setCategories(response.data.content);
+            const sortedCategories = response.data.content.sort((a, b) =>
+                a.categoryName.localeCompare(b.categoryName)
+            );
+            setCategories(sortedCategories);
         } catch (error) {
             toast.error('Failed to fetch categories');
         }
@@ -73,7 +76,7 @@ function Product() {
             if (search) {
                 params.product = `name~${search}`;
             }
-
+            
             if (selectedCategory) {
                 params.categoryId = selectedCategory;
             }
@@ -175,7 +178,7 @@ function Product() {
                                             />
                                         </div>
                                     </div>
-                                     <div className="float-left ml-2">
+                                    {/* <div className="float-left ml-2">
                                         <select onChange={handleCategoryChange} className="form-control selectric">
                                             <option value="">All Categories</option>
                                             {categories.map((category) => (
@@ -184,7 +187,7 @@ function Product() {
                                                 </option>
                                             ))}
                                         </select>
-                                    </div>
+                                    </div> */}
                                     <Search setSearch={handleSearch} />
                                     <div className="filter-sort-group">
                                         <div className="sort-container">

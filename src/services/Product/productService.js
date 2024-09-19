@@ -40,9 +40,9 @@ export const getProductDetails = async (id) => {
     }
 };
 
-export const createProduct = async (product) => {
+export const createProduct = async (data) => {
     try {
-        const response = await post('/products', product);
+        const response = await post('/products', data);
         return response;
     } catch (error) {
         console.error('Error creating Product:', error);

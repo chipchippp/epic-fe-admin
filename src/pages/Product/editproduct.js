@@ -98,10 +98,10 @@ const EditProduct = () => {
             }
     
             await updateProduct(id, formData);
-    
             navigate('/product');
         } catch (error) {
             toast('Failed to update product');
+            console.error('Error creating Product:', error.response ? error.response.data : error.message);
         }
     };
 
