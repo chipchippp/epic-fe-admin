@@ -98,10 +98,10 @@ const EditProduct = () => {
             }
     
             await updateProduct(id, formData);
-    
             navigate('/product');
         } catch (error) {
             toast('Failed to update product');
+            console.error('Error creating Product:', error.response ? error.response.data : error.message);
         }
     };
 
@@ -119,7 +119,7 @@ const EditProduct = () => {
                 <div className="col-md-12 grid-margin">
                     <h2 className="font-weight-bold">{product.name}</h2>
                 <Link to="/product" className="btn btn-primary mb-3">
-                    <i className="fas fa-plus"></i> Back
+                    <i className="fas fa-arrow-left"></i> Back
                 </Link>
                 </div>
             </div>

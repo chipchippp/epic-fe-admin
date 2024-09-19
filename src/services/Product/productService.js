@@ -1,5 +1,15 @@
 import { get, post, put, del } from '~/utils/httpRequest';
 
+export const getProduct = async (currentPage = 1, limit = 7) => {
+    try {
+        const response = await get(`/products/getAll?page=${currentPage}&limit=${limit}`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Product data:', error);
+        throw error;
+    }
+};
+
 export const getFilteredProducts = async (params) => {
     try {
         const response = await get(`/products/search-by-specification`, { params });
@@ -40,9 +50,9 @@ export const getProductDetails = async (id) => {
     }
 };
 
-export const createProduct = async (product) => {
+export const createProduct = async (data) => {
     try {
-        const response = await post('/products', product);
+        const response = await post('/products', data);
         return response;
     } catch (error) {
         console.error('Error creating Product:', error);

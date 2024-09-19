@@ -1,92 +1,192 @@
-import BarChart from './barChart';
-
-
+import React, { useState, useEffect } from 'react';
+import { getProducts, getOrders, getUsers } from '~/services/Dashboard/dashService';
+import Product from './Product';
 
 function HomeAdmin() {
+  const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    getOrderData();
+    getProductData();
+    getUserData();
+  }, []);
+
+  const getOrderData = () => {
+    getOrders()
+      .then((data) => {
+        setOrders(data.data.content);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+  const getProductData = () => {
+    getProducts()
+      .then((data) => {
+        setProducts(data.data.content);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
+  const getUserData = () => {
+    getUsers()
+      .then((data) => {
+        setUsers(data.data.content);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
   return (
-    <>
-  <div className="content-wrapper">
-    <div className="row">
-      <div className="col-md-12 grid-margin">
-        <div className="row">
-          <div className="col-12 col-xl-8 mb-4 mb-xl-0">
+    <div className="content-wrapper">
+      <div className="row mb-4">
+        <div className="col-md-12">
+          <div className="d-flex justify-content-between align-items-center">
             <h3 className="font-weight-bold">Welcome Aamir</h3>
             <h6 className="font-weight-normal mb-0">
               All systems are running smoothly! You have
-              <span className="text-primary">3 unread alerts!</span>
+              <span className="text-primary"> 3 unread alerts!</span>
             </h6>
           </div>
         </div>
       </div>
-    </div>
-    <div className="row">
-      <div className="col-md-6 grid-margin stretch-card">
-        <div className="card tale-bg">
-          <div className="card-people mt-auto">
-            <img src="/src/assets/images/dashboard/people.svg" alt="people" />
-            <div className="weather-info">
-              <div className="d-flex">
-                <div>
-                  <h2 className="mb-0 font-weight-normal">
-                    <i className="icon-sun mr-2" />
-                    31<sup>C</sup>
-                  </h2>
+
+      <div className="row mb-4">
+        <div className="col-md-6">
+          <div className="card tale-bg">
+            <div className="card-body d-flex flex-column align-items-center">
+              <img src="/src/assets/images/dashboard/people.svg" alt="people" className="mb-3" />
+              <div className="weather-info text-center">
+                <h2 className="mb-0 font-weight-normal">
+                  <i className="icon-sun mr-2" />
+                  31<sup>C</sup>
+                </h2>
+                <h4 className="location font-weight-normal">Bangalore</h4>
+                <h6 className="font-weight-normal">India</h6>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="col-md-6">
+          <div className="row">
+            <div className="col-md-6 mb-4">
+              <div className="card card-dark-blue">
+                <div className="card-body">
+                  <p className="mb-4">Today’s Bookings</p>
+                  <p className="fs-30 mb-2">4006</p>
+                  <p>10.00% (30 days)</p>
                 </div>
-                <div className="ml-2">
-                  <h4 className="location font-weight-normal">Bangalore</h4>
-                  <h6 className="font-weight-normal">India</h6>
+              </div>
+            </div>
+            <div className="col-md-6 mb-4">
+              <div className="card card-light-blue">
+                <div className="card-body">
+                  <p className="mb-4">Total Bookings</p>
+                  <p className="fs-30 mb-2">61344</p>
+                  <p>22.00% (30 days)</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 mb-4">
+              <div className="card card-light-blue">
+                <div className="card-body">
+                  <p className="mb-4">Number of Meetings</p>
+                  <p className="fs-30 mb-2">34040</p>
+                  <p>2.00% (30 days)</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 mb-4">
+              <div className="card card-light-danger">
+                <div className="card-body">
+                  <p className="mb-4">Number of Clients</p>
+                  <p className="fs-30 mb-2">47033</p>
+                  <p>0.22% (30 days)</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div className="col-md-6 grid-margin transparent">
-        <div className="row">
-          <div className="col-md-6 mb-4 stretch-card transparent">
-            <div className="card card-tale">
-              <div className="card-body">
-                <p className="mb-4">Today’s Bookings</p>
-                <p className="fs-30 mb-2">4006</p>
-                <p>10.00% (30 days)</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6 mb-4 stretch-card transparent">
-            <div className="card card-dark-blue">
-              <div className="card-body">
-                <p className="mb-4">Total Bookings</p>
-                <p className="fs-30 mb-2">61344</p>
-                <p>22.00% (30 days)</p>
+
+      <div className="row mb-4">
+        <div className="col-md-6 mb-4">
+          <div className="card">
+            <div className="card-body">
+              <h3 className="font-weight-bold">Order Statistics</h3>
+              <div className="table-responsive">
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>CREATED</th>
+                      <th>PENDING</th>
+                      <th>PROCESSING</th>
+                      <th>ONDELIVERY</th>
+                      <th>DELIVERED</th>
+                      <th>CANCEL</th>
+                      <th>COMPLETED</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "CREATED").length}</p></td>
+                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "PENDING").length}</p></td>
+                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "PROCESSING").length}</p></td>
+                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "ONDELIVERY").length}</p></td>
+                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "DELIVERED").length}</p></td>
+                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "CANCEL").length}</p></td>
+                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "COMPLETED").length}</p></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-md-6 mb-4 mb-lg-0 stretch-card transparent">
-            <div className="card card-light-blue">
-              <div className="card-body">
-                <p className="mb-4">Number of Meetings</p>
-                <p className="fs-30 mb-2">34040</p>
-                <p>2.00% (30 days)</p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6 stretch-card transparent">
-            <div className="card card-light-danger">
-              <div className="card-body">
-                <p className="mb-4">Number of Clients</p>
-                <p className="fs-30 mb-2">47033</p>
-                <p>0.22% (30 days)</p>
+
+        <div className="col-md-6 mb-4">
+          <div className="card">
+            <div className="card-body">
+              <h3 className="font-weight-bold">User Statistics</h3>
+              <div className="table-responsive">
+                <table className="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Admin</th>
+                      <th>Designer</th>
+                      <th>Employee</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_USER")).length}</p></td>
+                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_ADMIN")).length}</p></td>
+                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_DESIGNER")).length}</p></td>
+                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_EMPLOYEE")).length}</p></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <div className="row mb-4">
+        <div className="col-md-12">
+          <Product />
+        </div>
+      </div>
     </div>
-    <BarChart />
-  </div>
-    </>
   );
 }
+
 export default HomeAdmin;

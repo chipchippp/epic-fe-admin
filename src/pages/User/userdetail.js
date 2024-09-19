@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link, useParams } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 import { getOrderUser } from '~/services/User/userService';
+import debounce from 'lodash.debounce';
 
 function UserDetail() {
     const { userId } = useParams();
@@ -13,11 +14,10 @@ function UserDetail() {
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [limit, setLimit] = useState(15);
+    const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
-    const [userName, setUserName] = useState('');
 
     useEffect(() => {
         let filteredData = data;
@@ -41,20 +41,19 @@ function UserDetail() {
         const fetchOrders = async () => {
             setLoading(true);
             try {
-                const response = await getOrderUser(userId, data = { page: currentPage, limit: limit, status: status });
-                console.log('response: ', response);
-                const orderDetails = response.orderDetails || [];
+                const response = await getOrderUser(userId, { page: currentPage, limit: limit, status: status });
+                const orderDetails = response.data.content || [];
                 const enrichedOrderDetails = orderDetails.map(detail => ({
                     ...detail,
-                    orderCode: response.id,
-                    userId: response.userId,
-                    totalPrice: response.totalPrice,
-                    status: response.status
+                    orderCode: detail.id,
+                    userId: detail.userId,
+                    totalPrice: detail.totalPrice,
+                    status: detail.status
                 }));
+    
                 setData(enrichedOrderDetails);
                 setSearchedData(enrichedOrderDetails);
-                setTotalPages(response.totalPages || 1);
-                setUserName(`${response.firstName} ${response.lastName}`);
+                setTotalPages(response.data.totalPages || 1);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching Orders user data:', error);
@@ -62,11 +61,15 @@ function UserDetail() {
             }
         };
         fetchOrders();
-    }, [currentPage, limit, userId]);
-
+    }, [currentPage, limit, userId, status]);
+    
     const handleStatusChange = (event) => {
         setStatus(event.target.value);
     };
+
+    const handleSearch = useCallback(debounce((value) => {
+        setSearch(value);
+    }, 500), []);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -84,9 +87,9 @@ function UserDetail() {
                     <div className="col-md-12 grid-margin">
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold"> UserDetails {userName}</h3>
+                                <h3 className="font-weight-bold"> UserDetails</h3>
                             <Link to="/users" className="btn btn-primary mb-3">
-                                <i className="fas fa-plus"></i> Back
+                            <i className="fas fa-arrow-left"></i> Back
                             </Link>
                             </div>
                         </div>
@@ -117,20 +120,19 @@ function UserDetail() {
                                         </div>
                                         <div className="float-left ml-2">
                                             <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={15}>Show</option>
-                                                <option value={20}>10</option>
-                                                <option value={25}>20</option>
+                                                <option value={10}>Show</option>
+                                                <option value={20}>20</option>
                                                 <option value={30}>30</option>
                                             </select>
                                         </div>
-                                        <Search  className="float-left ml-2" setSearch={setSearch} />
+                                        <Search  className="float-left ml-2" setSearch={handleSearch} />
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
                                                         <th>OrderCode</th>
-                                                        <th>UserId</th>
+                                                        <th>Username</th>
                                                         <th>Total Price</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
@@ -138,10 +140,10 @@ function UserDetail() {
                                                 </thead>
                                                 <tbody>
                                                     {searchedData.map((item, index) => (
-                                                        <tr key={item.id.orderId + '-' + item.id.productId}>
+                                                        <tr key={(item.id?.orderId || index) + '-' + (item.id?.productId || index)}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.orderCode}</td>
-                                                            <td>{item.userId}</td>
+                                                            <td>{item.firstName} {item.lastName}</td>
                                                             <td>{item.totalPrice}</td>
                                                             <td>
                                                                 {item.status === "CREATED" && (
@@ -159,13 +161,16 @@ function UserDetail() {
                                                                 {item.status === "DELIVERED" && (
                                                                     <div className="badge badge-success">Delivered</div>
                                                                 )}
-                                                                {item.status === "CANCELLED" && (
-                                                                    <div className="badge badge-danger">Cancelled</div>
+                                                                {item.status === "CANCEL" && (
+                                                                    <div className="badge badge-danger">Cancel</div>
+                                                                )}
+                                                                {item.status === "COMPLETE" && (
+                                                                    <div className="badge badge-success">Complete</div>
                                                                 )}
                                                             </td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/order/detail/${item.id.orderId}`}
+                                                                    to={`/order/detail/${item.id}`}
                                                                     className="btn btn-primary"
                                                                     title="Detail"
                                                                 >

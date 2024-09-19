@@ -115,7 +115,6 @@ function Category() {
                                                         <th>#</th>
                                                         <th>Category Name</th>
                                                         <th>Description</th>
-                                                        <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -124,23 +123,6 @@ function Category() {
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.categoryName}</td>
                                                             <td>{item.description}</td>
-                                                            <td>
-                                                                <Link
-                                                                    to={`/category/edit/${item.categoryId}`}
-                                                                    className="btn btn-primary"
-                                                                    title="Edit"
-                                                                >
-                                                                    <i className="fas fa-pencil-alt"></i>
-                                                                </Link>
-                                                                &nbsp;
-                                                                <button
-                                                                    className="btn btn-danger"
-                                                                    onClick={() => handleDelete(item.categoryId)}
-                                                                    title="Delete"
-                                                                >
-                                                                    <i className="fas fa-trash"></i>
-                                                                </button>
-                                                            </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>

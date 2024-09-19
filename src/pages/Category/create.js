@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { createCategory } from '~/services/Category/categoryService';
+import axios from 'axios';
 
 function CreateCategory() {
     const [data, setData] = useState({
         categoryName: '',
         description: '',
+        parentCategoryId: 0
     });
-
+    const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/v1/categories/parentCategoryIsNull');
+                setCategories(response.data.data);
+            } catch (error) {
+                toast.error('Failed to fetch categories');
+                console.error('Fetch error:', error);
+            }
+        };
+    
+        fetchCategories();
+    }, []);
+    
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -31,6 +47,9 @@ function CreateCategory() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">New Category</h3>
+                                <Link to="/category" className="btn btn-primary mb-3">
+                                 <i className="fas fa-arrow-left"></i> Back
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -62,6 +81,23 @@ function CreateCategory() {
                                         onChange={(e) => setData({ ...data, description: e.target.value })}
                                     />
                                 </div>
+                                <div className="form-group">
+    <label htmlFor="exampleInputCity1">ParentCategoryId</label>
+    <select
+        name="categoryId"
+        className="form-control"
+        value={data.parentCategoryId || ''}
+        onChange={(e) => setData({ ...data, parentCategoryId: e.target.value || null })}
+    >
+        <option value="" disabled>Select Category</option>
+        {categories.map((category) => (
+            <option key={category.categoryId} value={category.categoryId}>
+                {category.categoryName}
+            </option>
+        ))}
+    </select>
+                                </div>
+
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Submit
                                 </button>

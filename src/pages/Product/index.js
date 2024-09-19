@@ -56,7 +56,10 @@ function Product() {
     const fetchCategories = async () => {
         try {
             const response = await getCategories();
-            setCategories(response.data.content);
+            const sortedCategories = response.data.content.sort((a, b) =>
+                a.categoryName.localeCompare(b.categoryName)
+            );
+            setCategories(sortedCategories);
         } catch (error) {
             toast.error('Failed to fetch categories');
         }
@@ -74,11 +77,14 @@ function Product() {
                 params.product = `name~${search}`;
             }
 
+            console.log(params);
+            
             if (selectedCategory) {
                 params.categoryId = selectedCategory;
             }
     
             const response = await getFilteredProducts(params);
+            console.log(response.data.content);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setNumbers([...Array(response.data.totalPages).keys()].map(i => i + 1));
@@ -175,7 +181,7 @@ function Product() {
                                             />
                                         </div>
                                     </div>
-                                     <div className="float-left ml-2">
+                                    {/* <div className="float-left ml-2">
                                         <select onChange={handleCategoryChange} className="form-control selectric">
                                             <option value="">All Categories</option>
                                             {categories.map((category) => (
@@ -184,7 +190,7 @@ function Product() {
                                                 </option>
                                             ))}
                                         </select>
-                                    </div>
+                                    </div> */}
                                     <Search setSearch={handleSearch} />
                                     <div className="filter-sort-group">
                                         <div className="sort-container">

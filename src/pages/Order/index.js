@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { getOrders, createOrders } from '~/services/Orders/orderService';
+import { createOrders } from '~/services/Orders/orderService';
+import debounce from 'lodash.debounce';
 
 function Order() {
     const [loading, setLoading] = useState(true);
@@ -30,7 +30,7 @@ function Order() {
         if (status !== '') {
             filteredData = filteredData.filter((item) => item.status === status);
         }
-    
+
         const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
         setNumbers(pagesArray);
         setSearchedData(filteredData);
@@ -39,27 +39,45 @@ function Order() {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const response = await createOrders(data = { page: currentPage, limit: limit, status: status });
-                console.log('Response:', response);
+                const response = await createOrders({
+                    page: currentPage,
+                    limit: limit,
+                    status: status
+                });
                 setData(response.data.content);
                 setSearchedData(response.data.content);
                 setTotalPages(response.data.totalPages);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching orders:', error);
+                toast.error(`Error fetching orders: ${error.response?.data?.message || error.message}`);
                 setLoading(false);
             }
         };
         fetchOrder();
-    }, [currentPage, limit]);
+    }, [currentPage, limit, status]);
 
     const handleStatusChange = (event) => {
-        setStatus(event.target.value);
+        // Convert status to number (e.g., "PENDING" -> 1)
+        const statusValue = event.target.value;
+        const statusMapping = {
+            "CREATED": 0,
+            "PENDING": 1,
+            "PROCESSING": 2,
+            "ONDELIVERY": 3,
+            "DELIVERED": 4,
+            "CANCEL": 5,
+            "COMPLETE": 6
+        };
+        setStatus(statusMapping[statusValue] || '');
     };
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
+
+    const handleSearch = useCallback(debounce((value) => {
+        setSearch(value);
+    }, 500), []);
 
     const handleLimitChange = (e) => {
         setLimit(e.target.value);
@@ -89,10 +107,10 @@ function Order() {
                                         <div className="float-left">
                                             <select
                                                 className="form-control selectric"
-                                                value={status}
                                                 onChange={handleStatusChange}
                                             >
-                                                <option value="">All</option>
+                                                <option value="">Sort Status</option>
+                                                <option value="CREATED">Pending</option>
                                                 <option value="PENDING">Pending</option>
                                                 <option value="PROCESSING">Processing</option>
                                                 <option value="ONDELIVERY">On Delivery</option>
@@ -103,13 +121,12 @@ function Order() {
                                         </div>
                                         <div className="float-left ml-2">
                                             <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={15}>Show</option>
-                                                <option value={10}>10</option>
+                                                <option value={10}>Show</option>
                                                 <option value={20}>20</option>
-                                                <option value={30}>30</option>
+                                                <option value={40}>40</option>
                                             </select>
                                         </div>
-                                        <Search className="float-left ml-2" setSearch={setSearch} />
+                                        <Search className="float-left ml-2" setSearch={handleSearch} />
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -132,22 +149,22 @@ function Order() {
                                                             <td>{item.totalPrice}</td>
                                                             <td>{item.createdAt}</td>
                                                             <td>
-                                                                {item.status === "PENDING" && (
+                                                                {item.status === 1 && (
                                                                     <div className="badge badge-secondary">Pending</div>
                                                                 )}
-                                                                {item.status === "PROCESSING" && (
+                                                                {item.status === 2 && (
                                                                     <div className="badge badge-primary">Processing</div>
                                                                 )}
-                                                                {item.status === "ONDELIVERY" && (
+                                                                {item.status === 3 && (
                                                                     <div className="badge badge-info">On Delivery</div>
                                                                 )}
-                                                                {item.status === "DELIVERED" && (
+                                                                {item.status === 4 && (
                                                                     <div className="badge badge-success">Delivered</div>
                                                                 )}
-                                                                {item.status === "CANCEL" && (
+                                                                {item.status === 5 && (
                                                                     <div className="badge badge-danger">Cancel</div>
                                                                 )}
-                                                                {item.status === "COMPLETE" && (
+                                                                {item.status === 6 && (
                                                                     <div className="badge badge-success">Complete</div>
                                                                 )}
                                                             </td>
