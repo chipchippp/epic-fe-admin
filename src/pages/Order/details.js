@@ -37,7 +37,6 @@ function OrderDetail() {
                 setLoading(false);
             } catch (error) {
                 toast.error('Failed to fetch order data');
-                console.error('Fetch error:', error);
                 setLoading(false);
             }
         };
@@ -72,6 +71,7 @@ function OrderDetail() {
 
     const getSelectableOptions = () => {
         const options = [
+            { value: 'CREATED', label: 'Created' },
             { value: 'PENDING', label: 'Pending' },
             { value: 'PROCESSING', label: 'Processing' },
             { value: 'ONDELIVERY', label: 'On Delivery' },
@@ -81,6 +81,8 @@ function OrderDetail() {
         ];
 
         switch (data.status) {
+            case 'CREATED':
+                return options.filter((option) => ['PENDING', 'PROCESSING', 'CANCEL'].includes(option.value));
             case 'PENDING':
                 return options.filter((option) => ['PENDING', 'PROCESSING', 'CANCEL'].includes(option.value));
             case 'PROCESSING':

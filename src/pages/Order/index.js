@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
+import React, { useState, useEffect, useCallback } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { getOrders, createOrders } from '~/services/Orders/orderService';
+import { createOrders } from '~/services/Orders/orderService';
+import debounce from 'lodash.debounce';
 
 function Order() {
     const [loading, setLoading] = useState(true);
@@ -30,7 +30,7 @@ function Order() {
         if (status !== '') {
             filteredData = filteredData.filter((item) => item.status === status);
         }
-    
+
         const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
         setNumbers(pagesArray);
         setSearchedData(filteredData);
@@ -39,14 +39,14 @@ function Order() {
     useEffect(() => {
         const fetchOrder = async () => {
             try {
-                const response = await createOrders(data = { page: currentPage, limit: limit, status: status });
-                console.log('Response:', response);
+                const response = await createOrders({ page: currentPage, limit: limit, status: status });
+                console.log(response);
                 setData(response.data.content);
                 setSearchedData(response.data.content);
                 setTotalPages(response.data.totalPages);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching orders:', error);
+                toast('Error fetching orders:', error);
                 setLoading(false);
             }
         };
@@ -60,6 +60,10 @@ function Order() {
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
+
+    const handleSearch = useCallback(debounce((value) => {
+        setSearch(value);
+    }, 500), []);
 
     const handleLimitChange = (e) => {
         setLimit(e.target.value);
@@ -92,7 +96,7 @@ function Order() {
                                                 value={status}
                                                 onChange={handleStatusChange}
                                             >
-                                                <option value="">All</option>
+                                                <option value="">Sort Status</option>
                                                 <option value="PENDING">Pending</option>
                                                 <option value="PROCESSING">Processing</option>
                                                 <option value="ONDELIVERY">On Delivery</option>
@@ -103,10 +107,9 @@ function Order() {
                                         </div>
                                         <div className="float-left ml-2">
                                             <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={15}>Show</option>
-                                                <option value={10}>10</option>
+                                                <option value={10}>Show</option>
                                                 <option value={20}>20</option>
-                                                <option value={30}>30</option>
+                                                <option value={40}>40</option>
                                             </select>
                                         </div>
                                         <Search className="float-left ml-2" setSearch={setSearch} />
@@ -132,6 +135,9 @@ function Order() {
                                                             <td>{item.totalPrice}</td>
                                                             <td>{item.createdAt}</td>
                                                             <td>
+                                                                {item.status === "CREATED" && (
+                                                                    <div className="badge badge-warning">Created</div>
+                                                                )}
                                                                 {item.status === "PENDING" && (
                                                                     <div className="badge badge-secondary">Pending</div>
                                                                 )}
