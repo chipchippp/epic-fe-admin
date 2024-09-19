@@ -3,16 +3,32 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { editCategory, updateCategory } from '~/services/Category/categoryService';
+import axios from 'axios';
 
 function EditCategory() {
     const { id } = useParams();
     const [data, setData] = useState({
-        categoryId: '',
         categoryName: '',
         description: '',
+        parentCategoryId: 0
     });
+    const [categories, setCategories] = useState([]);
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/api/v1/categories/parentCategoryIsNull');
+                setCategories(response.data.data);
+            } catch (error) {
+                toast.error('Failed to fetch categories');
+                console.error('Fetch error:', error);
+            }
+        };
+    
+        fetchCategories();
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -22,6 +38,7 @@ function EditCategory() {
                     categoryId: result.categoryId,
                     categoryName: result.categoryName,
                     description: result.description,
+                    parentCategoryId: result.parentCategoryId || 0
                 });
             } catch (error) {
                 toast.error('Failed to fetch category data');
@@ -51,10 +68,7 @@ function EditCategory() {
                     <div className="col-md-12 grid-margin">
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Edit Category</h3>
-                                <Link to="/category" className="btn btn-primary mb-3">
-                                    <i className="fas fa-plus"></i> Back
-                                </Link>
+                                <h3 className="font-weight-bold">New Category</h3>
                             </div>
                         </div>
                     </div>
@@ -62,21 +76,8 @@ function EditCategory() {
                 <div className="col-12 grid-margin stretch-card">
                     <div className="card">
                         <div className="card-body">
-                            <h4 className="card-title">Basic form elements</h4>
-                            <p className="card-description">Edit the category details below</p>
+                            <h4 className="card-title">Category</h4>
                             <form className="forms-sample" onSubmit={handleSubmit}>
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputName1">Id</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="exampleInputName1"
-                                        placeholder="Id"
-                                        disabled
-                                        value={data.categoryId}
-                                        onChange={(e) => setData({ ...data, categoryId: e.target.value })}
-                                    />
-                                </div>
                                 <div className="form-group">
                                     <label htmlFor="exampleInputName1">Name</label>
                                     <input
@@ -99,16 +100,31 @@ function EditCategory() {
                                         onChange={(e) => setData({ ...data, description: e.target.value })}
                                     />
                                 </div>
+                                <div className="form-group">
+    <label htmlFor="exampleInputCity1">ParentCategoryId</label>
+    <select
+        name="categoryId"
+        className="form-control"
+        value={data.parentCategoryId || ''}
+        onChange={(e) => setData({ ...data, parentCategoryId: e.target.value || null })}
+    >
+        <option value="" disabled>Select Category</option>
+        {categories.map((category) => (
+            <option key={category.categoryId} value={category.categoryId}>
+                {category.categoryName}
+            </option>
+        ))}
+    </select>
+                                </div>
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Submit
                                 </button>
-                                <Link to="/category" className="btn btn-light">Back</Link>
+                                <Link to="/category" className="btn btn-light"> Back </Link>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-            <ToastContainer />
         </>
     );
 }
