@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { getProduct } from '~/services/Products/productService';
+import { getProduct } from '~/services/Product/productService';
 import { useNavigate } from 'react-router-dom';
-import moment from 'moment';
 import { Link } from 'react-router-dom';
 
 const Product = () => {
@@ -13,99 +12,79 @@ const Product = () => {
     }, []);
 
     const getData = () => {
-        getProduct()
-            .then((data) => {
+        getProduct(1, 7)
+            .then((response) => {
+                const data = response.data.content;
+                console.log('Product data:', data);
+                // Sort data based on soldQuantity in descending order
                 const sortedData = data.sort((a, b) => {
-                    const totalQuantityA = a.orderProducts.reduce((sum, order) => sum + order.quantity, 0);
-                    const totalQuantityB = b.orderProducts.reduce((sum, order) => sum + order.quantity, 0);
-                    return totalQuantityB - totalQuantityA;
+                    const soldQuantityA = a.soldQuantity || 0;
+                    const soldQuantityB = b.soldQuantity || 0;
+                    return soldQuantityB - soldQuantityA;
                 });
-                const topFiveData = sortedData.slice(0, 5);
-                setProducts(topFiveData);
+                setProducts(sortedData);
             })
             .catch((error) => {
                 console.error('Error fetching data:', error);
             });
     };
 
-    const formatDate = (inputDate) => {
-        const parsedDate = moment(inputDate);
-        const formattedDate = parsedDate.format('HH:mm:ss DD/MM/YYYY');
-        return formattedDate;
-    };
-
-    const truncateProductCode = (ProductCode) => {
-        if (ProductCode && ProductCode.length > 7) {
-            return ProductCode.substring(0, 7) + '...';
-        } else {
-            return ProductCode;
-        }
-    };
-
     return (
-        <div className="section-body">
-            <div className="row mt-4">
-                <div className="col-12">
-                    <div className="card">
-                        <div className="card-header">
-                            <h4>Feature Products</h4>
-                            <div className="card-header-action">
-                                <Link to="/Product" className="btn btn-danger">
-                                    View More <i className="fas fa-chevron-right" />
-                                </Link>
-                            </div>
-                        </div>
-                        <div className="card-body p-0">
-                            <div className="table-responsive table-invoice">
-                                <table className="table table-striped">
-                                    <tbody>
-                                        <tr>
-                                            <th>Id</th>
-                                            <th>Img</th>
-                                            <th>Name</th>
-                                            <th>CategoryChild</th>
-                                            <th>Quantity</th>
-                                            <th>Price</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                        {products.map((item, index) => (
-                                            <tr key={item.id}>
-                                                <td>{index + 1}</td>
-                                                <td>
+        <div className="content-wrapper">
+            <div className="col-lg-20 grid-margin stretch-card">
+                <div className="card">
+                    <div className="card-body">
+                        <h3 className="font-weight-bold">Top Products</h3>
+
+                        <div className="table-responsive">
+                            <table className="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th className="col-id">Id</th>
+                                        <th className="col-img">Img</th>
+                                        <th className="col-name">Name</th>
+                                        <th className="col-category">Category</th>
+                                        <th className="col-soldQuantity">SoldQuantity</th>
+                                        <th className="col-quantity">Quantity</th>
+                                        <th className="col-price">Price</th>
+                                        <th className="col-actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {products.map((item, index) => (
+                                        <tr key={item.productId}>
+                                            <td className="col-id">{index + 1}</td>
+                                            <td className="col-img">
+                                                {item.images.length > 0 ? (
                                                     <img
-                                                        src={item.imageSrc}
-                                                        style={{ width: '100px', height: 'auto' }}
-                                                        alt={item.image}
+                                                        src={`http://localhost:8080/api/v1/product-images/images/${item.images[0].imageUrl}`}
+                                                        alt={item.name}
+                                                        style={{ width: '70px', height: '70px', borderRadius: '0px' }}
                                                     />
-                                                </td>
-                                                <td>{item.name}</td>
-                                                <td>{item.categoryChild.name}</td>
-                                                <td>
-                                                    {item.inStocks.length > 0 ? item.inStocks[0].stockQuantity : '0'}
-                                                </td>
-                                                <td>{item.price}</td>
-                                                <td colSpan={2}>
-                                                    <Link
+                                                ) : (
+                                                    'No Image'
+                                                )}
+                                            </td>
+                                            <td className="col-name">
+                                                <Link to={`/productdetail/${item.productId}`}>{item.name}</Link>
+                                            </td>
+                                            <td className="col-category">{item.category ? item.category.categoryName : 'N/A'}</td>
+                                            <td className="col-soldQuantity">{item.soldQuantity}</td>
+                                            <td className="col-quantity">{item.stockQuantity}</td>
+                                            <td className="col-price">{item.price}$</td>
+                                            <td className="col-actions">
+                                                <Link
                                                         to={`/product/detail/${item.id}`}
                                                         className="btn btn-primary"
                                                         title="Details"
                                                     >
                                                         <i class="far fa-eye"></i>
-                                                    </Link>
-                                                    &nbsp;
-                                                    <Link
-                                                        to={`/product/feedbacks/${item.id}`}
-                                                        className="btn btn-primary"
-                                                        title="Feedbacks"
-                                                    >
-                                                        <i class="fa-solid fa-comment"></i>
-                                                    </Link>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
+                                                </Link>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

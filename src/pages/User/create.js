@@ -37,7 +37,7 @@ function CreateUser() {
                         <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                             <h3 className="font-weight-bold">Create User</h3>
                         <Link to="/users" className="btn btn-primary mb-3">
-                            <i className="fas fa-plus"></i> Back
+                        <i className="fas fa-arrow-left"></i> Back
                         </Link>
                         </div>
                     </div>

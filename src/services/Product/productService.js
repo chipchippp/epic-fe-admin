@@ -1,5 +1,15 @@
 import { get, post, put, del } from '~/utils/httpRequest';
 
+export const getProduct = async (currentPage = 1, limit = 7) => {
+    try {
+        const response = await get(`/products/getAll?page=${currentPage}&limit=${limit}`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Product data:', error);
+        throw error;
+    }
+};
+
 export const getFilteredProducts = async (params) => {
     try {
         const response = await get(`/products/search-by-specification`, { params });

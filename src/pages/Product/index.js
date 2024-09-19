@@ -76,12 +76,15 @@ function Product() {
             if (search) {
                 params.product = `name~${search}`;
             }
+
+            console.log(params);
             
             if (selectedCategory) {
                 params.categoryId = selectedCategory;
             }
     
             const response = await getFilteredProducts(params);
+            console.log(response.data.content);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setNumbers([...Array(response.data.totalPages).keys()].map(i => i + 1));

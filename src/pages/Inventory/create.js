@@ -52,7 +52,7 @@ function ManageInventory() {
           <div className="col-md-12 grid-margin">
             <h3 className="font-weight-bold">Manage Inventory</h3>
             <Link to="/inventory" className="btn btn-primary mb-3">
-                    <i className="fas fa-plus"></i> Back
+              <i className="fas fa-arrow-left"></i> Back
             </Link>
           </div>
         </div>

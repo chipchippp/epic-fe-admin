@@ -47,6 +47,9 @@ function CreateCategory() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">New Category</h3>
+                                <Link to="/category" className="btn btn-primary mb-3">
+                                 <i className="fas fa-arrow-left"></i> Back
+                                </Link>
                             </div>
                         </div>
                     </div>

@@ -27,7 +27,6 @@ const CreateProduct = () => {
                 setCategories(response.data.data.content || []);
             } catch (error) {
                 toast.error('Failed to fetch categories');
-                console.error('Fetch error:', error);
             }
         };
 
@@ -71,7 +70,7 @@ const CreateProduct = () => {
                         <div className="card-body">
                             <h4 className="card-title">Create Product</h4>
                             <Link to="/product" className="btn btn-primary mb-3">
-                                <i className="fas fa-plus"></i> Back
+                                <i className="fas fa-arrow-left"></i> Back
                             </Link>
                             <form onSubmit={handleSubmit}>
                                 <div className="row mb-4">
