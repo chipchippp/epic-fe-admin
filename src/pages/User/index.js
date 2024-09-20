@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Table, Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 import { getUsers, deleteUsers } from '~/services/User/userService';
+import { debounce } from 'lodash';
 
 function User() {
     const [loading, setLoading] = useState(true);
@@ -20,14 +21,19 @@ function User() {
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
+    const debouncedSearch = useCallback(
+        debounce((query) => {
+            const filteredData = data.filter((item) =>
+                item.username.toLowerCase().includes(query.toLowerCase())
+            );
+            setSearchedData(filteredData);
+        }, 500),
+        [data]
+    );
+
     useEffect(() => {
-        const filteredData = data.filter((item) =>
-            item.username.toLowerCase().includes(search.toLowerCase())
-        );
-        const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
-        setNumbers(pagesArray);
-        setSearchedData(filteredData);
-    }, [search, data, totalPages]);
+        debouncedSearch(search);
+    }, [search, debouncedSearch]);
 
     useEffect(() => {
         getData();
@@ -53,12 +59,10 @@ function User() {
 
     const handleDeleteConfirm = async () => {
         try {
-            await deleteUsers(deleteId)
-            .then(() => {
-                toast.success('users has been deleted');
-                handleClose();
-                getData();
-            })
+            await deleteUsers(deleteId);
+            toast.success('User has been deleted');
+            handleClose();
+            getData();
         } catch (error) {
             toast.error('Failed to delete user');
         }

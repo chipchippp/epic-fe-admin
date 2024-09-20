@@ -21,6 +21,11 @@ import EditProduct from '~/pages/Product/editproduct';
 import Inventory from '~/pages/Inventory/index';
 import InventoryCreate from '~/pages/Inventory/create';
 
+// Blog
+import Blog from '~/pages/Blog/index';
+import BlogCreate from '~/pages/Blog/create';
+import BlogEdit from '~/pages/Blog/edit';
+
 // Order
 import Order from '~/pages/Order/index';
 import OrderDetail from '~/pages/Order/details';
@@ -60,6 +65,10 @@ export const publicRoutes = [
     // Inventory
     {path: config.routes.inventory, component: Inventory, layout: AdminLayout},
     {path: config.routes.createInventory, component: InventoryCreate, layout: AdminLayout},
+    // Blog
+    {path: config.routes.blog, component: Blog, layout: AdminLayout},
+    {path: config.routes.createBlog, component: BlogCreate, layout: AdminLayout},
+    {path: config.routes.editBlog, component: BlogEdit, layout: AdminLayout},
 
     // Order
     {path: config.routes.orders, component: Order, layout: AdminLayout},

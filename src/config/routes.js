@@ -21,6 +21,11 @@ const routes = {
     inventory: '/inventory',
     createInventory: '/inventory/create',
     editInventory: '/inventory/edit/:id',
+
+    //     Blog
+    blog: '/blog',
+    createBlog: '/blog/create',
+    editBlog: '/blog/edit/:id',
    
     //      Orders
     orders: '/order',

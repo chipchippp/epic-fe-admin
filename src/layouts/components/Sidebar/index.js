@@ -6,13 +6,6 @@ function SidebarAdmin() {
            <nav className="sidebar sidebar-offcanvas" id="sidebar">
   <ul className="nav">
     <li className="nav-item">
-      <Link className="nav-link" to="/">
-        <i className="icon-grid menu-icon" />
-        <span className="menu-title">Dashboard</span>
-      </Link>
-    </li>
-   
-    <li className="nav-item">
       <a
         className="nav-link"
         data-toggle="collapse"
@@ -21,12 +14,15 @@ function SidebarAdmin() {
         aria-controls="charts"
       >
         <i className="icon-bar-graph menu-icon" />
-        <span className="menu-title">Charts</span>
+        <span className="menu-title">Dashboard</span>
         <i className="menu-arrow" />
       </a>
       <div className="collapse" id="charts">
         <ul className="nav flex-column sub-menu">
           <li className="nav-item">
+            <Link className="nav-link" to="/">
+              Home
+            </Link>
             <Link className="nav-link" to="/chart">
               ChartJs
             </Link>
@@ -43,7 +39,7 @@ function SidebarAdmin() {
         aria-controls="tables"
       >
         <i className="icon-grid-2 menu-icon" />
-        <span className="menu-title">Tables</span>
+        <span className="menu-title">Manager</span>
         <i className="menu-arrow" />
       </a>
       <div className="collapse" id="tables">
@@ -57,6 +53,9 @@ function SidebarAdmin() {
             </Link>
             <Link className="nav-link" to="/inventory">
                 Inventory
+            </Link>
+            <Link className="nav-link" to="/blog">
+                Blogs
             </Link>
             <Link className="nav-link" to="/order">
                 Orders
