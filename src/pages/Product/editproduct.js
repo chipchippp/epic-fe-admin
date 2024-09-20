@@ -50,11 +50,6 @@ const EditProduct = () => {
         setProduct({ ...product, [name]: value });
     };
 
-    const handleCategoryChange = (e) => {
-        const categoryId = e.target.value;
-        setProduct({ ...product, category: { ...product.category, categoryId } });
-    };
-
     const handleFileChange = (e) => {
         const filesArray = Array.from(e.target.files);
         setImagesNew([]);
@@ -81,7 +76,7 @@ const EditProduct = () => {
         e.preventDefault();
         setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
     };
-
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -95,16 +90,18 @@ const EditProduct = () => {
     
             if (selectedFiles.length > 0) {
                 selectedFiles.forEach((file) => formData.append('files', file));
+            } else {
+                formData.append('files', null);
             }
-    
+            
             await updateProduct(id, formData);
             navigate('/product');
         } catch (error) {
             toast('Failed to update product');
-            console.error('Error creating Product:', error.response ? error.response.data : error.message);
         }
     };
-
+    
+    
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -169,8 +166,8 @@ const EditProduct = () => {
                                     <select
                                         name="categoryId"
                                         className="form-control"
-                                        value={product.category?.categoryId || ''}
-                                        onChange={handleCategoryChange}
+                                        value={product.category.categoryId || ''}
+                                        onChange={(e) => setProduct({ ...product, categoryId: e.target.value })}
                                         required
                                     >
                                         <option value="" disabled>

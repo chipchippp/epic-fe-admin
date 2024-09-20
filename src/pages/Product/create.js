@@ -182,6 +182,7 @@ const CreateProduct = () => {
                                     <input
                                         type="file"
                                         name="images"
+                                        required
                                         className="form-control"
                                         multiple
                                         onChange={handleFileChange}

@@ -26,6 +26,11 @@ import Blog from '~/pages/Blog/index';
 import BlogCreate from '~/pages/Blog/create';
 import BlogEdit from '~/pages/Blog/edit';
 
+// Designer
+// import Designer from '~/pages/Designer/index';
+// import DetailDesigner from '~/pages/Designer/detail';
+import Profile from '~/pages/Designer/profile';
+
 // Order
 import Order from '~/pages/Order/index';
 import OrderDetail from '~/pages/Order/details';
@@ -65,10 +70,16 @@ export const publicRoutes = [
     // Inventory
     {path: config.routes.inventory, component: Inventory, layout: AdminLayout},
     {path: config.routes.createInventory, component: InventoryCreate, layout: AdminLayout},
+
     // Blog
     {path: config.routes.blog, component: Blog, layout: AdminLayout},
     {path: config.routes.createBlog, component: BlogCreate, layout: AdminLayout},
     {path: config.routes.editBlog, component: BlogEdit, layout: AdminLayout},
+
+    // Designer
+    // {path: config.routes.designer, component: Designer, layout: AdminLayout},
+    // {path: config.routes.detailDesigner, component: DetailDesigner, layout: AdminLayout},
+    {path: config.routes.profile, component: Profile, layout: AdminLayout},
 
     // Order
     {path: config.routes.orders, component: Order, layout: AdminLayout},

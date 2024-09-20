@@ -78,9 +78,9 @@ function Product() {
             }
 
             if (selectedCategory) {
-                params.categoryId = selectedCategory;
+                params.category = `categoryId-${Number(selectedCategory)}`;
             }
-    
+
             const response = await getFilteredProducts(params);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
@@ -173,7 +173,15 @@ function Product() {
                                             />
                                         </div>
                                     </div>
-                                    {/* <div className="float-left ml-2">
+                                    <div className="filter-sort-group">
+                                        <div className="sort-container">
+                                            <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
+                                                <option value="asc">Sort Ascending</option>
+                                                <option value="desc">Sort Descending</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div className="float-left ml-2">
                                         <select onChange={handleCategoryChange} className="form-control selectric">
                                             <option value="">All Categories</option>
                                             {categories.map((category) => (
@@ -182,14 +190,6 @@ function Product() {
                                                 </option>
                                             ))}
                                         </select>
-                                    </div> */}
-                                    <div className="filter-sort-group">
-                                        <div className="sort-container">
-                                            <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
-                                                <option value="asc">Sort Ascending</option>
-                                                <option value="desc">Sort Descending</option>
-                                            </select>
-                                        </div>
                                     </div>
                                     <Search setSearch={handleSearch} />
                                 </div>

@@ -19,7 +19,6 @@ const EditBlog = () => {
             try {
                 const response = await editBlog(id);
                 const blogData = response.data;
-                console.log("blogData", blogData);
         
                 if (blogData.user && blogData.user.userId) {
                     blogData.userId = blogData.user.userId;

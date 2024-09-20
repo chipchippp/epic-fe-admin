@@ -26,6 +26,11 @@ const routes = {
     blog: '/blog',
     createBlog: '/blog/create',
     editBlog: '/blog/edit/:id',
+
+    //     Designer
+    designer: '/designer',
+    detailDesigner: '/designer/detail/:id',
+    profile: '/profile',
    
     //      Orders
     orders: '/order',

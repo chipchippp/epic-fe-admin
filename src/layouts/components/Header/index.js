@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import React, { useState, useEffect } from 'react';
-
+import { Link } from 'react-router-dom';
 function HeaderAdmin() {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
@@ -147,6 +147,10 @@ function HeaderAdmin() {
             <i className="ti-settings text-primary" />
             Settings
           </a>
+          <Link className="dropdown-item" to='/profile'>
+            <i className="ti-settings text-primary" />
+            Profile
+          </Link>
           <a className="dropdown-item" onClick={handleLogout}>
       <i className="ti-power-off text-primary" />
       Logout
