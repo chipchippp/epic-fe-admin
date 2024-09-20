@@ -13,7 +13,7 @@ const EditProduct = () => {
     const [product, setProduct] = useState({});
     const [imagesOld, setImagesOld] = useState([]);
     const [imagesNew, setImagesNew] = useState([]);
-
+ 
     useEffect(() => {
         const fetchProduct = async () => {
             setLoading(true);
@@ -243,7 +243,7 @@ const EditProduct = () => {
                                       multiple
                                       onChange={handleFileChange}
                                     />
-                                </div>
+                                </div> 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
                             <div>
                                 <h4>List of available products:</h4>
@@ -252,7 +252,7 @@ const EditProduct = () => {
                                         imagesOld.map((image, index) => (
                                             <div key={index} style={{ position: 'relative' }}>
                                                 <img
-                                                    src={`http://localhost:8082${image.imageSrc}`}
+                                                    src={`http://localhost:8080/api/v1/product-images/imagesPost/${image.imageUrl}`}
                                                     alt={image.imageName}
                                                     style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                                                 />

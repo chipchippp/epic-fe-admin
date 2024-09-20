@@ -77,14 +77,11 @@ function Product() {
                 params.product = `name~${search}`;
             }
 
-            console.log(params);
-            
             if (selectedCategory) {
                 params.categoryId = selectedCategory;
             }
     
             const response = await getFilteredProducts(params);
-            console.log(response.data.content);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setNumbers([...Array(response.data.totalPages).keys()].map(i => i + 1));
@@ -130,11 +127,6 @@ function Product() {
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-    };
-
-    const handleLimitChange = (e) => {
-        setLimit(e.target.value);
-        setCurrentPage(1);
     };
 
     const handleClose = () => setDeleteShow(false);
@@ -191,7 +183,6 @@ function Product() {
                                             ))}
                                         </select>
                                     </div> */}
-                                    <Search setSearch={handleSearch} />
                                     <div className="filter-sort-group">
                                         <div className="sort-container">
                                             <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
@@ -200,6 +191,7 @@ function Product() {
                                             </select>
                                         </div>
                                     </div>
+                                    <Search setSearch={handleSearch} />
                                 </div>
                                 <div className="table-responsive">
                                     <table className="table table-striped">
@@ -223,7 +215,7 @@ function Product() {
                                                     </td>
                                                     <td>
                                                         {item.images.length > 0 ? (
-                                                            <img src={`http://localhost:8080/api/v1/product-images/images/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                            <img src={`http://localhost:8080/api/v1/product-images/imagesPost/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
                                                         ) : (
                                                             'No Image'
                                                         )}
