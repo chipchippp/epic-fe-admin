@@ -15,8 +15,6 @@ const Product = () => {
         getProduct(1, 7)
             .then((response) => {
                 const data = response.data.content;
-                console.log('Product data:', data);
-                // Sort data based on soldQuantity in descending order
                 const sortedData = data.sort((a, b) => {
                     const soldQuantityA = a.soldQuantity || 0;
                     const soldQuantityB = b.soldQuantity || 0;

@@ -41,13 +41,13 @@ httpRequest.interceptors.response.use(
     (response) => {
         return response;
     },
-    (error) => {
-        if (error.response && error.response.status === 403) {
-            alert('Access denied. Please log in with a valid access token.');
-            window.location.href = '/login';
-        }
-        return Promise.reject(error);
-    },
+    // (error) => {
+    //     if (error.response && error.response.status === 403) {
+    //         alert('Access denied. Please log in with a valid access token.');
+    //         window.location.href = '/login';
+    //     }
+    //     return Promise.reject(error);
+    // },
 );
 
 export const isAuthenticated = () => {

@@ -30,9 +30,9 @@ export const getCategories = async () => {
     }
 };
 
-export const getTrashProduct = async (currentPage = 1, limit = 10) => {
+export const getTrashProduct = async (currentPage = 1, limit = 10, search) => {
     try {
-        const response = await get(`/products/trash?page=${currentPage}&limit=${limit}`);
+        const response = await get(`/products/trash?page=${currentPage}&limit=${limit}&search=${search}`);
         return response;
     } catch (error) {
         console.error('Error fetching products data:', error);
@@ -40,9 +40,30 @@ export const getTrashProduct = async (currentPage = 1, limit = 10) => {
     }
 };
 
+
+export const getProductCategory = async (params) => {
+    try {
+        const response = await get('http://localhost:8080/api/v1/products/category', { params });
+        return response;
+    } catch (error) {
+        console.error('Error fetching categories data:', error);
+        throw error;
+    }
+};
+
+export const getTrashCategories = async () => {
+    try {
+        const response = await get(`/categories/trash?page=1&limit=100`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching categories data:', error);
+        throw error;
+    }
+};
+
 export const getProductDetails = async (id) => {
     try {
-        const response = await get(`/Products/${id}`);
+        const response = await get(`/products/${id}`);
         return response;
     } catch (error) {
         console.error('Error fetching Product data:', error);
@@ -81,7 +102,17 @@ export const updateProduct = async (id, data) => {
 };
 export const deleteProduct = async (id) => {
     try {
-        const response = await del(`/products/${id}`);
+        const response = await del(`/products/in-trash/${id}`);
+        return response;
+    } catch (error) {
+        console.error('Error deleting Product:', error);
+        throw error;
+    }
+};
+
+export const deleteProductImg = async (id) => {
+    try {
+        const response = await del(`/product-images/${id}`);
         return response;
     } catch (error) {
         console.error('Error deleting Product:', error);

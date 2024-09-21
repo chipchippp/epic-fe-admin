@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 import { getCategory, deleteCategory } from '~/services/Category/categoryService';
+import { debounce } from 'lodash';
 
 function Category() {
     const [loading, setLoading] = useState(true);
@@ -20,36 +21,43 @@ function Category() {
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
+    const debouncedSearch = useCallback(
+        debounce((query) => {
+            const filteredData = data.filter((item) =>
+                item.categoryName.toLowerCase().includes(query.toLowerCase())
+            );
+            setSearchedData(filteredData);
+        }, 500),
+        [data]
+    );
+
     useEffect(() => {
-        const filteredData = data.filter((item) =>
-            item.categoryName.toLowerCase().includes(search.toLowerCase())
-        );
-        const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
-        setNumbers(pagesArray);
-        setSearchedData(filteredData);
-    }, [search, data, totalPages]);
+        debouncedSearch(search);
+    }, [search, debouncedSearch]);
 
-        useEffect(() => {
-            getData();
-        }, [currentPage, limit]);
+    useEffect(() => {
+        getData();
+    }, [currentPage, limit]);
 
-        const getData = async () => {
-            try {
-                const response = await getCategory(currentPage, limit);
-        
-                if (response && response.data && response.data.content) {
-                    setData(response.data.content);
-                    setSearchedData(response.data.content);
-                    setTotalPages(response.data.totalPages);
-                } else {
-                    toast.error('Invalid response structure from server');
-                }
-                setLoading(false);
-            } catch (error) {
-                toast.error('Failed to fetch categories');
+    const getData = async () => {
+        try {
+            const response = await getCategory(currentPage, limit);
+    
+            if (response && response.data && response.data.content) {
+                setData(response.data.content);
+                setSearchedData(response.data.content);
+                setTotalPages(response.data.totalPages);
+                const pagesArray = Array.from({ length: response.data.totalPages }, (_, i) => i + 1);
+                setNumbers(pagesArray);
+            } else {
+                toast.error('Invalid response structure from server');
             }
-        };
-        
+            setLoading(false);
+        } catch (error) {
+            toast.error('Failed to fetch categories');
+        }
+    };
+    
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
@@ -57,12 +65,10 @@ function Category() {
 
     const handleDeleteConfirm = async () => {
         try {
-            deleteCategory(deleteId)
-            .then(() => {
-                toast.success('CategoryParents has been deleted');
-                handleClose();
-                getData();
-            })
+            await deleteCategory(deleteId);
+            toast.success('Category has been deleted');
+            handleClose();
+            getData();
         } catch (error) {
             toast.error('Failed to delete category');
         }
@@ -78,6 +84,7 @@ function Category() {
         setLimit(e.target.value);
         setCurrentPage(1);
     };
+
     return (
         <>
             <div className="content-wrapper">

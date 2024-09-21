@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getProducts, getOrders, getUsers } from '~/services/Dashboard/dashService';
+import { getProducts, getOrders, getUsers, getOrderCount } from '~/services/Dashboard/dashService';
 import Product from './Product';
 
 function HomeAdmin() {
@@ -10,6 +10,7 @@ function HomeAdmin() {
   useEffect(() => {
     getOrderData();
     getProductData();
+    getOrderCount();
     getUserData();
   }, []);
 
@@ -23,10 +24,21 @@ function HomeAdmin() {
       });
   };
 
+  const getOrderCount = () => {
+    getOrders()
+      .then((data) => {
+        console.log(data.data);
+        setOrders(data.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+  };
+
   const getProductData = () => {
     getProducts()
       .then((data) => {
-        setProducts(data.data.content);
+        setProducts(data.data);
       })
       .catch((error) => {
         console.error('Error fetching data:', error);
@@ -86,29 +98,29 @@ function HomeAdmin() {
               </div>
             </div>
             <div className="col-md-6 mb-4">
-              <div className="card card-light-blue">
-                <div className="card-body">
-                  <p className="mb-4">Total Bookings</p>
-                  <p className="fs-30 mb-2">61344</p>
-                  <p>22.00% (30 days)</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mb-4">
-              <div className="card card-light-blue">
-                <div className="card-body">
-                  <p className="mb-4">Number of Meetings</p>
-                  <p className="fs-30 mb-2">34040</p>
-                  <p>2.00% (30 days)</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 mb-4">
               <div className="card card-light-danger">
                 <div className="card-body">
-                  <p className="mb-4">Number of Clients</p>
-                  <p className="fs-30 mb-2">47033</p>
-                  <p>0.22% (30 days)</p>
+                  <p className="mb-4">Total Order</p>
+                  <p className="fs-30 mb-2">{orders}</p>
+                  <p>abc</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 mb-4">
+              <div className="card card-light-blue">
+                <div className="card-body">
+                  <p className="mb-4">Total Product</p>
+                  <p className="fs-30 mb-2">{products}</p>
+                  <p>abc</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-6 mb-4">
+              <div className="card card-light-blue">
+                <div className="card-body">
+                  <p className="mb-4">Total Users</p>
+                  <p className="fs-30 mb-2">34040</p>
+                  <p>abc</p>
                 </div>
               </div>
             </div>

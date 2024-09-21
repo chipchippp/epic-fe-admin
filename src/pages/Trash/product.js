@@ -6,6 +6,7 @@ import 'rc-slider/assets/index.css';
 import './Product.css';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
+import { getTrashProduct, getProductCategory, getTrashCategories } from '~/services/Product/productService';
 
 function Product() {
     const [products, setProducts] = useState([]);
@@ -23,12 +24,12 @@ function Product() {
         const fetchProducts = async () => {
             try {
                 const response = selectedCategory
-                    ? await fetch(`http://localhost:8080/api/v1/products?category=${selectedCategory}&page=${currentPage}&limit=${limit}&search=${search}`)
-                    : await fetch(`http://localhost:8080/api/v1/products/trash?page=${currentPage}&limit=${limit}&search=${search}`);
+                    ? await getProductCategory(selectedCategory, currentPage, limit, search)
+                    : await getTrashProduct(currentPage, limit, search);
            
-                const data = await response.json();
-                setProducts(data.data.content);
-                setTotalPages(data.data.totalPages);
+                const data = response.data;
+                setProducts(data.content);
+                setTotalPages(data.totalPages);
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
@@ -54,21 +55,22 @@ function Product() {
         applyFilters();
     }, [search, priceRange, products]);
 
-    useEffect(() => {
-        fetch('http://localhost:8080/api/v1/categories/trash')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then((data) => {
-                setCategories(data.data.content);
-            })
-            .catch((error) => {
-                console.error('Error fetching categories:', error.message);
-            });
-    }, []);
+    // useEffect(() => {
+    //     getTrashCategories()
+    //         .then((response) => {
+    //             if (!response || response.status !== 200) {
+    //                 throw new Error(`Network response was not ok: ${response?.status}`);
+    //             }
+    //             return response.data;
+    //         })
+    //         .then((data) => {
+    //             console.log('Categories:', data.content);
+    //             setCategories(data.content);
+    //         })
+    //         .catch((error) => {
+    //             // console.error('Error fetching categories:', error.message || error);
+    //         });
+    // }, []);
 
     const handleCategoryChange = (categoryId) => {
         setSelectedCategory(categoryId);
@@ -80,10 +82,8 @@ function Product() {
             try {
                 await axios.delete(`http://localhost:8080/api/v1/products/${productId}`);
                 setProducts(products.filter(product => product.productId !== productId));
-                alert('Product deleted successfully');
             } catch (error) {
                 console.error('Error deleting product:', error);
-                alert('Failed to delete product');
             }
         }
     };
@@ -136,17 +136,16 @@ function Product() {
                                             <option value={30}>30</option>
                                         </select>
                                     </div>
-                                    <Search setSearch={setSearch} />
-                                    <div className="float-left ml-2">
+                                    {/* <div className="float-left ml-2">
                                         <select onChange={(e) => handleCategoryChange(e.target.value)} className="form-control selectric">
                                             <option value="">All</option> 
                                             {categories.map((category) => (
-                                                <option key={category.categoryId} value={category.categoryId}>
+                                                <option key={category.id} value={category.id}>
                                                     {category.categoryName}
                                                 </option>
                                             ))}
                                         </select>
-                                    </div>
+                                    </div> */}
                                     <div className="filter-sort-group">
                                         <div className="filter-container">
                                             <div className="price-labels">
@@ -165,7 +164,10 @@ function Product() {
                                                 />
                                             </div>
                                         </div>
+                                        
                                     </div>
+                                    <Search setSearch={setSearch} />
+
                                 </div>
                                 <div className="table-responsive">
                                     <table className="table table-striped">
@@ -198,7 +200,7 @@ function Product() {
                                                     <td>{item.category ? item.category.categoryName : 'N/A'}</td>
                                                     <td>{item.stockQuantity}</td>
                                                     <td>
-                                                        {/* {/* <Link to={`/editproduct/${item.productId}`} className="btn btn-primary" title="Edit">
+                                                        {/* <Link to={`/editproduct/${item.productId}`} className="btn btn-primary" title="Edit">
                                                             <i className="fas fa-pencil-alt"></i>
                                                         </Link> */}
                                                         &nbsp;

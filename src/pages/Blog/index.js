@@ -1,30 +1,30 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Table, Button, Modal } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { getUsers, deleteUsers } from '~/services/User/userService';
+import { getBlog, deleteBlog } from '~/services/Inventory/blogService';
 import { debounce } from 'lodash';
 
-function User() {
+function Blog() {
     const [loading, setLoading] = useState(true);
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-
+    
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
     const debouncedSearch = useCallback(
         debounce((query) => {
             const filteredData = data.filter((item) =>
-                item.username.toLowerCase().includes(query.toLowerCase())
+                item.title.toLowerCase().includes(query.toLowerCase())
             );
             setSearchedData(filteredData);
         }, 500),
@@ -41,17 +41,23 @@ function User() {
 
     const getData = async () => {
         try {
-            const response = await getUsers(currentPage, limit);
-            setData(response.data.content);
-            setSearchedData(response.data.content);
-            setTotalPages(response.data.totalPages);
+            const response = await getBlog(currentPage, limit);
+    
+            if (response && response.data && response.data.content) {
+                setData(response.data.content);
+                setSearchedData(response.data.content);
+                setTotalPages(response.data.totalPages);
+                const pagesArray = Array.from({ length: response.data.totalPages }, (_, i) => i + 1);
+                setNumbers(pagesArray);
+            } else {
+                toast.error('Invalid response structure from server');
+            }
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching users:', error);
-            setLoading(false);
+            toast.error('Failed to fetch categories');
         }
     };
-
+    
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
@@ -59,12 +65,12 @@ function User() {
 
     const handleDeleteConfirm = async () => {
         try {
-            await deleteUsers(deleteId);
-            toast.success('User has been deleted');
+            await deleteBlog(deleteId);
+            toast.success('blog has been deleted');
             handleClose();
             getData();
         } catch (error) {
-            toast.error('Failed to delete user');
+            toast.error('Failed to delete blog');
         }
     };
 
@@ -86,8 +92,8 @@ function User() {
                     <div className="col-md-12 grid-margin">
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Users</h3>
-                                <Link to="/users/create" className="btn btn-primary mb-3">
+                                <h3 className="font-weight-bold">Blogs</h3>
+                                <Link to="/blog/create" className="btn btn-primary">
                                     <i className="fas fa-plus"></i> New
                                 </Link>
                             </div>
@@ -102,23 +108,26 @@ function User() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <Search setSearch={setSearch} />
                                         <div className="float-left">
-                                            <select onChange={handleLimitChange} className='btn btn-primary form-control selectric' value={limit}>
+                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
                                                 <option value={5}>Show</option>
                                                 <option value={10}>10</option>
                                                 <option value={20}>20</option>
                                                 <option value={30}>30</option>
                                             </select>
                                         </div>
+                                        <Search setSearch={setSearch} />
+                                    
                                         <div className="table-responsive">
-                                            <Table className="table table-striped">
+                                            <table className="table table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Username</th>
-                                                        <th>Email</th>
-                                                        <th>Phone</th>
+                                                        <th>Title</th>
+                                                        <th>ImageTitle</th>
+                                                        <th>Content</th>
+                                                        <th>Author</th>
+                                                        <th>UserId</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -126,30 +135,42 @@ function User() {
                                                     {searchedData.map((item, index) => (
                                                         <tr key={item.id}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
-                                                            <td>{item.username}</td>
-                                                            <td>{item.email}</td>
-                                                            <td>{item.phoneNumber}</td>
+                                                            <td>{item.title}</td>
+                                                            <td>
+                                            {item.imageTitle ? (
+                                                <img
+                                                    src={`http://localhost:8080/api/v1/blogs/blog/${item.imageTitle}`}
+                                                    alt={item.title}
+                                                    style={{ width: '70px', height: '70px', borderRadius: '0px' }}
+                                                />
+                                            ) : (
+                                                'No Image'
+                                            )}
+                                        </td>
+                                                            <td>{item.content}</td>
+                                                            <td>{item.author}</td>
+                                                            <td>{item.userId}</td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/users/detail/${item.id}`}
-                                                                    className="btn btn-warning"
-                                                                    title="Detail"
-                                                                >
-                                                                    <i className="far fa-eye"></i>
-                                                                </Link>
-                                                                &nbsp;
-                                                                <Link
-                                                                    to={`/users/edit/${item.id}`}
+                                                                    to={`/blog/edit/${item.id}`}
                                                                     className="btn btn-primary"
                                                                     title="Edit"
                                                                 >
                                                                     <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
+                                                                &nbsp;
+                                                                <button
+                                                                    className="btn btn-danger"
+                                                                    onClick={() => handleDelete(item.id)}
+                                                                    title="Delete"
+                                                                >
+                                                                    <i className="fas fa-trash"></i>
+                                                                </button>
                                                             </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
-                                            </Table>
+                                            </table>
                                         </div>
                                         <Pagination
                                             prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
@@ -164,12 +185,12 @@ function User() {
                         </div>
                     </div>
                 </div>
-
+                
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this user?</Modal.Body>
+                    <Modal.Body>Are you sure you want to delete this blog?</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel
@@ -186,4 +207,4 @@ function User() {
     );
 }
 
-export default User;
+export default Blog;

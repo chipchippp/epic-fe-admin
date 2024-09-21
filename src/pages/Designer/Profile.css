@@ -1,0 +1,10 @@
+.fixed-profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    position: relative;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: block;
+}

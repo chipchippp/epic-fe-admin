@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { editProduct, updateProduct, getCategories } from '~/services/Product/productService';
+import { editProduct, updateProduct, getCategories, deleteProductImg } from '~/services/Product/productService';
 import { toast } from 'react-toastify';
 
 const EditProduct = () => {
@@ -13,6 +13,7 @@ const EditProduct = () => {
     const [product, setProduct] = useState({});
     const [imagesOld, setImagesOld] = useState([]);
     const [imagesNew, setImagesNew] = useState([]);
+    const [removedImages, setRemovedImages] = useState([]);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -50,11 +51,6 @@ const EditProduct = () => {
         setProduct({ ...product, [name]: value });
     };
 
-    const handleCategoryChange = (e) => {
-        const categoryId = e.target.value;
-        setProduct({ ...product, category: { ...product.category, categoryId } });
-    };
-
     const handleFileChange = (e) => {
         const filesArray = Array.from(e.target.files);
         setImagesNew([]);
@@ -77,11 +73,11 @@ const EditProduct = () => {
         setSelectedFiles(filesArray);
     };
 
-    const handleRemoveOldImage = (e, index) => {
-        e.preventDefault();
-        setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
-    };
-
+    // const handleRemoveOldImage = (e, index) => {
+    //     e.preventDefault();
+    //     setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
+    // };
+    
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -97,14 +93,19 @@ const EditProduct = () => {
                 selectedFiles.forEach((file) => formData.append('files', file));
             }
     
+            if (removedImages.length > 0) {
+                formData.append('removedImages', JSON.stringify(removedImages));
+            }
+    
             await updateProduct(id, formData);
             navigate('/product');
         } catch (error) {
             toast('Failed to update product');
-            console.error('Error creating Product:', error.response ? error.response.data : error.message);
         }
     };
-
+    
+    
+    
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -112,6 +113,19 @@ const EditProduct = () => {
     if (error) {
         return <div>{error}</div>;
     }
+
+    const handleRemoveOldImage = async (e, index) => {
+        e.preventDefault();
+        try {
+            const imageId = imagesOld[index].imageId;
+            await deleteProductImg(imageId); 
+            setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
+            setRemovedImages((prevImages) => [...prevImages, imageId]);
+        } catch (error) {
+            toast.error('Failed to remove image');
+        }
+    };
+    
 
     return (
         <div className="content-wrapper">
@@ -169,8 +183,8 @@ const EditProduct = () => {
                                     <select
                                         name="categoryId"
                                         className="form-control"
-                                        value={product.category?.categoryId || ''}
-                                        onChange={handleCategoryChange}
+                                        value={product.category.categoryId || ''}
+                                        onChange={(e) => setProduct({ ...product, categoryId: e.target.value })}
                                         required
                                     >
                                         <option value="" disabled>
@@ -243,7 +257,7 @@ const EditProduct = () => {
                                       multiple
                                       onChange={handleFileChange}
                                     />
-                                </div>
+                                </div> 
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
                             <div>
                                 <h4>List of available products:</h4>
@@ -252,7 +266,7 @@ const EditProduct = () => {
                                         imagesOld.map((image, index) => (
                                             <div key={index} style={{ position: 'relative' }}>
                                                 <img
-                                                    src={`http://localhost:8082${image.imageSrc}`}
+                                                    src={`http://localhost:8080/api/v1/product-images/imagesPost/${image.imageUrl}`}
                                                     alt={image.imageName}
                                                     style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                                                 />
