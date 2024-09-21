@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { createOrders } from '~/services/Orders/orderService';
+import { getFilteredOrders } from '~/services/Orders/orderService';
 import debounce from 'lodash.debounce';
 
 function Order() {
@@ -16,7 +16,8 @@ function Order() {
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
     const [search, setSearch] = useState('');
-    const [searchedData, setSearchedData] = useState([]);
+    const [sortOrder, setSortOrder] = useState('desc');
+    const [filteredOrders, setFilteredOrders] = useState([]);
 
     useEffect(() => {
         let filteredData = data;
@@ -33,56 +34,57 @@ function Order() {
 
         const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
         setNumbers(pagesArray);
-        setSearchedData(filteredData);
+        setFilteredOrders(filteredData);
     }, [search, data, totalPages, status]);
 
     useEffect(() => {
-        const fetchOrder = async () => {
-            try {
-                const response = await createOrders({
-                    page: currentPage,
-                    limit: limit,
-                    status: status
-                });
-                setData(response.data.content);
-                setSearchedData(response.data.content);
-                setTotalPages(response.data.totalPages);
-                setLoading(false);
-            } catch (error) {
-                toast.error(`Error fetching orders: ${error.response?.data?.message || error.message}`);
-                setLoading(false);
+        getFilteredData();
+    }, [currentPage, limit, sortOrder, search]);
+
+    const getFilteredData = async () => {
+        try {
+            const params = {
+                page: currentPage,
+                size: Number(limit),
+                sort: `createdAt:${sortOrder}`,
+            };
+
+            if (search) {
+                params.order = `id~${search}`;
             }
-        };
-        fetchOrder();
-    }, [currentPage, limit, status]);
+
+            const response = await getFilteredOrders(params);
+            setData(response.data.content);
+            setTotalPages(response.data.totalPages);
+            setNumbers([...Array(response.data.totalPages).keys()].map(i => i + 1));
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching products data:', error);
+            toast.error('Failed to fetch products');
+            setLoading(false);
+        }
+    };
 
     const handleStatusChange = (event) => {
-        // Convert status to number (e.g., "PENDING" -> 1)
-        const statusValue = event.target.value;
-        const statusMapping = {
-            "CREATED": 0,
-            "PENDING": 1,
-            "PROCESSING": 2,
-            "ONDELIVERY": 3,
-            "DELIVERED": 4,
-            "CANCEL": 5,
-            "COMPLETE": 6
-        };
-        setStatus(statusMapping[statusValue] || '');
+        setStatus(event.target.value);
     };
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
 
+    const handleLimitChange = (e) => {
+        setLimit(Number(e.target.value));
+        setCurrentPage(1);
+    };
+
+    const handleSort = (order) => {
+        setSortOrder(order);
+    };
+
     const handleSearch = useCallback(debounce((value) => {
         setSearch(value);
     }, 500), []);
-
-    const handleLimitChange = (e) => {
-        setLimit(e.target.value);
-        setCurrentPage(1);
-    };
 
     return (
         <>
@@ -110,7 +112,7 @@ function Order() {
                                                 onChange={handleStatusChange}
                                             >
                                                 <option value="">Sort Status</option>
-                                                <option value="CREATED">Pending</option>
+                                                <option value="CREATED">Created</option>
                                                 <option value="PENDING">Pending</option>
                                                 <option value="PROCESSING">Processing</option>
                                                 <option value="ONDELIVERY">On Delivery</option>
@@ -119,12 +121,18 @@ function Order() {
                                                 <option value="COMPLETE">Complete</option>
                                             </select>
                                         </div>
-                                        <div className="float-left ml-2">
+                                        {/* <div className="float-left ml-2">
                                             <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
                                                 <option value={10}>Show</option>
                                                 <option value={20}>20</option>
                                                 <option value={40}>40</option>
                                             </select>
+                                        </div> */}
+                                        <div className="float-left ml-2">
+                                                <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
+                                                    <option value="asc">Sort Ascending</option>
+                                                    <option value="desc">Sort Descending</option>
+                                                </select>
                                         </div>
                                         <Search className="float-left ml-2" setSearch={handleSearch} />
                                         <div className="table-responsive">
@@ -141,7 +149,7 @@ function Order() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {searchedData.map((item, index) => (
+                                                    {filteredOrders.map((item, index) => (
                                                         <tr key={item.id}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.id}</td>
@@ -149,22 +157,25 @@ function Order() {
                                                             <td>{item.totalPrice}</td>
                                                             <td>{item.createdAt}</td>
                                                             <td>
-                                                                {item.status === 1 && (
+                                                                {item.status === "CREATED" && (
+                                                                    <div className="badge badge-warning">Created</div>
+                                                                )}
+                                                                {item.status === "PENDING" && (
                                                                     <div className="badge badge-secondary">Pending</div>
                                                                 )}
-                                                                {item.status === 2 && (
+                                                                {item.status === "PROCESSING" && (
                                                                     <div className="badge badge-primary">Processing</div>
                                                                 )}
-                                                                {item.status === 3 && (
+                                                                {item.status === "ONDELIVERY" && (
                                                                     <div className="badge badge-info">On Delivery</div>
                                                                 )}
-                                                                {item.status === 4 && (
+                                                                {item.status === "DELIVERED" && (
                                                                     <div className="badge badge-success">Delivered</div>
                                                                 )}
-                                                                {item.status === 5 && (
+                                                                {item.status === "CANCEL" && (
                                                                     <div className="badge badge-danger">Cancel</div>
                                                                 )}
-                                                                {item.status === 6 && (
+                                                                {item.status === "COMPLETE" && (
                                                                     <div className="badge badge-success">Complete</div>
                                                                 )}
                                                             </td>
