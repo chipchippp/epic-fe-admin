@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { editProduct, updateProduct, getCategories } from '~/services/Product/productService';
+import { editProduct, updateProduct, getCategories, deleteProductImg } from '~/services/Product/productService';
 import { toast } from 'react-toastify';
 
 const EditProduct = () => {
@@ -13,7 +13,8 @@ const EditProduct = () => {
     const [product, setProduct] = useState({});
     const [imagesOld, setImagesOld] = useState([]);
     const [imagesNew, setImagesNew] = useState([]);
- 
+    const [removedImages, setRemovedImages] = useState([]);
+
     useEffect(() => {
         const fetchProduct = async () => {
             setLoading(true);
@@ -72,10 +73,10 @@ const EditProduct = () => {
         setSelectedFiles(filesArray);
     };
 
-    const handleRemoveOldImage = (e, index) => {
-        e.preventDefault();
-        setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
-    };
+    // const handleRemoveOldImage = (e, index) => {
+    //     e.preventDefault();
+    //     setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
+    // };
     
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -90,16 +91,19 @@ const EditProduct = () => {
     
             if (selectedFiles.length > 0) {
                 selectedFiles.forEach((file) => formData.append('files', file));
-            } else {
-                formData.append('files', null);
             }
-            
+    
+            if (removedImages.length > 0) {
+                formData.append('removedImages', JSON.stringify(removedImages));
+            }
+    
             await updateProduct(id, formData);
             navigate('/product');
         } catch (error) {
             toast('Failed to update product');
         }
     };
+    
     
     
     if (loading) {
@@ -109,6 +113,19 @@ const EditProduct = () => {
     if (error) {
         return <div>{error}</div>;
     }
+
+    const handleRemoveOldImage = async (e, index) => {
+        e.preventDefault();
+        try {
+            const imageId = imagesOld[index].imageId;
+            await deleteProductImg(imageId); 
+            setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
+            setRemovedImages((prevImages) => [...prevImages, imageId]);
+        } catch (error) {
+            toast.error('Failed to remove image');
+        }
+    };
+    
 
     return (
         <div className="content-wrapper">

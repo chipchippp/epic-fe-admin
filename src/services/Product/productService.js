@@ -109,3 +109,13 @@ export const deleteProduct = async (id) => {
         throw error;
     }
 };
+
+export const deleteProductImg = async (id) => {
+    try {
+        const response = await del(`/product-images/${id}`);
+        return response;
+    } catch (error) {
+        console.error('Error deleting Product:', error);
+        throw error;
+    }
+};

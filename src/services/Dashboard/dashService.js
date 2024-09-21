@@ -2,7 +2,7 @@ import { get } from '~/utils/httpRequest';
 
 export const getProducts = async () => {
     try {
-        const response = await get(`/products/getAll?page=1&limit=1000`);
+        const response = await get(`/products/count`);
         return response;
     } catch (error) {
         console.error('Error fetching Product data:', error);
@@ -13,6 +13,16 @@ export const getProducts = async () => {
 export const getOrders = async () => {
     try {
         const response = await get(`/orders?page=1&limit=1000`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Orders data:', error);
+        throw error;
+    }
+};
+
+export const getOrderCount = async () => {
+    try {
+        const response = await get(`/orders/count`);
         return response;
     } catch (error) {
         console.error('Error fetching Orders data:', error);
