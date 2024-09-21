@@ -83,6 +83,39 @@ function SidebarAdmin() {
             <Link className="nav-link" to="/users">
                 Users
             </Link>
+            <Link className="nav-link" to="/feedback">
+                Reviews
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <li className="nav-item">
+      <a
+        className="nav-link"
+        data-toggle="collapse"
+        href="#auth"
+        aria-expanded="false"
+        aria-controls="auth"
+      >
+        <i className="icon-head menu-icon"></i>
+
+        <span className="menu-title">Designer</span>
+        <i className="menu-arrow" />
+      </a>
+      <div className="collapse" id="auth">
+        <ul className="nav flex-column sub-menu">
+          <li className="nav-item">
+            <Link className="nav-link" to="/designer">
+                Designer
+            </Link>
+            <Link className="nav-link" to="/category-gallery">
+                Category Gallery
+            </Link>
+            {/* <Link className="nav-link" to="/feedback">
+                Reviews
+            </Link> */}
           </li>
         </ul>
       </div>
@@ -110,6 +143,9 @@ function SidebarAdmin() {
             </Link>
             <Link className="nav-link" to="/trash/products">
                 Trash Products
+            </Link>
+            <Link className="nav-link" to="/trash/category/gallery">
+                Trash Category Gallery
             </Link>
           </li>
         </ul>

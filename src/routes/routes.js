@@ -31,6 +31,21 @@ import BlogEdit from '~/pages/Blog/edit';
 // import DetailDesigner from '~/pages/Designer/detail';
 import Profile from '~/pages/Designer/profile';
 
+// Category Gallery
+import CategoryGallery from '~/pages/Designer/CategoryGallery/index';
+import CreateCategoryGallery from '~/pages/Designer/CategoryGallery/create';
+import EditCategoryGallery from '~/pages/Designer/CategoryGallery/edit';
+
+// Img Designer
+import ImgDesigner from '~/pages/Designer/ImgDesigner/index';
+import CreateImgDesigner from '~/pages/Designer/ImgDesigner/create';
+import EditImgDesigner from '~/pages/Designer/ImgDesigner/edit';
+
+// Room 
+import Room from '~/pages/Room/index';
+import CreateRoom from '~/pages/Room/create';
+import EditRoom from '~/pages/Room/edit';
+
 // Order
 import Order from '~/pages/Order/index';
 import OrderDetail from '~/pages/Order/details';
@@ -81,6 +96,21 @@ export const publicRoutes = [
     // {path: config.routes.detailDesigner, component: DetailDesigner, layout: AdminLayout},
     {path: config.routes.profile, component: Profile, layout: AdminLayout},
 
+    // Category Gallery
+    {path: config.routes.categoryGallery, component: CategoryGallery, layout: AdminLayout},
+    {path: config.routes.createCategoryGallery, component: CreateCategoryGallery, layout: AdminLayout},
+    {path: config.routes.editCategoryGallery, component: EditCategoryGallery, layout: AdminLayout},
+
+    // Img Designer
+    {path: config.routes.imgDesigner, component: ImgDesigner, layout: AdminLayout},
+    {path: config.routes.createImgDesigner, component: CreateImgDesigner, layout: AdminLayout},
+    {path: config.routes.editImgDesigner, component: EditImgDesigner, layout: AdminLayout},
+    
+    // Room
+    {path: config.routes.room, component: Room, layout: AdminLayout},
+    {path: config.routes.createRoom, component: CreateRoom, layout: AdminLayout},
+    {path: config.routes.editRoom, component: EditRoom, layout: AdminLayout},
+    
     // Order
     {path: config.routes.orders, component: Order, layout: AdminLayout},
     {path: config.routes.orderDetail, component: OrderDetail, layout: AdminLayout},
