@@ -83,8 +83,8 @@ function SidebarAdmin() {
             <Link className="nav-link" to="/users">
                 Users
             </Link>
-            <Link className="nav-link" to="/feedback">
-                Reviews
+            <Link className="nav-link" to="/room/create">
+                Rooms
             </Link>
           </li>
         </ul>
@@ -95,16 +95,15 @@ function SidebarAdmin() {
       <a
         className="nav-link"
         data-toggle="collapse"
-        href="#auth"
+        href="#design"
         aria-expanded="false"
-        aria-controls="auth"
+        aria-controls="design"
       >
-        <i className="icon-head menu-icon"></i>
-
+        <i class="menu-icon fa-solid fa-people-roof"></i>
         <span className="menu-title">Designer</span>
         <i className="menu-arrow" />
       </a>
-      <div className="collapse" id="auth">
+      <div className="collapse" id="design">
         <ul className="nav flex-column sub-menu">
           <li className="nav-item">
             <Link className="nav-link" to="/designer">
@@ -113,9 +112,9 @@ function SidebarAdmin() {
             <Link className="nav-link" to="/category-gallery">
                 Category Gallery
             </Link>
-            {/* <Link className="nav-link" to="/feedback">
-                Reviews
-            </Link> */}
+            <Link className="nav-link" to="/img-designer">
+                ImgDesign
+            </Link>
           </li>
         </ul>
       </div>
@@ -144,7 +143,7 @@ function SidebarAdmin() {
             <Link className="nav-link" to="/trash/products">
                 Trash Products
             </Link>
-            <Link className="nav-link" to="/trash/category/gallery">
+            <Link className="nav-link" to="/trash/category-gallery">
                 Trash Category Gallery
             </Link>
           </li>
