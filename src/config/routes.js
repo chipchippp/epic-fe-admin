@@ -29,7 +29,7 @@ const routes = {
 
     //     Designer
     designer: '/designer',
-    detailDesigner: '/designer/detail/:id',
+    detailDesigner: '/designer-detail/:id',
     profile: '/profile',
 
     //      Category Gallery

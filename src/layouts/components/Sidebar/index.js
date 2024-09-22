@@ -83,9 +83,6 @@ function SidebarAdmin() {
             <Link className="nav-link" to="/users">
                 Users
             </Link>
-            <Link className="nav-link" to="/room/create">
-                Rooms
-            </Link>
           </li>
         </ul>
       </div>
@@ -144,7 +141,7 @@ function SidebarAdmin() {
                 Trash Products
             </Link>
             <Link className="nav-link" to="/trash/category-gallery">
-                Trash Category Gallery
+                Trash Gallery
             </Link>
           </li>
         </ul>
