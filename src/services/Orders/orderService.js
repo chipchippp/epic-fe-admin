@@ -1,8 +1,8 @@
 import { get, post, put, del } from '~/utils/httpRequest';
 
-export const getOrders = async (currentPage = 1, limit = 10) => {
+export const getFilteredOrders = async (params) => {
     try {
-        const response = await get(`/orders?page=${currentPage}&limit=${limit}`);
+        const response = await get(`/orders/search-by-specification`, { params });
         return response;
     } catch (error) {
         console.error('Error fetching Orders data:', error);
@@ -20,12 +20,12 @@ export const getAllOrders = async () => {
     }
 };
 
-export const createOrders = async (data) => {
-    try {  
-        const response = await post(`/orders/search`, data);
+export const createOrders = async (params) => {
+    try {
+        const response = await get(`/orders/search-by-specification`, { params });
         return response;
     } catch (error) {
-        console.error('Failed to create Orders', error);
+        console.error('Error fetching Orders data:', error);
         throw error;
     }
 };

@@ -92,6 +92,35 @@ function SidebarAdmin() {
       <a
         className="nav-link"
         data-toggle="collapse"
+        href="#design"
+        aria-expanded="false"
+        aria-controls="design"
+      >
+        <i class="menu-icon fa-solid fa-people-roof"></i>
+        <span className="menu-title">Designer</span>
+        <i className="menu-arrow" />
+      </a>
+      <div className="collapse" id="design">
+        <ul className="nav flex-column sub-menu">
+          <li className="nav-item">
+            <Link className="nav-link" to="/designer">
+                Designer
+            </Link>
+            <Link className="nav-link" to="/category-gallery">
+                Category Gallery
+            </Link>
+            <Link className="nav-link" to="/img-designer">
+                ImgDesign
+            </Link>
+          </li>
+        </ul>
+      </div>
+    </li>
+
+    <li className="nav-item">
+      <a
+        className="nav-link"
+        data-toggle="collapse"
         href="#trash"
         aria-expanded="false"
         aria-controls="trash"
@@ -110,6 +139,9 @@ function SidebarAdmin() {
             </Link>
             <Link className="nav-link" to="/trash/products">
                 Trash Products
+            </Link>
+            <Link className="nav-link" to="/trash/category-gallery">
+                Trash Gallery
             </Link>
           </li>
         </ul>

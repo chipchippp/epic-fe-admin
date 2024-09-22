@@ -27,9 +27,25 @@ import BlogCreate from '~/pages/Blog/create';
 import BlogEdit from '~/pages/Blog/edit';
 
 // Designer
-// import Designer from '~/pages/Designer/index';
-// import DetailDesigner from '~/pages/Designer/detail';
-import Profile from '~/pages/Designer/profile';
+import Designer from '~/pages/Designer/Designer/index';
+import DesignerDetail from '~/pages/Designer/Designer/details';
+import DesignAppointment from '~/pages/Designer/Designer/designerAppointment';
+import DesignAppointmentDetail from '~/pages/Designer/Designer/designerAppointmentDetail';
+
+// Category Gallery
+import CategoryGallery from '~/pages/Designer/CategoryGallery/index';
+import CreateCategoryGallery from '~/pages/Designer/CategoryGallery/create';
+import EditCategoryGallery from '~/pages/Designer/CategoryGallery/edit';
+
+// Img Designer
+import ImgDesigner from '~/pages/Designer/ImgDesigner/index';
+import CreateImgDesigner from '~/pages/Designer/ImgDesigner/create';
+import EditImgDesigner from '~/pages/Designer/ImgDesigner/edit';
+
+// Room 
+import Room from '~/pages/Room/index';
+import CreateRoom from '~/pages/Room/create';
+import EditRoom from '~/pages/Room/edit';
 
 // Order
 import Order from '~/pages/Order/index';
@@ -77,9 +93,25 @@ export const publicRoutes = [
     {path: config.routes.editBlog, component: BlogEdit, layout: AdminLayout},
 
     // Designer
-    // {path: config.routes.designer, component: Designer, layout: AdminLayout},
-    // {path: config.routes.detailDesigner, component: DetailDesigner, layout: AdminLayout},
-    {path: config.routes.profile, component: Profile, layout: AdminLayout},
+    {path: config.routes.designer, component: Designer, layout: AdminLayout},
+    {path: config.routes.detailDesigner, component: DesignerDetail, layout: AdminLayout},
+    {path: config.routes.designerAppointment, component: DesignAppointment, layout: AdminLayout},
+    {path: config.routes.designerAppointmentDetail, component: DesignAppointmentDetail, layout: AdminLayout},
+
+    // Category Gallery
+    {path: config.routes.categoryGallery, component: CategoryGallery, layout: AdminLayout},
+    {path: config.routes.createCategoryGallery, component: CreateCategoryGallery, layout: AdminLayout},
+    {path: config.routes.editCategoryGallery, component: EditCategoryGallery, layout: AdminLayout},
+
+    // Img Designer
+    {path: config.routes.imgDesigner, component: ImgDesigner, layout: AdminLayout},
+    {path: config.routes.createImgDesigner, component: CreateImgDesigner, layout: AdminLayout},
+    {path: config.routes.editImgDesigner, component: EditImgDesigner, layout: AdminLayout},
+    
+    // Room
+    {path: config.routes.room, component: Room, layout: AdminLayout},
+    {path: config.routes.createRoom, component: CreateRoom, layout: AdminLayout},
+    {path: config.routes.editRoom, component: EditRoom, layout: AdminLayout},
 
     // Order
     {path: config.routes.orders, component: Order, layout: AdminLayout},

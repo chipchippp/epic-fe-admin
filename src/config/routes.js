@@ -29,8 +29,24 @@ const routes = {
 
     //     Designer
     designer: '/designer',
-    detailDesigner: '/designer/detail/:id',
-    profile: '/profile',
+    detailDesigner: '/designer-detail/:id',
+    designerAppointment: '/designer-appointments/:userId',
+    designerAppointmentDetail: '/designer-appointments/detail/:id',
+
+    //      Category Gallery
+    categoryGallery: '/category-gallery',
+    createCategoryGallery: '/category-gallery/create',
+    editCategoryGallery: '/category-gallery/edit/:id',
+
+    //      Img Designer
+    imgDesigner: '/img-designer',
+    createImgDesigner: '/img-designer/create',
+    editImgDesigner: '/img-designer/edit/:id',
+    
+    //     Room
+    room: '/room',
+    createRoom: '/room/create',
+    editRoom: '/room/edit/:id',
    
     //      Orders
     orders: '/order',
