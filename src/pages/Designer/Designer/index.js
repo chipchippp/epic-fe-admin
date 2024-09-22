@@ -45,7 +45,6 @@ function Design() {
             const response = await getDesign(status);
     
             if (response && response.data) {
-                console.log(response.data);
                 setData(response.data); 
                 setSearchedData(response.data);
             } else {
@@ -115,6 +114,7 @@ function Design() {
                                                 <option value={30}>30</option>
                                             </select>
                                         </div>
+                                        &nbsp;
                                         <div className="float-left">
                                             <select
                                                 className="form-control selectric"

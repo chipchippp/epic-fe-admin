@@ -25,7 +25,6 @@ function CreateUser() {
             navigate('/users');
         } catch (error) {
             toast.error(`Failed to create user: ${error.message}`);
-            console.error('Failed to create Users', error);
         }
     };
 

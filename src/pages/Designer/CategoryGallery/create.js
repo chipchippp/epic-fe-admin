@@ -20,8 +20,7 @@ function CreateCategory() {
                 const response = await axios.get('http://localhost:8080/api/v1/categories/parentCategoryIsNull');
                 setCategories(response.data.data);
             } catch (error) {
-                toast.error('Failed to fetch categories');
-                console.error('Fetch error:', error);
+                toast.error('Failed to fetch categories', error);
             }
         };
     

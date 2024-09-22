@@ -53,7 +53,6 @@ const CreateBlog = () => {
             navigate('/Blog');
         } catch (error) {
             toast.error(`Failed to create Blog: ${error.message}`);
-            console.error('Error creating Blog:', error.response ? error.response.data : error.message);
         }
     };
 

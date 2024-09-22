@@ -59,8 +59,7 @@ function Order() {
             setNumbers([...Array(response.data.totalPages).keys()].map(i => i + 1));
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching products data:', error);
-            toast.error('Failed to fetch products');
+            toast.error('Failed to fetch products', error);
             setLoading(false);
         }
     };

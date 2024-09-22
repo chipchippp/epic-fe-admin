@@ -58,7 +58,6 @@ const CreateProduct = () => {
             navigate('/product');
         } catch (error) {
             toast.error(`Failed to create product: ${error.message}`);
-            console.error('Error creating Product:', error.response ? error.response.data : error.message);
         }
     };
 

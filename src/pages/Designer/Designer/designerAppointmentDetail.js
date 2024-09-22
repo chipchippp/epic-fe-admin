@@ -25,7 +25,6 @@ function OrderDetail() {
         const fetchData = async () => {
             try {
                 const result = await editAppointment(id);
-                console.log('result', result.data);
                 setData(result.data);
                 setLoading(false);
             } catch (error) {
@@ -52,8 +51,7 @@ function OrderDetail() {
             navigate(`/designer-appointments/detail/${id}`);
             window.location.reload();
         } catch (error) {
-            toast.error('Failed to update order status');
-            console.error('Update error:', error);
+            toast.error('Failed to update order status', error);
         }
     };
 

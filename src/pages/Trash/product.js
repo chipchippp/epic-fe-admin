@@ -7,6 +7,7 @@ import './Product.css';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
 import { getTrashProduct, getProductCategory, getTrashCategories } from '~/services/Product/productService';
+import { toast } from 'react-toastify';
 
 function Product() {
     const [products, setProducts] = useState([]);
@@ -31,7 +32,7 @@ function Product() {
                 setProducts(data.content);
                 setTotalPages(data.totalPages);
             } catch (error) {
-                console.error('Error fetching products:', error);
+                toast.error('Failed to fetch products', error);
             }
         };
     
@@ -55,23 +56,6 @@ function Product() {
         applyFilters();
     }, [search, priceRange, products]);
 
-    // useEffect(() => {
-    //     getTrashCategories()
-    //         .then((response) => {
-    //             if (!response || response.status !== 200) {
-    //                 throw new Error(`Network response was not ok: ${response?.status}`);
-    //             }
-    //             return response.data;
-    //         })
-    //         .then((data) => {
-    //             console.log('Categories:', data.content);
-    //             setCategories(data.content);
-    //         })
-    //         .catch((error) => {
-    //             // console.error('Error fetching categories:', error.message || error);
-    //         });
-    // }, []);
-
     const handleCategoryChange = (categoryId) => {
         setSelectedCategory(categoryId);
         setCurrentPage(1);
@@ -83,7 +67,7 @@ function Product() {
                 await axios.delete(`http://localhost:8080/api/v1/products/${productId}`);
                 setProducts(products.filter(product => product.productId !== productId));
             } catch (error) {
-                console.error('Error deleting product:', error);
+                toast.error('Failed to delete product', error);
             }
         }
     };

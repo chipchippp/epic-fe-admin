@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getProduct } from '~/services/Product/productService';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Product = () => {
     const [products, setProducts] = useState([]);
@@ -23,7 +24,7 @@ const Product = () => {
                 setProducts(sortedData);
             })
             .catch((error) => {
-                console.error('Error fetching data:', error);
+                toast.error('Failed to fetch products', error);
             });
     };
 

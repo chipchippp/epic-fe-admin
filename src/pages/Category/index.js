@@ -66,7 +66,7 @@ function Category() {
     const handleDeleteConfirm = async () => {
         try {
             await deleteCategory(deleteId);
-            toast.success('Category has been deleted');
+            toast.success('Category has been deleted successfully');
             handleClose();
             getData();
         } catch (error) {

@@ -56,7 +56,7 @@ function UserDetail() {
                 setTotalPages(response.data.totalPages || 1);
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching Orders user data:', error);
+                toast.error('Error fetching Orders user data:', error);
                 setLoading(false);
             }
         };

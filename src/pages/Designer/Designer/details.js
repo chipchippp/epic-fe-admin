@@ -50,8 +50,7 @@ function DesignDetail() {
             navigate(`/designer-detail/${id}`);
             window.location.reload();
         } catch (error) {
-            toast.error('Failed to update design status');
-            console.error('Update error:', error);
+            toast.error('Failed to update design status', error);
         }
     };
 

@@ -12,13 +12,12 @@ import debounce from 'lodash.debounce';
 import { getFilteredProducts, deleteProduct, getCategories } from '~/services/Product/productService';
 
 function Product() {
-    const [loading, setLoading] = useState(true);
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
     const [priceRange, setPriceRange] = useState([0, 90905.0]);
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [sortOrder, setSortOrder] = useState('desc');
+    const [sortOrder, setSortOrder] = useState('asc');
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -96,17 +95,6 @@ function Product() {
         setCurrentPage(1);
     };
 
-    const handleDeleteConfirm = async () => {
-        try {
-            await deleteProduct(deleteId);
-            setDeleteShow(false);
-            toast.success('Product deleted successfully');
-            getFilteredData();
-        } catch (error) {
-            toast.error('Failed to delete product');
-        }
-    };
-
     const debouncedHandleSliderChange = debounce((value) => {
         if (value[0] <= value[1]) {
             setPriceRange(value);
@@ -134,6 +122,17 @@ function Product() {
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
+    };
+
+    const handleDeleteConfirm = async () => {
+        try {
+            await deleteProduct(deleteId);
+            toast.success('Product deleted successfully');
+            getFilteredData();
+            handleClose();
+        } catch (error) {
+            toast.error('Failed to delete product');
+        }
     };
 
     return (

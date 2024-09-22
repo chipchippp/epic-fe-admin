@@ -3,10 +3,10 @@ import { useParams, Link } from 'react-router-dom';
 import { editProduct } from '~/services/Product/productService';
 
 const ProductDetail = () => {
-  const { id } = useParams(); // Ensure you are getting the correct parameter from URL
+  const { id } = useParams(); 
   const [product, setProduct] = useState(null);
-  const [error, setError] = useState(null); // State for error
-  const [loading, setLoading] = useState(true); // State for loading
+  const [error, setError] = useState(null); 
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
