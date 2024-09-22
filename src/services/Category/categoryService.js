@@ -1,5 +1,4 @@
 import { get, post, put, del } from '~/utils/httpRequest';
-import { toast } from 'react-toastify';
 
 export const getCategory = async (currentPage = 1, limit = 10) => {
     try {

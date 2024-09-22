@@ -29,6 +29,8 @@ import BlogEdit from '~/pages/Blog/edit';
 // Designer
 import Designer from '~/pages/Designer/Designer/index';
 import DesignerDetail from '~/pages/Designer/Designer/details';
+import DesignAppointment from '~/pages/Designer/Designer/designerAppointment';
+import DesignAppointmentDetail from '~/pages/Designer/Designer/designerAppointmentDetail';
 
 // Category Gallery
 import CategoryGallery from '~/pages/Designer/CategoryGallery/index';
@@ -93,6 +95,8 @@ export const publicRoutes = [
     // Designer
     {path: config.routes.designer, component: Designer, layout: AdminLayout},
     {path: config.routes.detailDesigner, component: DesignerDetail, layout: AdminLayout},
+    {path: config.routes.designerAppointment, component: DesignAppointment, layout: AdminLayout},
+    {path: config.routes.designerAppointmentDetail, component: DesignAppointmentDetail, layout: AdminLayout},
 
     // Category Gallery
     {path: config.routes.categoryGallery, component: CategoryGallery, layout: AdminLayout},
@@ -108,7 +112,7 @@ export const publicRoutes = [
     {path: config.routes.room, component: Room, layout: AdminLayout},
     {path: config.routes.createRoom, component: CreateRoom, layout: AdminLayout},
     {path: config.routes.editRoom, component: EditRoom, layout: AdminLayout},
-    
+
     // Order
     {path: config.routes.orders, component: Order, layout: AdminLayout},
     {path: config.routes.orderDetail, component: OrderDetail, layout: AdminLayout},

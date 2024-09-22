@@ -6,7 +6,7 @@ import { editImgDesign, updateImgDesign, getCategoryGallery } from '~/services/D
 const EditImgDesign = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [categoryGalleryId, setUsers] = useState([]);
+    const [categoryGalleryId, setCategoryGallery] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -18,13 +18,12 @@ const EditImgDesign = () => {
             try {
                 const response = await editImgDesign(id);
                 const imgDesignData = response.data;
-                console.log(imgDesignData);
         
                 if (imgDesignData.user && imgDesignData.user.categoryGalleryId) {
                     imgDesignData.categoryGalleryId = imgDesignData.user.categoryGalleryId;
                 }
                 setImgDesign(imgDesignData);
-                setImagesOld(imgDesignData.imageTitle ? [imgDesignData.imageTitle] : []);
+                setImagesOld(imgDesignData.imageUrl ? [imgDesignData.imageUrl] : []);
                 setLoading(false);
             } catch (error) {
                 setLoading(false);
@@ -32,17 +31,17 @@ const EditImgDesign = () => {
             }
         };
     
-        const fetchUsers = async () => {
+        const fetchCategoryGallery = async () => {
             try {
                 const response = await getCategoryGallery();
-                setUsers(response.data.content || []);
+                setCategoryGallery(response.data.content || []);
             } catch (error) {
-                toast('Failed to fetch Users');
+                toast('Failed to fetch CategoryGallery');
             }
         };
     
         fetchImgDesign();
-        fetchUsers();
+        fetchCategoryGallery();
     }, [id]);
 
     const handleInputChange = (e) => {
@@ -87,7 +86,7 @@ const EditImgDesign = () => {
         try {
             const updatedImgDesign = {
                 ...imgDesign,
-                categoryGalleryId: imgDesign.categoryGalleryId || (imgDesign.user && imgDesign.user.categoryGalleryId),
+                categoryGalleryId: imgDesign.categoryGalleryId || (imgDesign.categoryGalleryId && imgDesign.categoryGalleryId),
             };
     
             const formData = new FormData();
@@ -96,14 +95,12 @@ const EditImgDesign = () => {
             if (selectedFiles.length > 0) {
                 selectedFiles.forEach((file) => formData.append('file', file));
             }
-    
             await updateImgDesign(id, formData);
             navigate('/img-designer');
         } catch (error) {
             toast('Failed to update imgDesign');
         }
     };
-
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -254,7 +251,7 @@ const EditImgDesign = () => {
                             <button type="submit" className="btn btn-primary">
                                 Save
                             </button>
-                            <Link to="/imgDesign" className="btn btn-light">
+                            <Link to="/img-designer" className="btn btn-light">
                                 Back
                             </Link>
                         </form>

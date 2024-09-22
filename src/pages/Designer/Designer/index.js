@@ -56,11 +56,6 @@ function Design() {
             toast.error('Failed to fetch designer profiles');
         }
     };
-    
-    const handleDelete = (id) => {
-        setDeleteId(id);
-        setDeleteShow(true);
-    };
 
     const handleDeleteConfirm = async () => {
         try {
@@ -157,6 +152,14 @@ function Design() {
                                                                 <Link
                                                                     to={`/designer-detail/${item.id}`}
                                                                     className="btn btn-primary"
+                                                                    title="Detail"
+                                                                >
+                                                                    <i className="far fa-eye"></i>
+                                                                </Link>
+                                                                &nbsp;
+                                                                <Link
+                                                                    to={`/designer-appointments/${item.id}`}
+                                                                    className="btn btn-warning"
                                                                     title="Detail"
                                                                 >
                                                                     <i className="far fa-eye"></i>

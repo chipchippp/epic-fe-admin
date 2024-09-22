@@ -30,7 +30,8 @@ const routes = {
     //     Designer
     designer: '/designer',
     detailDesigner: '/designer-detail/:id',
-    profile: '/profile',
+    designerAppointment: '/designer-appointments/:userId',
+    designerAppointmentDetail: '/designer-appointments/detail/:id',
 
     //      Category Gallery
     categoryGallery: '/category-gallery',

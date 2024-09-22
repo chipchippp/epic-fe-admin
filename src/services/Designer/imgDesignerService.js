@@ -17,7 +17,7 @@ export const getCategoryGallery = async () => {
     } catch (error) {
         console.error('Error fetching category_gallery data:', error);
         throw error;
-    }
+    } 
 };
 
 export const getTrashImgDesign = async (currentPage = 1, limit = 10) => {
@@ -38,11 +38,11 @@ export const createImgDesign = async (data) => {
         console.error('Failed to create ImgDesign', error);
         throw error;
     }
-};
+}; 
 
 export const editImgDesign = async (id) => {
     try {
-        const response = await get(`/images_design/${id}`);
+        const response = await get(`/images_design/id/${id}`);
         console.log('response', response);
         return response;
     } catch (error) {
