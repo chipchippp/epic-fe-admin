@@ -22,8 +22,7 @@ function EditCategory() {
                 const response = await axios.get('http://localhost:8080/api/v1/categories/parentCategoryIsNull');
                 setCategories(response.data.data);
             } catch (error) {
-                toast.error('Failed to fetch categories');
-                console.error('Fetch error:', error);
+                toast.error('Failed to fetch categories', error);
             }
         };
     
@@ -42,7 +41,6 @@ function EditCategory() {
                 });
             } catch (error) {
                 toast.error('Failed to fetch category data');
-                console.error('Fetch error:', error);
             }
         };
         fetchData();
@@ -56,8 +54,7 @@ function EditCategory() {
             toast.success('Category updated successfully');
             navigate('/category-gallery');
         } catch (error) {
-            toast.error('Failed to update category');
-            console.error('Update error:', error);
+            toast.error('Failed to update category', error);
         }
     };
 

@@ -51,8 +51,7 @@ function OrderDetail() {
             navigate(`/order/detail/${id}`);
             window.location.reload();
         } catch (error) {
-            toast.error('Failed to update order status');
-            console.error('Update error:', error);
+            toast.error('Failed to update order status', error);
         }
     };
 

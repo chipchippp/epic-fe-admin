@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { getProducts, getOrders, getUsers, getOrderCount } from '~/services/Dashboard/dashService';
 import Product from './Product';
+import { toast } from 'react-toastify';
 
 function HomeAdmin() {
   const [orders, setOrders] = useState([]);
@@ -10,7 +11,7 @@ function HomeAdmin() {
   useEffect(() => {
     getOrderData();
     getProductData();
-    getOrderCount();
+    // getOrderCount();
     getUserData();
   }, []);
 
@@ -20,7 +21,7 @@ function HomeAdmin() {
         setOrders(data.data.content);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        toast.error('Failed to fetch orders', error);
       });
   };
 
@@ -31,7 +32,7 @@ function HomeAdmin() {
         setOrders(data.data);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        toast.error('Failed to fetch orders', error);
       });
   };
 
@@ -41,7 +42,7 @@ function HomeAdmin() {
         setProducts(data.data);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        toast.error('Failed to fetch products', error);
       });
   };
 
@@ -51,7 +52,7 @@ function HomeAdmin() {
         setUsers(data.data.content);
       })
       .catch((error) => {
-        console.error('Error fetching data:', error);
+        toast.error('Failed to fetch users', error);
       });
   };
 
@@ -102,6 +103,7 @@ function HomeAdmin() {
                 <div className="card-body">
                   <p className="mb-4">Total Order</p>
                   <p className="fs-30 mb-2">1{orders}</p>
+
                   <p>abc</p>
                 </div>
               </div>
@@ -119,7 +121,8 @@ function HomeAdmin() {
               <div className="card card-light-blue">
                 <div className="card-body">
                   <p className="mb-4">Total Users</p>
-                  <p className="fs-30 mb-2">3</p>
+
+                  <p className="fs-30 mb-2">{users.length}</p>
                   <p>abc</p>
                 </div>
               </div>

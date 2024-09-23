@@ -3,6 +3,7 @@ import { getOrders } from '~/services/Orders/orderService';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Order = () => {
     const [orders, setOrders] = useState([]);
@@ -19,7 +20,7 @@ const Order = () => {
                 setOrders(firstTenData);
             })
             .catch((error) => {
-                console.error('Error fetching data:', error);
+                toast.error('Failed to fetch orders', error);
             });
     };
 

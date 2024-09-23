@@ -47,7 +47,7 @@ function User() {
             setTotalPages(response.data.totalPages);
             setLoading(false);
         } catch (error) {
-            console.error('Error fetching users:', error);
+            toast.error('Error fetching users:', error);
             setLoading(false);
         }
     };
