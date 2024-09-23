@@ -1,10 +1,10 @@
 import { get, post, put, del } from '~/utils/httpRequest';
 
-const service = '';
+const service = 'user';
 
 export const getUsers = async (currentPage = 1, limit = 10) => {
     try {
-        const response = await get(`/users?page=${currentPage}&limit=${limit}`);
+        const response = await get(service, `/users?page=${currentPage}&limit=${limit}`);
         return response;
     } catch (error) {
         console.error('Error fetching Users data:', error);
@@ -14,7 +14,7 @@ export const getUsers = async (currentPage = 1, limit = 10) => {
 
 export const getOrderUser = async (id, data) => {
     try {
-        const response = await post( `/orders/user/${id}`, data);
+        const response = await post(service, `/orders/user/${id}`, data);
         return response;
     } catch (error) {
         console.error('Error fetching orders Users data:', error);
@@ -24,7 +24,7 @@ export const getOrderUser = async (id, data) => {
 
 export const createUsers = async (data) => {
     try {
-        const response = await post( '/users', data);
+        const response = await post(service, '/users', data);
         return response;
     } catch (error) {
         console.error('Failed to create Users', error);

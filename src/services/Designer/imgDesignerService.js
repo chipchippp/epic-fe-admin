@@ -1,8 +1,10 @@
 import { get, post, put, del } from '~/utils/httpRequest';
 
+const service = 'design';
+
 export const getImgDesign = async (currentPage = 1, limit = 10) => {
     try {
-        const response = await get(`/images_design/getAll?page=${currentPage}&limit=${limit}`);
+        const response = await get(service, `/images_design/getAll?page=${currentPage}&limit=${limit}`);
         return response;
     } catch (error) {
         console.error('Error fetching ImgDesign data:', error);
@@ -12,7 +14,7 @@ export const getImgDesign = async (currentPage = 1, limit = 10) => {
 
 export const getCategoryGallery = async () => {
     try {
-        const response = await get(`/category_gallery/getAll?page=1&limit=100`);
+        const response = await get(service, `/category_gallery/getAll?page=1&limit=100`);
         return response;
     } catch (error) {
         console.error('Error fetching category_gallery data:', error);
@@ -22,7 +24,7 @@ export const getCategoryGallery = async () => {
 
 export const getTrashImgDesign = async (currentPage = 1, limit = 10) => {
     try {
-        const response = await get(`/images_design/trash?page=${currentPage}&limit=${limit}`);
+        const response = await get(service, `/images_design/trash?page=${currentPage}&limit=${limit}`);
         return response;
     } catch (error) {
         console.error('Error fetching ImgDesign data:', error);
@@ -32,7 +34,7 @@ export const getTrashImgDesign = async (currentPage = 1, limit = 10) => {
 
 export const createImgDesign = async (data) => {
     try {
-        const response = await post('/images_design', data);
+        const response = await post(service, '/images_design', data);
         return response;
     } catch (error) {
         console.error('Failed to create ImgDesign', error);
@@ -42,7 +44,7 @@ export const createImgDesign = async (data) => {
 
 export const editImgDesign = async (id) => {
     try {
-        const response = await get(`/images_design/id/${id}`);
+        const response = await get(service, `/images_design/id/${id}`);
         console.log('response', response);
         return response;
     } catch (error) {
@@ -53,7 +55,7 @@ export const editImgDesign = async (id) => {
 
 export const updateImgDesign = async (id, data) => {
     try {
-        const response = await put(`/images_design/${id}`, data);
+        const response = await put(service, `/images_design/${id}`, data);
         return response;
     } catch (error) {
         console.error('Failed to update ImgDesign', error);
@@ -63,7 +65,7 @@ export const updateImgDesign = async (id, data) => {
 
 export const deleteImgDesign = async (id) => {
     try {
-        await del(`/images_design/in-trash/${id}`);
+        await del(service, `/images_design/in-trash/${id}`);
         return true;
     } catch (error) {
         console.error('Failed to delete ImgDesign', error);
