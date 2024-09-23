@@ -11,7 +11,7 @@ function HomeAdmin() {
   useEffect(() => {
     getOrderData();
     getProductData();
-    getOrderCount();
+    // getOrderCount();
     getUserData();
   }, []);
 
@@ -102,7 +102,7 @@ function HomeAdmin() {
               <div className="card card-light-danger">
                 <div className="card-body">
                   <p className="mb-4">Total Order</p>
-                  <p className="fs-30 mb-2">{orders}</p>
+                  <p className="fs-30 mb-2">{orders.length}</p>
                   <p>abc</p>
                 </div>
               </div>
@@ -120,7 +120,7 @@ function HomeAdmin() {
               <div className="card card-light-blue">
                 <div className="card-body">
                   <p className="mb-4">Total Users</p>
-                  <p className="fs-30 mb-2">34040</p>
+                  <p className="fs-30 mb-2">{users.length}</p>
                   <p>abc</p>
                 </div>
               </div>
