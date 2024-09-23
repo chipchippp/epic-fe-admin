@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { editBlog, updateBlog, getUsers } from '~/services/Inventory/blogService';
+import { editBlog, updateBlog } from '~/services/Inventory/blogService';
+import { getUsers } from '~/services/User/userService';
 
 const EditBlog = () => {
     const navigate = useNavigate();

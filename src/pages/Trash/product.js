@@ -187,10 +187,10 @@ function Product() {
                                                         {/* <Link to={`/editproduct/${item.productId}`} className="btn btn-primary" title="Edit">
                                                             <i className="fas fa-pencil-alt"></i>
                                                         </Link> */}
-                                                        &nbsp;
+                                                        {/* &nbsp;
                                                         <button className="btn btn-danger" onClick={() => handleDelete(item.productId)} title="Delete">
                                                             <i className="fas fa-trash"></i>
-                                                        </button> 
+                                                        </button>  */}
                                                     </td>
                                                 </tr>
                                             ))}

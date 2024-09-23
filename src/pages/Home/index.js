@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getProducts, getOrders, getUsers, getOrderCount } from '~/services/Dashboard/dashService';
+import { getProducts } from '~/services/Product/productService';
+import { getUsers } from '~/services/User/userService';
+import { getOrders, getOrderCount } from '~/services/Orders/orderService';
 import Product from './Product';
 import { toast } from 'react-toastify';
 
@@ -111,7 +113,7 @@ function HomeAdmin() {
               <div className="card card-light-blue">
                 <div className="card-body">
                   <p className="mb-4">Total Product</p>
-                  <p className="fs-30 mb-2">{products}</p>
+                  <p className="fs-30 mb-2">{products.length}</p>
                   <p>abc</p>
                 </div>
               </div>
@@ -175,7 +177,6 @@ function HomeAdmin() {
                       <th>User</th>
                       <th>Admin</th>
                       <th>Designer</th>
-                      <th>Employee</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -183,7 +184,6 @@ function HomeAdmin() {
                       <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_USER")).length}</p></td>
                       <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_ADMIN")).length}</p></td>
                       <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_DESIGNER")).length}</p></td>
-                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_EMPLOYEE")).length}</p></td>
                     </tr>
                   </tbody>
                 </table>
