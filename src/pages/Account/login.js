@@ -23,7 +23,7 @@ function Login() {
         if (validate()) {
             try {
                 const response = await httpRequest.post(
-                    'http://localhost:8080/api/v1/auth/login',
+                    'https://techwiz5-user-service-hbereff9dmexc6er.eastasia-01.azurewebsites.net/api/v1/auth/login',
                     {
                         username: username,
                         password: password,
