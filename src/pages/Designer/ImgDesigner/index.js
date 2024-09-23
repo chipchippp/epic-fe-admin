@@ -139,7 +139,7 @@ function ImgDesign() {
                                                             <td>
                                             {item.imageTitle ? (
                                                 <img
-                                                    src={`http://localhost:8080/api/v1/images_design/imagesDesign/${item.imageUrl}`}
+                                                    src={`https://techwiz5-inventory-service-ekb0h0d4c9gyfpby.eastasia-01.azurewebsites.net/api/v1/images_design/imagesDesign/${item.imageUrl}`}
                                                     alt={item.name}
                                                     style={{ width: '70px', height: '70px', borderRadius: '0px' }}
                                                 />

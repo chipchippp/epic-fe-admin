@@ -109,7 +109,7 @@ const EditImgDesign = () => {
         return <div>{error}</div>;
     }
 
-    const imageUrl = imagesOld.length > 0 ? `http://localhost:8080/api/v1/images_design/imagesDesign/${imagesOld[0]}` : '';
+    const imageUrl = imagesOld.length > 0 ? `https://techwiz5-inventory-service-ekb0h0d4c9gyfpby.eastasia-01.azurewebsites.net/api/v1/images_design/imagesDesign/${imagesOld[0]}` : '';
 
     return (
         <div className="content-wrapper">

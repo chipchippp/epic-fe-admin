@@ -19,7 +19,7 @@ function EditCategory() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/v1/categories/parentCategoryIsNull');
+                const response = await axios.get('https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/categories/parentCategoryIsNull');
                 setCategories(response.data.data);
             } catch (error) {
                 toast.error('Failed to fetch categories');

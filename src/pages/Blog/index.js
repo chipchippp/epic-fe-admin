@@ -139,7 +139,7 @@ function Blog() {
                                                             <td>
                                             {item.imageTitle ? (
                                                 <img
-                                                    src={`http://localhost:8080/api/v1/blogs/blog/${item.imageTitle}`}
+                                                    src={`https://techwiz5-inventory-service-ekb0h0d4c9gyfpby.eastasia-01.azurewebsites.net/api/v1/blogs/blog/${item.imageTitle}`}
                                                     alt={item.title}
                                                     style={{ width: '70px', height: '70px', borderRadius: '0px' }}
                                                 />
