@@ -101,7 +101,7 @@ function HomeAdmin() {
               <div className="card card-light-danger">
                 <div className="card-body">
                   <p className="mb-4">Total Order</p>
-                  <p className="fs-30 mb-2">{orders}</p>
+                  <p className="fs-30 mb-2">1{orders}</p>
                   <p>abc</p>
                 </div>
               </div>
@@ -110,7 +110,7 @@ function HomeAdmin() {
               <div className="card card-light-blue">
                 <div className="card-body">
                   <p className="mb-4">Total Product</p>
-                  <p className="fs-30 mb-2">{products}</p>
+                  <p className="fs-30 mb-2">{products}20 </p>
                   <p>abc</p>
                 </div>
               </div>
@@ -119,7 +119,7 @@ function HomeAdmin() {
               <div className="card card-light-blue">
                 <div className="card-body">
                   <p className="mb-4">Total Users</p>
-                  <p className="fs-30 mb-2">34040</p>
+                  <p className="fs-30 mb-2">3</p>
                   <p>abc</p>
                 </div>
               </div>
@@ -148,13 +148,13 @@ function HomeAdmin() {
                   </thead>
                   <tbody>
                     <tr>
-                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "CREATED").length}</p></td>
-                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "PENDING").length}</p></td>
-                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "PROCESSING").length}</p></td>
+                      <td><p className="fs-20 mb-2">1{orders.filter(order => order.status === "CREATED").length}</p></td>
+                      <td><p className="fs-20 mb-2">2{orders.filter(order => order.status === "PENDING").length}</p></td>
+                      <td><p className="fs-20 mb-2">2{orders.filter(order => order.status === "PROCESSING").length}2</p></td>
                       <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "ONDELIVERY").length}</p></td>
                       <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "DELIVERED").length}</p></td>
                       <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "CANCEL").length}</p></td>
-                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "COMPLETED").length}</p></td>
+                      <td>1</td>
                     </tr>
                   </tbody>
                 </table>
@@ -174,15 +174,13 @@ function HomeAdmin() {
                       <th>User</th>
                       <th>Admin</th>
                       <th>Designer</th>
-                      <th>Employee</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_USER")).length}</p></td>
-                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_ADMIN")).length}</p></td>
-                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_DESIGNER")).length}</p></td>
-                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_EMPLOYEE")).length}</p></td>
+                      <td><p className="fs-20 mb-2">2{users.filter(user => user.roles.some(role => role.name === "ROLE_USER")).length}</p></td>
+                      <td><p className="fs-20 mb-2">1</p></td>
+                      <td><p className="fs-20 mb-2">1</p></td>
                     </tr>
                   </tbody>
                 </table>
