@@ -1,8 +1,10 @@
 import { get, post, put, del } from '~/utils/httpRequest';
 
+const service = 'order';
+
 export const getFilteredOrders = async (params) => {
     try {
-        const response = await get(`/orders/search-by-specification`, { params });
+        const response = await get(service, `/orders/search-by-specification`, { params });
         return response;
     } catch (error) {
         console.error('Error fetching Orders data:', error);
@@ -12,7 +14,7 @@ export const getFilteredOrders = async (params) => {
 
 export const getAllOrders = async () => {
     try {
-        const response = await get(`/orders?page=1&limit=1000`);
+        const response = await get(service, `/orders?page=1&limit=1000`);
         return response;
     } catch (error) {
         console.error('Error fetching Orders data:', error);
@@ -22,7 +24,7 @@ export const getAllOrders = async () => {
 
 export const createOrders = async (params) => {
     try {
-        const response = await get(`/orders/search-by-specification`, { params });
+        const response = await get(service, `/orders/search-by-specification`, { params });
         return response;
     } catch (error) {
         console.error('Error fetching Orders data:', error);
@@ -32,7 +34,7 @@ export const createOrders = async (params) => {
 
 export const editOrders = async (id) => {
     try {
-        const response = await get(`/orders/${id}`);
+        const response = await get(service, `/orders/${id}`);
         return response;
     } catch (error) {
         console.error('Error fetching Orders data:', error);
@@ -42,7 +44,7 @@ export const editOrders = async (id) => {
 
 export const updateOrders = async (id, status) => {
     try {
-        const response = await put(`/orders/changeStatus/${id}`, null, {
+        const response = await put(service, `/orders/changeStatus/${id}`, null, {
             params: { status },
         });
         return response;
@@ -54,7 +56,7 @@ export const updateOrders = async (id, status) => {
 
 export const deleteOrders = async (id) => {
     try {
-        await del(`/orders/id?id=${id}`);
+        await del(service, `/orders/id?id=${id}`);
         return true;
     } catch (error) {
         console.error('Failed to delete orders', error);
