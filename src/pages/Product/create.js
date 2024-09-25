@@ -23,7 +23,7 @@ const CreateProduct = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/v1/categories/getAll');
+                const response = await axios.get('https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/categories/getAll');
                 setCategories(response.data.data.content || []);
             } catch (error) {
                 toast.error('Failed to fetch categories');

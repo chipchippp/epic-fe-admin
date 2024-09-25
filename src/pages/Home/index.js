@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { getProducts, getOrders, getUsers, getOrderCount } from '~/services/Dashboard/dashService';
+import { getProduct } from '~/services/Product/productService';
+import { getUsers } from '~/services/User/userService';
+import { getAllOrders, getOrderCount } from '~/services/Orders/orderService';
 import Product from './Product';
 import { toast } from 'react-toastify';
 
@@ -16,7 +18,7 @@ function HomeAdmin() {
   }, []);
 
   const getOrderData = () => {
-    getOrders()
+    getAllOrders()
       .then((data) => {
         setOrders(data.data.content);
       })
@@ -26,7 +28,7 @@ function HomeAdmin() {
   };
 
   const getOrderCount = () => {
-    getOrders()
+    getAllOrders()
       .then((data) => {
         console.log(data.data);
         setOrders(data.data);
@@ -37,7 +39,7 @@ function HomeAdmin() {
   };
 
   const getProductData = () => {
-    getProducts()
+    getProduct()
       .then((data) => {
         setProducts(data.data);
       })
@@ -182,8 +184,8 @@ function HomeAdmin() {
                   <tbody>
                     <tr>
                       <td><p className="fs-20 mb-2">2{users.filter(user => user.roles.some(role => role.name === "ROLE_USER")).length}</p></td>
-                      <td><p className="fs-20 mb-2">1</p></td>
-                      <td><p className="fs-20 mb-2">1</p></td>
+                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_ADMIN")).length}</p></td>
+                      <td><p className="fs-20 mb-2">{users.filter(user => user.roles.some(role => role.name === "ROLE_DESIGNER")).length}</p></td>
                     </tr>
                   </tbody>
                 </table>

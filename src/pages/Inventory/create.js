@@ -18,7 +18,7 @@ function ManageInventory() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const productData = await fetch('http://localhost:8080/api/v1/products/getAll?page=1&limit=100');
+        const productData = await fetch('https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/products/getAll?page=1&limit=100');
         const productJson = await productData.json();
         setProducts(productJson.data.content);
       } catch (error) {

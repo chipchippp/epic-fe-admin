@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
-import { createBlog, getUsers } from '~/services/Inventory/blogService';
+import { createBlog } from '~/services/Inventory/blogService';
+import { getUsers } from '~/services/User/userService';
 
 const CreateBlog = () => {
     const navigate = useNavigate();

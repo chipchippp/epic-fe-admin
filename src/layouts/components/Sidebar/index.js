@@ -140,9 +140,6 @@ function SidebarAdmin() {
             <Link className="nav-link" to="/trash/products">
                 Trash Products
             </Link>
-            <Link className="nav-link" to="/trash/category-gallery">
-                Trash Gallery
-            </Link>
           </li>
         </ul>
       </div>

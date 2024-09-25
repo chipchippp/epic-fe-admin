@@ -56,7 +56,7 @@ const Product = () => {
                                             <td className="col-img">
                                                 {item.images.length > 0 ? (
                                                     <img
-                                                        src={`http://localhost:8080/api/v1/product-images/images/${item.images[0].imageUrl}`}
+                                                        src={`https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/product-images/images/${item.images[0].imageUrl}`}
                                                         alt={item.name}
                                                         style={{ width: '70px', height: '70px', borderRadius: '0px' }}
                                                     />

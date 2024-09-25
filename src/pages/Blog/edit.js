@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { editBlog, updateBlog, getUsers } from '~/services/Inventory/blogService';
+import { editBlog, updateBlog } from '~/services/Inventory/blogService';
+import { getUsers } from '~/services/User/userService';
 
 const EditBlog = () => {
     const navigate = useNavigate();
@@ -111,7 +112,7 @@ const EditBlog = () => {
         return <div>{error}</div>;
     }
 
-    const imageUrl = imagesOld.length > 0 ? `http://localhost:8080/api/v1/blogs/blog/${imagesOld[0]}` : '';
+    const imageUrl = imagesOld.length > 0 ? `https://techwiz5-inventory-service-ekb0h0d4c9gyfpby.eastasia-01.azurewebsites.net/api/v1/blogs/blog/${imagesOld[0]}` : '';
 
     return (
         <div className="content-wrapper">
