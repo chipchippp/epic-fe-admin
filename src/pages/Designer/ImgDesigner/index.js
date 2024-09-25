@@ -123,11 +123,11 @@ function ImgDesign() {
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Title</th>
-                                                        <th>ImageTitle</th>
-                                                        <th>Content</th>
-                                                        <th>Author</th>
-                                                        <th>UserId</th>
+                                                        <th>Name</th>
+                                                        <th>Image</th>
+                                                        <th>Tags</th>
+                                                        <th>Description</th>
+                                                        <th>CategoryGalleryId</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>

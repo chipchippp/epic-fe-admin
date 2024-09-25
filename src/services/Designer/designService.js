@@ -1,6 +1,6 @@
 import { get, post, put, del } from '~/utils/httpRequest';
 
-const service = 'design';
+const service = 'user';
 
 export const getDesign = async (status) => {
     try {

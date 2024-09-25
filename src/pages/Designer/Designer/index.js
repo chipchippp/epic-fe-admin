@@ -91,9 +91,6 @@ function Design() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">Designer Profiles</h3>
-                                <Link to="/designer/create" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
                             </div>
                         </div>
                     </div>
