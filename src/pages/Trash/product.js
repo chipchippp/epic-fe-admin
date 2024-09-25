@@ -175,7 +175,7 @@ function Product() {
                                                     </td>
                                                     <td>
                                                         {item.images.length > 0 ? (
-                                                            <img src={`http://localhost:8082/api/v1/product-images/images/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                            <img src={`https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/product-images/images/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
                                                         ) : (
                                                             'No Image'
                                                         )}
@@ -183,15 +183,6 @@ function Product() {
                                                     <td>{item.price}$</td>
                                                     <td>{item.category ? item.category.categoryName : 'N/A'}</td>
                                                     <td>{item.stockQuantity}</td>
-                                                    <td>
-                                                        {/* <Link to={`/editproduct/${item.productId}`} className="btn btn-primary" title="Edit">
-                                                            <i className="fas fa-pencil-alt"></i>
-                                                        </Link> */}
-                                                        {/* &nbsp;
-                                                        <button className="btn btn-danger" onClick={() => handleDelete(item.productId)} title="Delete">
-                                                            <i className="fas fa-trash"></i>
-                                                        </button>  */}
-                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
