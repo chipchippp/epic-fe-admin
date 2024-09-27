@@ -214,7 +214,7 @@ function Product() {
                                                     </td>
                                                     <td>
                                                         {item.images.length > 0 ? (
-                                                            <img src={`https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/product-images/imagesPost/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                            <img src={`http://localhost:8080/api/v1/product-images/imagesPost/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
                                                         ) : (
                                                             'No Image'
                                                         )}

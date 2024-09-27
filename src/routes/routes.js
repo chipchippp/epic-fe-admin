@@ -42,11 +42,6 @@ import ImgDesigner from '~/pages/Designer/ImgDesigner/index';
 import CreateImgDesigner from '~/pages/Designer/ImgDesigner/create';
 import EditImgDesigner from '~/pages/Designer/ImgDesigner/edit';
 
-// Room 
-import Room from '~/pages/Room/index';
-import CreateRoom from '~/pages/Room/create';
-import EditRoom from '~/pages/Room/edit';
-
 // Order
 import Order from '~/pages/Order/index';
 import OrderDetail from '~/pages/Order/details';
@@ -107,11 +102,6 @@ export const publicRoutes = [
     {path: config.routes.imgDesigner, component: ImgDesigner, layout: AdminLayout},
     {path: config.routes.createImgDesigner, component: CreateImgDesigner, layout: AdminLayout},
     {path: config.routes.editImgDesigner, component: EditImgDesigner, layout: AdminLayout},
-    
-    // Room
-    {path: config.routes.room, component: Room, layout: AdminLayout},
-    {path: config.routes.createRoom, component: CreateRoom, layout: AdminLayout},
-    {path: config.routes.editRoom, component: EditRoom, layout: AdminLayout},
 
     // Order
     {path: config.routes.orders, component: Order, layout: AdminLayout},

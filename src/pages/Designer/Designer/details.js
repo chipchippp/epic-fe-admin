@@ -109,7 +109,7 @@ function DesignDetail() {
                                     <div className="profile-widget-header">
                                         <img
                                             alt="DesignDetail"
-                                             src={`https://techwiz5-inventory-service-ekb0h0d4c9gyfpby.eastasia-01.azurewebsites.net/api/v1/image_design_designer/imagesPost/${data.avatar}`} style={{ width: '70px', height: '70px', borderRadius: '0px' }}
+                                             src={`http://localhost:8080/api/v1/image_design_designer/imagesPost/${data.avatar}`} style={{ width: '70px', height: '70px', borderRadius: '0px' }}
 
                                             className="rounded-circle profile-widget-picture fixed-profile-img"
                                         />

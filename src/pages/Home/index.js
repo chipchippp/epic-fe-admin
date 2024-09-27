@@ -104,8 +104,8 @@ function HomeAdmin() {
             <div className="col-md-6 mb-4">
               <div className="card card-light-danger">
                 <div className="card-body">
-                  <p className="mb-4">Total Order</p>
-                  <p className="fs-30 mb-2">{orders.length}</p>
+                  <p className="mb-4">Total Order Completed</p>
+                  <p className="fs-30 mb-2">{orders.filter(order => order.status === "COMPLETED").length}</p>
                   <p>abc</p>
                 </div>
               </div>
@@ -114,7 +114,7 @@ function HomeAdmin() {
               <div className="card card-light-blue">
                 <div className="card-body">
                   <p className="mb-4">Total Product</p>
-                  <p className="fs-30 mb-2">1{products.length}</p>
+                  <p className="fs-30 mb-2">{products.length}1</p>
                   <p>abc</p>
                 </div>
               </div>

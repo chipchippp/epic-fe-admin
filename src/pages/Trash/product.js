@@ -64,7 +64,7 @@ function Product() {
     const handleDelete = async (productId) => {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
-                await axios.delete(`https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/products/${productId}`);
+                await axios.delete(`http://localhost:8080/api/v1/products/${productId}`);
                 setProducts(products.filter(product => product.productId !== productId));
             } catch (error) {
                 toast.error('Failed to delete product', error);

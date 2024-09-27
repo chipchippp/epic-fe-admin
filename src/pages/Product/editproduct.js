@@ -96,7 +96,8 @@ const EditProduct = () => {
             if (removedImages.length > 0) {
                 formData.append('removedImages', JSON.stringify(removedImages));
             }
-    
+            console.log('FormData:', formData);
+
             await updateProduct(id, formData);
             navigate('/product');
         } catch (error) {
@@ -266,7 +267,7 @@ const EditProduct = () => {
                                         imagesOld.map((image, index) => (
                                             <div key={index} style={{ position: 'relative' }}>
                                                 <img
-                                                    src={`https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/product-images/imagesPost/${image.imageUrl}`}
+                                                    src={`http://localhost:8080/api/v1/product-images/imagesPost/${image.imageUrl}`}
                                                     alt={image.imageName}
                                                     style={{ width: '100px', height: '100px', objectFit: 'cover' }}
                                                 />

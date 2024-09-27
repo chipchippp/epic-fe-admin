@@ -192,7 +192,7 @@ function OrderDetail() {
                                                                         <td>
                                                                             {item.product && item.product.images && item.product.images.length > 0 ? (
                                                                                 <img
-                                                                                    src={`https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/product-images/images/${item.product.images[0].imageUrl}`}
+                                                                                    src={`http://localhost:8080/api/v1/product-images/images/${item.product.images[0].imageUrl}`}
                                                                                     alt={item.product.name}
                                                                                     style={{ width: '70px', height: '70px', borderRadius: '0px' }}
                                                                                 />
