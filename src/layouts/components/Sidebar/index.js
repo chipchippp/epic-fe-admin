@@ -88,7 +88,7 @@ function SidebarAdmin() {
       </div>
     </li>
 
-    <li className="nav-item">
+    {/* <li className="nav-item">
       <a
         className="nav-link"
         data-toggle="collapse"
@@ -115,7 +115,7 @@ function SidebarAdmin() {
           </li>
         </ul>
       </div>
-    </li>
+    </li> */}
 
     <li className="nav-item">
       <a

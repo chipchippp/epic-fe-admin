@@ -142,6 +142,7 @@ function HomeAdmin() {
                   <thead>
                     <tr>
                       <th>CREATED</th>
+                      <th>PAYMENT_FAILED</th>
                       <th>PENDING</th>
                       <th>PROCESSING</th>
                       <th>ONDELIVERY</th>
@@ -153,12 +154,13 @@ function HomeAdmin() {
                   <tbody>
                     <tr>
                       <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "CREATED").length}</p></td>
+                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "PAYMENT_FAILED").length}</p></td>
                       <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "PENDING").length}</p></td>
                       <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "PROCESSING").length}</p></td>
                       <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "ONDELIVERY").length}</p></td>
                       <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "DELIVERED").length}</p></td>
                       <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "CANCEL").length}</p></td>
-                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "COMPLETED").length}</p></td>
+                      <td><p className="fs-20 mb-2">{orders.filter(order => order.status === "COMPLETE").length}</p></td>
                     </tr>
                   </tbody>
                 </table>

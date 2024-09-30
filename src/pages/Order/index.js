@@ -112,6 +112,7 @@ function Order() {
                                             >
                                                 <option value="">Sort Status</option>
                                                 <option value="CREATED">Created</option>
+                                                <option value="PAYMENT_FAILED">Payment Failed</option>
                                                 <option value="PENDING">Pending</option>
                                                 <option value="PROCESSING">Processing</option>
                                                 <option value="ONDELIVERY">On Delivery</option>
@@ -158,6 +159,9 @@ function Order() {
                                                             <td>
                                                                 {item.status === "CREATED" && (
                                                                     <div className="badge badge-warning">Created</div>
+                                                                )}
+                                                                 {item.status === "PAYMENT_FAILED" && (
+                                                                    <div className="badge badge-secondary">Payment Failed</div>
                                                                 )}
                                                                 {item.status === "PENDING" && (
                                                                     <div className="badge badge-secondary">Pending</div>

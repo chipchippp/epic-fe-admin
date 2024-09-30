@@ -46,12 +46,14 @@ function OrderDetail() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
+            console.log('Updating order status to:', tempStatus);
             await updateOrders(id, tempStatus);
             toast.success('Order status updated successfully');
             navigate(`/order/detail/${id}`);
             window.location.reload();
         } catch (error) {
-            toast.error('Failed to update order status', error);
+            toast.error('Failed to update order status');
+            console.error('Error updating order:', error);
         }
     };
 
@@ -71,6 +73,7 @@ function OrderDetail() {
     const getSelectableOptions = () => {
         const options = [
             { value: 'CREATED', label: 'Created' },
+            { value: 'PAYMENT_FAILED', label: 'Payment_Failed' },
             { value: 'PENDING', label: 'Pending' },
             { value: 'PROCESSING', label: 'Processing' },
             { value: 'ONDELIVERY', label: 'On Delivery' },
@@ -81,7 +84,9 @@ function OrderDetail() {
 
         switch (data.status) {
             case 'CREATED':
-                return options.filter((option) => ['PENDING', 'PROCESSING', 'CANCEL'].includes(option.value));
+                return options.filter((option) => ['PENDING', 'CANCEL'].includes(option.value));
+            case 'PAYMENT_FAILED':
+                return options.filter((option) => ['PAYMENT_FAILED'].includes(option.value));
             case 'PENDING':
                 return options.filter((option) => ['PENDING', 'PROCESSING', 'CANCEL'].includes(option.value));
             case 'PROCESSING':

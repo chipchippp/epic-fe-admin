@@ -9,6 +9,7 @@ import { isAuthenticated } from '~/utils/httpRequest';
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [platform, setPlatform] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -23,10 +24,11 @@ function Login() {
         if (validate()) {
             try {
                 const response = await httpRequest.post(
-                    'https://techwiz5-user-service-hbereff9dmexc6er.eastasia-01.azurewebsites.net/api/v1/auth/login',
+                    'http://localhost:8080/api/v1/auth/login',
                     {
                         username: username,
                         password: password,
+                        platform: platform,
                     },
                 );
 
@@ -55,10 +57,10 @@ function Login() {
                         navigate('/');
                         window.location.reload();
                     } catch (error) {
-                        return toast.error('Failed to decode token.');
+                        return toast.warning('Failed to decode token.');
                     }
                 } else {
-                    toast.error('Invalid response from server');
+                    toast.warning('Invalid response from server');
                 }
             } catch (error) {
                 toast.error('Failed to login. Please try again.');
@@ -107,6 +109,15 @@ function Login() {
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 placeholder="Password"
+                                                className="form-control"
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <input
+                                                type="text"
+                                                value={platform}
+                                                onChange={(e) => setPlatform(e.target.value)}
+                                                placeholder="Platform"
                                                 className="form-control"
                                             />
                                         </div>
