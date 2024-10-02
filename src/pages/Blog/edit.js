@@ -116,18 +116,13 @@ const EditBlog = () => {
 
     return (
         <div className="content-wrapper">
-            <div className="row">
-                <div className="col-md-12 grid-margin">
-                    <h2 className="font-weight-bold">{blog.title}</h2>
-                <Link to="/blog" className="btn btn-primary mb-3">
-                    <i className="fas fa-arrow-left"></i> Back
-                </Link>
-                </div>
-            </div>
             <div className="col-12 grid-margin stretch-card">
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Edit Blog</h4>
+                        <Link to="/blog" className="btn btn-primary mb-3">
+                            <i className="fas fa-arrow-left"></i> Back
+                        </Link>
                         <form onSubmit={handleSubmit}>
                             <div className="row mb-4">
                                 <div className="col-md-6">

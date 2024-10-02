@@ -5,16 +5,14 @@ import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { getInventory, deleteInventory } from '~/services/Inventory/inventoryService';
+import { getInventory } from '~/services/Inventory/inventoryService';
 
 function Inventory() {
     const [loading, setLoading] = useState(true);
-    const [deleteShow, setDeleteShow] = useState(false);
-    const [deleteId, setDeleteId] = useState(null);
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
 
     const [search, setSearch] = useState('');
@@ -44,47 +42,13 @@ function Inventory() {
         fetchInventory();
     }, [currentPage, limit]);
 
-    const handleDelete = (id) => {
-        setDeleteId(id);
-        setDeleteShow(true);
-    };
-
-    const handleDeleteConfirm = async () => {
-        try {
-            await deleteInventory(deleteId);
-            toast.success('Inventory has been deleted');
-            setDeleteShow(false);
-        } catch (error) {
-            toast.error(`Failed to delete inventory: ${error.message}`);
-        }
-    };
-
-    const handleClose = () => setDeleteShow(false);
-
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-    };
-
-    const handleLimitChange = (e) => {
-        setLimit(e.target.value);
-        setCurrentPage(1);
     };
 
     return (
         <>
             <div className="content-wrapper">
-                <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Inventory</h3>
-                                <Link to="/Inventory/create" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
@@ -93,14 +57,10 @@ function Inventory() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <div className="float-left">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={5}>Show</option>
-                                                <option value={10}>10</option>
-                                                <option value={20}>20</option>
-                                                <option value={30}>30</option>
-                                            </select>
-                                        </div>
+                                        <h3 className="font-weight-bold">Inventory</h3>
+                                        <Link to="/inventory/create" className="float-left btn btn-primary">
+                                            <i className="fas fa-plus"></i> New
+                                        </Link>
                                         <Search setSearch={setSearch} />
                                     
                                         <div className="table-responsive">
@@ -126,13 +86,9 @@ function Inventory() {
                                                             <td>{item.reason}</td>
                                                             <td>{item.date}</td>
                                                             <td>
-                                                                <button
-                                                                    className="btn btn-danger"
-                                                                    onClick={() => handleDelete(item.InventoryId)}
-                                                                    title="Delete"
-                                                                >
-                                                                    <i className="fas fa-trash"></i>
-                                                                </button>
+                                                                <Link to={`/inventory/edit/${item.id}`} className="btn btn-primary mr-2">
+                                                                    <i className="fas fa-pencil-alt"></i>
+                                                                </Link>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -152,22 +108,6 @@ function Inventory() {
                         </div>
                     </div>
                 </div>
-                
-                <Modal show={deleteShow} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Confirm Delete</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this Inventory?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Cancel
-                        </Button>
-                        <Button variant="danger" onClick={handleDeleteConfirm}>
-                            Delete
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
                 <ToastContainer />
             </div>
         </>

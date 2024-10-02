@@ -97,7 +97,7 @@ const EditProduct = () => {
                 formData.append('removedImages', JSON.stringify(removedImages));
             }
             console.log('FormData:', formData);
-
+    
             await updateProduct(id, formData);
             navigate('/product');
         } catch (error) {
@@ -130,18 +130,13 @@ const EditProduct = () => {
 
     return (
         <div className="content-wrapper">
-            <div className="row">
-                <div className="col-md-12 grid-margin">
-                    <h2 className="font-weight-bold">{product.name}</h2>
-                <Link to="/product" className="btn btn-primary mb-3">
-                    <i className="fas fa-arrow-left"></i> Back
-                </Link>
-                </div>
-            </div>
             <div className="col-12 grid-margin stretch-card">
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Edit Product</h4>
+                        <Link to="/product" className="btn btn-primary mb-3">
+                        <i className="fas fa-arrow-left"></i> Back
+                        </Link>
                         <form onSubmit={handleSubmit}>
                             <div className="row mb-4">
                                 <div className="col-md-6">

@@ -107,18 +107,6 @@ function OrderDetail() {
     return (
         <>
             <div className="content-wrapper">
-                <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Order Details</h3>
-                                <Link to="/order" className="btn btn-primary mb-3">
-                                 <i className="fas fa-arrow-left"></i> Back
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className="col-12 grid-margin stretch-card">
                     <div className="card">
                         <div className="card-body">
@@ -129,6 +117,9 @@ function OrderDetail() {
                                             <div className="invoice-title">
                                                 <h4>Order <span style={{ color: 'gray' }}>#{id}</span></h4>
                                             </div>
+                                            <Link to="/order" className="btn btn-primary mb-3">
+                                            <i className="fas fa-arrow-left"></i> Back
+                                            </Link>
                                             <hr />
                                             <div className="row">
                                                 <div className="col-md-6">
@@ -241,11 +232,6 @@ function OrderDetail() {
                                             </div>
                                         </div>
                                         <hr />
-                                        <div className="text-md-right">
-                                            <Link to={`/order/invoice/${id}`} className="btn btn-primary me-1">
-                                                <i className="fa-solid fa-download"></i> Invoice
-                                            </Link>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

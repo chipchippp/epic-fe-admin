@@ -64,11 +64,8 @@ function HomeAdmin() {
       <div className="row mb-4">
         <div className="col-md-12">
           <div className="d-flex justify-content-between align-items-center">
-            <h3 className="font-weight-bold">Welcome Aamir</h3>
-            <h6 className="font-weight-normal mb-0">
-              All systems are running smoothly! You have
-              <span className="text-primary"> 3 unread alerts!</span>
-            </h6>
+            <h3 className="font-weight-bold">Welcome Epicfigures</h3>
+           
           </div>
         </div>
       </div>
@@ -105,7 +102,7 @@ function HomeAdmin() {
               <div className="card card-light-danger">
                 <div className="card-body">
                   <p className="mb-4">Total Order Completed</p>
-                  <p className="fs-30 mb-2">{orders.filter(order => order.status === "COMPLETED").length}</p>
+                  <p className="fs-30 mb-2">{orders.filter(order => order.status === "COMPLETE").length}</p>
                   <p>abc</p>
                 </div>
               </div>

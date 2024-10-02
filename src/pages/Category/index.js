@@ -89,18 +89,6 @@ function Category() {
         <>
             <div className="content-wrapper">
                 <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Categories</h3>
-                                <Link to="/category/create" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
@@ -108,14 +96,10 @@ function Category() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <div className="float-left">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={5}>Show</option>
-                                                <option value={10}>10</option>
-                                                <option value={20}>20</option>
-                                                <option value={30}>30</option>
-                                            </select>
-                                        </div>
+                                     <h3 className="font-weight-bold">Categories</h3>
+                                        <Link to="/category/create" className="float-left btn btn-primary">
+                                            <i className="fas fa-plus"></i> New
+                                        </Link>
                                         <Search setSearch={setSearch} />
                                     
                                         <div className="table-responsive">

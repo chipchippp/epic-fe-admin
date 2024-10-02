@@ -64,7 +64,7 @@ const CreateBlog = () => {
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Create Blog</h4>
-                            <Link to="/Blog" className="btn btn-primary mb-3">
+                            <Link to="/blog" className="btn btn-primary mb-3">
                                 <i className="fas fa-arrow-left"></i> Back
                             </Link>
                             <form onSubmit={handleSubmit}>

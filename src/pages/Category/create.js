@@ -42,37 +42,29 @@ function CreateCategory() {
     return (
         <>
             <div className="content-wrapper">
-                <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">New Category</h3>
-                                <Link to="/category" className="btn btn-primary mb-3">
-                                 <i className="fas fa-arrow-left"></i> Back
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className="col-12 grid-margin stretch-card">
                     <div className="card">
                         <div className="card-body">
-                            <h4 className="card-title">Category</h4>
+                        <h3 className="font-weight-bold">New Category</h3>
+                                <Link to="/category" className="btn btn-primary mb-3">
+                                 <i className="fas fa-arrow-left"></i> Back
+                                </Link>
                             <form className="forms-sample" onSubmit={handleSubmit}>
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputName1">Name</label>
-                                    <input
-                                        type="text"
+                            <div className="row mb-4">
+                                    <div className="col-md-6">
+                                        <label className="col-form-label text-md-right">Name</label>
+                                        <input
+                                        type="text" 
                                         className="form-control"
                                         id="exampleInputName1"
                                         placeholder="Name"
                                         value={data.categoryName}
                                         onChange={(e) => setData({ ...data, categoryName: e.target.value })}
                                     />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputCity1">Description</label>
-                                    <input
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label className="col-form-label text-md-right">Description</label>
+                                        <input
                                         type="text"
                                         className="form-control"
                                         id="exampleInputCity1"
@@ -80,6 +72,7 @@ function CreateCategory() {
                                         value={data.description}
                                         onChange={(e) => setData({ ...data, description: e.target.value })}
                                     />
+                                    </div>
                                 </div>
                                 <div className="form-group">
     <label htmlFor="exampleInputCity1">ParentCategoryId</label>

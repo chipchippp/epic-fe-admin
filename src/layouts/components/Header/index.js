@@ -30,7 +30,7 @@ function HeaderAdmin() {
            <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
   <div className="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
     <a className="navbar-brand brand-logo mr-5" href="/">
-      <img src="/src/assets/images/logo.svg" className="mr-2" alt="logo" />
+      <img src="/src/assets/images/Epic-logo.png" className="mr-2" alt="logo" />
     </a>
     <a className="navbar-brand brand-logo-mini" href="index.html">
       <img src="/src/assets/images/logo-mini.svg" alt="logo" />
@@ -137,7 +137,7 @@ function HeaderAdmin() {
           data-toggle="dropdown"
           id="profileDropdown"
         >
-          <img src="/src/assets/images/faces/face28.jpg" alt="profile" />
+          <img src="/src/assets/images/faces/face28.jpg" className='ml-2' alt="profile" />
         </a>
         <div
           className="dropdown-menu dropdown-menu-right navbar-dropdown"

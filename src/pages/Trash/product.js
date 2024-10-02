@@ -99,18 +99,11 @@ function Product() {
         <>
             <div className="content-wrapper">
                 <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Trash Products</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
+                                <h3 className="font-weight-bold">Trash Products</h3>
+
                                 <div className="filter-product">
                                     <div className="float-left">
                                         <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>

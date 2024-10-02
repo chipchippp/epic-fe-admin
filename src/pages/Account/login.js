@@ -9,7 +9,6 @@ import { isAuthenticated } from '~/utils/httpRequest';
 function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [platform, setPlatform] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,7 +27,7 @@ function Login() {
                     {
                         username: username,
                         password: password,
-                        platform: platform,
+                        platform: 'WEB',
                     },
                 );
 
@@ -109,15 +108,6 @@ function Login() {
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
                                                 placeholder="Password"
-                                                className="form-control"
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <input
-                                                type="text"
-                                                value={platform}
-                                                onChange={(e) => setPlatform(e.target.value)}
-                                                placeholder="Platform"
                                                 className="form-control"
                                             />
                                         </div>

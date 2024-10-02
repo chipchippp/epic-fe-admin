@@ -12,6 +12,16 @@ export const getUsers = async (currentPage = 1, limit = 10) => {
     }
 };
 
+export const getUserCount = async () => {
+    try {
+        const response = await get(service, `/users/count`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Users data:', error);
+        throw error;
+    }
+};
+
 export const getOrderUser = async (id, data) => {
     try {
         const response = await post(service, `/orders/user/${id}`, data);

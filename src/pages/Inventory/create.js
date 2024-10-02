@@ -3,6 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { createInventory } from '~/services/Inventory/inventoryService';
+import { getProduct } from '~/services/Product/productService';
 
 function ManageInventory() {
   const [products, setProducts] = useState([]);
@@ -18,9 +19,8 @@ function ManageInventory() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const productData = await fetch('http://localhost:8080/api/v1/products/getAll?page=1&limit=100');
-        const productJson = await productData.json();
-        setProducts(productJson.data.content);
+        const productData = await getProduct();
+        setProducts(productData.data.content);
       } catch (error) {
         toast.error('Failed to fetch products');
       }
@@ -28,8 +28,7 @@ function ManageInventory() {
     fetchData();
   }, []);
   
-
-  const handleSave = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const inventoryData = {
@@ -50,61 +49,67 @@ function ManageInventory() {
       <div className="content-wrapper">
         <div className="row">
           <div className="col-md-12 grid-margin">
-            <h3 className="font-weight-bold">Manage Inventory</h3>
-            <Link to="/inventory" className="btn btn-primary mb-3">
-              <i className="fas fa-arrow-left"></i> Back
-            </Link>
           </div>
         </div>
         <div className="col-12 grid-margin stretch-card">
           <div className="card">
             <div className="card-body">
-              <h4 className="card-title">Inventory Form</h4>
-              <form className="forms-sample" onSubmit={handleSave}>
-                <div className="form-group">
-                  <label>Product</label>
-                  <select
-                    className="form-control selectric"
-                    value={data.productId}
-                    onChange={(e) => setData({ ...data, productId: e.target.value })}
-                  >
-                    <option value="">Select product</option>
-                    {products.map((product) => (
-                      <option key={product.productId} value={product.productId}>
-                        {product.name}
-                      </option>
-                    ))}
-                  </select>
+              <h4 className="card-title">Create Inventory</h4>
+              <Link to="/inventory" className=" btn btn-primary">
+                    <i className="fas fa-arrow-left"></i> Back
+              </Link>
+              <form onSubmit={handleSubmit}>
+                <div className="row mb-4">
+                  <div className="col-md-6">
+                    <label className="col-form-label text-md-right">Product</label>
+                    <select
+                      className="form-control"
+                      value={data.productId}
+                      onChange={(e) => setData({ ...data, productId: e.target.value })}
+                    >
+                      <option value="">Select product</option>
+                      {products.map((product) => (
+                        <option key={product.productId} value={product.productId}>
+                          {product.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="col-md-6">
+                    <label className="col-form-label text-md-right">Quantity</label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      placeholder="Quantity"
+                      value={data.quantity}
+                      onChange={(e) => setData({ ...data, quantity: e.target.value })}
+                    />
+                  </div>
                 </div>
-                <div className="form-group">
-                  <label>Quantity</label>
-                  <input
-                    type="number"
-                    className="form-control"
-                    placeholder="Quantity"
-                    value={data.quantity}
-                    onChange={(e) => setData({ ...data, quantity: e.target.value })}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Status</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Status"
-                    value={data.status}
-                    onChange={(e) => setData({ ...data, status: e.target.value })}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="reason">Reason</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Reason"
-                    value={data.reason}
-                    onChange={(e) => setData({ ...data, reason: e.target.value })}
-                  />
+                <div className="row mb-4">
+                <div className="col-md-6">
+  <label className="col-form-label text-md-right">Status</label>
+  <select
+    className="form-control"
+    value={data.status}
+    onChange={(e) => setData({ ...data, status: e.target.value })}
+  >
+    <option value="">Select status</option>
+    <option value="IN">IN</option>
+    <option value="OUT">OUT</option>
+  </select>
+</div>
+
+                  <div className="col-md-6">
+                    <label className="col-form-label text-md-right">Reason</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Reason"
+                      value={data.reason}
+                      onChange={(e) => setData({ ...data, reason: e.target.value })}
+                    />
+                  </div>
                 </div>
                 <button type="submit" className="btn btn-primary mr-2">
                   Save

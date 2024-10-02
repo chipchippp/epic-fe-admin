@@ -89,18 +89,6 @@ function Blog() {
         <>
             <div className="content-wrapper">
                 <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Blogs</h3>
-                                <Link to="/blog/create" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
@@ -108,14 +96,10 @@ function Blog() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <div className="float-left">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={5}>Show</option>
-                                                <option value={10}>10</option>
-                                                <option value={20}>20</option>
-                                                <option value={30}>30</option>
-                                            </select>
-                                        </div>
+                                        <h3 className="font-weight-bold">Blogs</h3>
+                                        <Link to="/blog/create" className="float-left btn btn-primary">
+                                            <i className="fas fa-plus"></i> New
+                                        </Link>
                                         <Search setSearch={setSearch} />
                                     
                                         <div className="table-responsive">
@@ -127,7 +111,7 @@ function Blog() {
                                                         <th>ImageTitle</th>
                                                         <th>Content</th>
                                                         <th>Author</th>
-                                                        <th>UserId</th>
+                                                        <th>User</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -149,7 +133,7 @@ function Blog() {
                                         </td>
                                                             <td>{item.content}</td>
                                                             <td>{item.author}</td>
-                                                            <td>{item.userId}</td>
+                                                            <td>{item.user.username}</td>
                                                             <td>
                                                                 <Link
                                                                     to={`/blog/edit/${item.id}`}

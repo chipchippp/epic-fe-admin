@@ -174,7 +174,7 @@ function UserDetail() {
                                                                     className="btn btn-primary"
                                                                     title="Detail"
                                                                 >
-                                                                    <i className="far fa-eye"></i>
+                                                                <i class="fa-solid fa-cart-shopping"></i>
                                                                 </Link>
                                                             </td>
                                                         </tr>

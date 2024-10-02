@@ -17,7 +17,7 @@ function Product() {
 
     const [priceRange, setPriceRange] = useState([0, 90905.0]);
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortOrder, setSortOrder] = useState('desc');
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -99,7 +99,7 @@ function Product() {
         if (value[0] <= value[1]) {
             setPriceRange(value);
         }
-    }, 300);
+    }, 0);
     
     const handleSliderChange = (value) => {
         debouncedHandleSliderChange(value);
@@ -134,33 +134,25 @@ function Product() {
             toast.error('Failed to delete product');
         }
     };
-
+ 
     return (
         <>
             <div className="content-wrapper">
                 <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Products</h3>
-                                <Link to="/addcreate" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
+                                <h3 className="font-weight-bold">Products</h3>
                                 <div className="filter-product">
+                                    <Link to="/add/create" className="btn btn-primary">
+                                        <i className="fas fa-plus"></i> New
+                                    </Link>
                                     <div className="filter-container">
-                                        <div className="price-labels">
+                                        <div className="float-left price-labels">
                                             <span className="min-price">{priceRange[0]}$</span>
                                             <span className="max-price">{priceRange[1]}$</span>
                                         </div>
-                                        <div className="slider-button-group">
+                                        <div className="float-left slider-button-group">
                                             <Slider
                                                 className="price-slider"
                                                 range
@@ -172,15 +164,16 @@ function Product() {
                                             />
                                         </div>
                                     </div>
-                                    <div className="filter-sort-group">
+                                    <div className="float-left filter-sort-group">
                                         <div className="sort-container">
                                             <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
+                                                <option value="desc">Sort Date</option>
                                                 <option value="asc">Sort Ascending</option>
                                                 <option value="desc">Sort Descending</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="float-left ml-2">
+                                    <div className="float-left">
                                         <select onChange={handleCategoryChange} className="form-control selectric">
                                             <option value="">All Categories</option>
                                             {categories.map((category) => (
@@ -210,7 +203,7 @@ function Product() {
                                                 <tr key={item.productId}>
                                                     <td>{(currentPage - 1) * limit + index + 1}</td>
                                                     <td>
-                                                        <Link to={`/productdetail/${item.productId}`}>{item.name}</Link>
+                                                        <Link to={`/product/detail/${item.productId}`}>{item.name}</Link>
                                                     </td>
                                                     <td>
                                                         {item.images.length > 0 ? (
@@ -223,7 +216,7 @@ function Product() {
                                                     <td>{item.category ? item.category.categoryName : 'N/A'}</td>
                                                     <td>{item.stockQuantity}</td>
                                                     <td>
-                                                        <Link to={`/editproduct/${item.productId}`} className="btn btn-primary" title="Edit">
+                                                        <Link to={`/edit/product/${item.productId}`} className="btn btn-primary" title="Edit">
                                                             <i className="fas fa-pencil-alt"></i>
                                                         </Link>
                                                         &nbsp;

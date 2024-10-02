@@ -89,15 +89,6 @@ function Order() {
         <>
             <div className="content-wrapper">
                 <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Orders</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
@@ -105,6 +96,8 @@ function Order() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
+                                    <h3 className="font-weight-bold">Orders</h3>
+
                                         <div className="float-left">
                                             <select
                                                 className="form-control selectric"
@@ -121,15 +114,9 @@ function Order() {
                                                 <option value="COMPLETE">Complete</option>
                                             </select>
                                         </div>
-                                        {/* <div className="float-left ml-2">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={10}>Show</option>
-                                                <option value={20}>20</option>
-                                                <option value={40}>40</option>
-                                            </select>
-                                        </div> */}
                                         <div className="float-left ml-2">
                                                 <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
+                                                    <option value="asc">Sort Date</option>
                                                     <option value="asc">Sort Ascending</option>
                                                     <option value="desc">Sort Descending</option>
                                                 </select>
@@ -141,7 +128,7 @@ function Order() {
                                                     <tr>
                                                         <th>#</th>
                                                         <th>OrderCode</th>
-                                                        <th>FirstName</th>
+                                                        <th>Full Name</th>
                                                         <th>Total Price</th>
                                                         <th>Created At</th>
                                                         <th>Status</th>
@@ -153,7 +140,7 @@ function Order() {
                                                         <tr key={item.id}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.id}</td>
-                                                            <td>{item.firstName}</td>
+                                                            <td>{item.firstName} {item.lastName}</td>
                                                             <td>{item.totalPrice}</td>
                                                             <td>{item.createdAt}</td>
                                                             <td>
