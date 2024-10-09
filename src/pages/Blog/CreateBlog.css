@@ -1,0 +1,24 @@
+.custom-quill .ql-container {
+    min-height: 300px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.custom-quill .ql-editor {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.custom-quill .ql-toolbar {
+    background-color: #f3f3f3;
+    border-radius: 5px 5px 0 0;
+}
+
+.custom-quill .ql-container {
+    border-radius: 0 0 5px 5px;
+    border: 1px solid #ccc;
+}
+
+.custom-quill .ql-editor {
+    padding: 15px;
+}

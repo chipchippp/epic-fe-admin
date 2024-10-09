@@ -90,18 +90,13 @@ function DesignDetail() {
         return <div>Loading...</div>;
     }
 
-
     return (
         <div className="content-wrapper">
             <div className="card">
                 <div className="card-body">
                     <div className="section-body">
-                        <h2 className="section-title">
-                            Hi, {data.username}
-                        </h2>
-                        <p className="section-lead">
-                            Change information about yourself on this page.
-                        </p>
+                        <h2 className="section-title">Hi, {data.username}</h2>
+                        <p className="section-lead">Change information about yourself on this page.</p>
 
                         <div className="row mt-sm-4">
                             <div className="col-12 col-md-12 col-lg-5">
@@ -109,8 +104,8 @@ function DesignDetail() {
                                     <div className="profile-widget-header">
                                         <img
                                             alt="DesignDetail"
-                                             src={`http://localhost:8080/api/v1/image_design_designer/imagesPost/${data.avatar}`} style={{ width: '70px', height: '70px', borderRadius: '0px' }}
-
+                                            src={`http://localhost:8080/api/v1/image_design_designer/imagesPost/${data.avatar}`}
+                                            style={{ width: '70px', height: '70px', borderRadius: '0px' }}
                                             className="rounded-circle profile-widget-picture fixed-profile-img"
                                         />
                                         <div className="profile-widget-items btn btn-primary d-flex justify-content-between">
@@ -146,7 +141,9 @@ function DesignDetail() {
                                                         id="status"
                                                         value={tempStatus}
                                                         onChange={(e) => setTempStatus(e.target.value)}
-                                                        disabled={data.status === 'REJECTED' || data.status === 'ACCEPTED'}
+                                                        disabled={
+                                                            data.status === 'REJECTED' || data.status === 'ACCEPTED'
+                                                        }
                                                     >
                                                         {getSelectableOptions().map((option) => (
                                                             <option key={option.value} value={option.value}>
@@ -216,19 +213,25 @@ function DesignDetail() {
                                                 </div>
                                                 <div className="form-group col-md-6 col-12">
                                                     <label>Created At</label>
-                                                    <p className="form-control-plaintext">{formatDate(data.createdAt)}</p>
-                                                </div>  
+                                                    <p className="form-control-plaintext">
+                                                        {formatDate(data.createdAt)}
+                                                    </p>
+                                                </div>
                                             </div>
 
                                             <h5 className="mb-4">Timestamps</h5>
                                             <div className="row">
                                                 <div className="form-group col-md-6 col-12">
                                                     <label>Created At</label>
-                                                    <p className="form-control-plaintext">{formatDate(data.createdAt)}</p>
+                                                    <p className="form-control-plaintext">
+                                                        {formatDate(data.createdAt)}
+                                                    </p>
                                                 </div>
                                                 <div className="form-group col-md-6 col-12">
                                                     <label>Update At</label>
-                                                    <p className="form-control-plaintext">{formatDate(data.updateAt)}</p>
+                                                    <p className="form-control-plaintext">
+                                                        {formatDate(data.updateAt)}
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>

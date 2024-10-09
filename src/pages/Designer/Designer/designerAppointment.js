@@ -11,7 +11,7 @@ function DesignerAppointment() {
     const { userId } = useParams();
 
     const [loading, setLoading] = useState(true);
-    const [status, setStatus] = useState('');   
+    const [status, setStatus] = useState('');
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -22,17 +22,16 @@ function DesignerAppointment() {
 
     useEffect(() => {
         let filteredData = data;
-        
-        if(search){
-            filteredData = filteredData.filter(
-                (item) =>
-                item.id.orderId.toString().toLowerCase().includes(search.toLowerCase())
+
+        if (search) {
+            filteredData = filteredData.filter((item) =>
+                item.id.orderId.toString().toLowerCase().includes(search.toLowerCase()),
             );
         }
         if (status !== '') {
             filteredData = filteredData.filter((item) => item.status === status);
         }
-    
+
         const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
         setNumbers(pagesArray);
         setSearchedData(filteredData);
@@ -44,14 +43,14 @@ function DesignerAppointment() {
             try {
                 const response = await editAppointmentDesign(userId, currentPage, limit);
                 const orderDetails = response.data.content || [];
-                const enrichedOrderDetails = orderDetails.map(detail => ({
+                const enrichedOrderDetails = orderDetails.map((detail) => ({
                     ...detail,
                     orderCode: detail.id,
                     userId: detail.userId,
                     totalPrice: detail.totalPrice,
-                    status: detail.status
+                    status: detail.status,
                 }));
-    
+
                 setData(enrichedOrderDetails);
                 setSearchedData(enrichedOrderDetails);
                 setTotalPages(response.data.totalPages || 1);
@@ -65,9 +64,12 @@ function DesignerAppointment() {
         }
     }, [currentPage, limit, userId, status]);
 
-    const handleSearch = useCallback(debounce((value) => {
-        setSearch(value);
-    }, 500), []);
+    const handleSearch = useCallback(
+        debounce((value) => {
+            setSearch(value);
+        }, 500),
+        [],
+    );
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -78,7 +80,7 @@ function DesignerAppointment() {
         setCurrentPage(1);
     };
 
-    return ( 
+    return (
         <>
             <div className="content-wrapper">
                 <div className="row">
@@ -86,9 +88,9 @@ function DesignerAppointment() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold"> DesignerAppointments</h3>
-                            <Link to="/designer" className="btn btn-primary mb-3">
-                            <i className="fas fa-arrow-left"></i> Back
-                            </Link>
+                                <Link to="/designer" className="btn btn-primary mb-3">
+                                    <i className="fas fa-arrow-left"></i> Back
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -102,13 +104,17 @@ function DesignerAppointment() {
                                 ) : (
                                     <>
                                         <div className="float-left ml-2">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
+                                            <select
+                                                onChange={handleLimitChange}
+                                                className="btn-primary form-control selectric"
+                                                value={limit}
+                                            >
                                                 <option value={10}>Show</option>
                                                 <option value={20}>20</option>
                                                 <option value={30}>30</option>
                                             </select>
                                         </div>
-                                        <Search  className="float-left ml-2" setSearch={handleSearch} />
+                                        <Search className="float-left ml-2" setSearch={handleSearch} />
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -124,7 +130,13 @@ function DesignerAppointment() {
                                                 </thead>
                                                 <tbody>
                                                     {searchedData.map((item, index) => (
-                                                        <tr key={(item.id?.orderId || index) + '-' + (item.id?.productId || index)}>
+                                                        <tr
+                                                            key={
+                                                                (item.id?.orderId || index) +
+                                                                '-' +
+                                                                (item.id?.productId || index)
+                                                            }
+                                                        >
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.designer.username}</td>
                                                             <td>{item.designer.email}</td>
@@ -146,8 +158,8 @@ function DesignerAppointment() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
@@ -161,7 +173,7 @@ function DesignerAppointment() {
                 <ToastContainer />
             </div>
         </>
-     );
+    );
 }
 
 export default DesignerAppointment;

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 function Pagination({ prePage, nextPage, changeCPage, currentPage, numbers = [] }) {
     if (!Array.isArray(numbers) || numbers.length === 0) {
-        return null; 
+        return null;
     }
 
     return (

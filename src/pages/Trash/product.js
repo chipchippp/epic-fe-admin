@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 
 function Product() {
     const [products, setProducts] = useState([]);
-    const [priceRange, setPriceRange] = useState([0, 90905.00]);
+    const [priceRange, setPriceRange] = useState([0, 90905.0]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [sortOrder, setSortOrder] = useState('asc');
     const [limit, setLimit] = useState(10);
@@ -27,7 +27,7 @@ function Product() {
                 const response = selectedCategory
                     ? await getProductCategory(selectedCategory, currentPage, limit, search)
                     : await getTrashProduct(currentPage, limit, search);
-           
+
                 const data = response.data;
                 setProducts(data.content);
                 setTotalPages(data.totalPages);
@@ -35,20 +35,16 @@ function Product() {
                 toast.error('Failed to fetch products', error);
             }
         };
-    
+
         fetchProducts();
     }, [currentPage, limit, search, selectedCategory]);
-    
 
     useEffect(() => {
         const applyFilters = () => {
             const [minPrice, maxPrice] = priceRange;
             const filteredData = products.filter((item) => {
                 const price = parseFloat(item.price);
-                return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) &&
-                    price >= minPrice && price <= maxPrice
-                );
+                return item.name.toLowerCase().includes(search.toLowerCase()) && price >= minPrice && price <= maxPrice;
             });
             setFilteredProducts(filteredData);
         };
@@ -65,7 +61,7 @@ function Product() {
         if (window.confirm('Are you sure you want to delete this product?')) {
             try {
                 await axios.delete(`http://localhost:8080/api/v1/products/${productId}`);
-                setProducts(products.filter(product => product.productId !== productId));
+                setProducts(products.filter((product) => product.productId !== productId));
             } catch (error) {
                 toast.error('Failed to delete product', error);
             }
@@ -106,7 +102,11 @@ function Product() {
 
                                 <div className="filter-product">
                                     <div className="float-left">
-                                        <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
+                                        <select
+                                            onChange={handleLimitChange}
+                                            className="btn-primary form-control selectric"
+                                            value={limit}
+                                        >
                                             <option value={5}>Show</option>
                                             <option value={10}>10</option>
                                             <option value={20}>20</option>
@@ -134,17 +134,15 @@ function Product() {
                                                     className="price-slider"
                                                     range
                                                     min={0}
-                                                    max={90905.00}
-                                                    defaultValue={[0, 90905.00]}
+                                                    max={90905.0}
+                                                    defaultValue={[0, 90905.0]}
                                                     value={priceRange}
                                                     onChange={handleSliderChange}
                                                 />
                                             </div>
                                         </div>
-                                        
                                     </div>
                                     <Search setSearch={setSearch} />
-
                                 </div>
                                 <div className="table-responsive">
                                     <table className="table table-striped">
@@ -168,7 +166,15 @@ function Product() {
                                                     </td>
                                                     <td>
                                                         {item.images.length > 0 ? (
-                                                            <img src={`http://localhost:8082/api/v1/product-images/images/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                            <img
+                                                                src={`http://localhost:8082/api/v1/product-images/images/${item.images[0].imageUrl}`}
+                                                                alt={item.name}
+                                                                style={{
+                                                                    width: '70px',
+                                                                    height: '70px',
+                                                                    borderRadius: '0px',
+                                                                }}
+                                                            />
                                                         ) : (
                                                             'No Image'
                                                         )}

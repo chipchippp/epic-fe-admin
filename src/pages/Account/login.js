@@ -22,14 +22,11 @@ function Login() {
 
         if (validate()) {
             try {
-                const response = await httpRequest.post(
-                    'http://localhost:8080/api/v1/auth/login',
-                    {
-                        username: username,
-                        password: password,
-                        platform: 'WEB',
-                    },
-                );
+                const response = await httpRequest.post('http://localhost:8080/api/v1/auth/login', {
+                    username: username,
+                    password: password,
+                    platform: 'WEB',
+                });
 
                 if (response && response.data && response.data.accessToken) {
                     const accessToken = response.data.accessToken;
@@ -131,10 +128,7 @@ function Login() {
                                             </Link>
                                         </div>
                                         <div className="mb-2">
-                                            <button
-                                                type="button"
-                                                className="btn btn-block btn-facebook auth-form-btn"
-                                            >
+                                            <button type="button" className="btn btn-block btn-facebook auth-form-btn">
                                                 <i className="ti-facebook mr-2" />
                                                 Connect using facebook
                                             </button>

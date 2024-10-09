@@ -12,7 +12,7 @@ const routes = {
 
     //      products
     product: '/product',
-    
+
     productdetail: '/product/detail/:id',
     createProduct: '/add/create',
     editProduct: '/edit/product/:id',
@@ -21,6 +21,11 @@ const routes = {
     inventory: '/inventory',
     createInventory: '/inventory/create',
     editInventory: '/inventory/edit/:id',
+
+    //     Inventory Status
+    inventoryStatus: '/inventory-status',
+    createInventoryStatus: '/inventory-status/create',
+    editInventoryStatus: '/inventory-status/edit/:id',
 
     //     Blog
     blog: '/blog',
@@ -42,12 +47,12 @@ const routes = {
     imgDesigner: '/img-designer',
     createImgDesigner: '/img-designer/create',
     editImgDesigner: '/img-designer/edit/:id',
-    
+
     //     Room
     room: '/room',
     createRoom: '/room/create',
     editRoom: '/room/edit/:id',
-   
+
     //      Orders
     orders: '/order',
     orderDetail: '/order/detail/:id',

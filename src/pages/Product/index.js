@@ -33,10 +33,7 @@ function Product() {
             const [minPrice, maxPrice] = priceRange;
             const filteredData = data.filter((item) => {
                 const price = parseFloat(item.price);
-                return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) &&
-                    price >= minPrice && price <= maxPrice
-                );
+                return item.name.toLowerCase().includes(search.toLowerCase()) && price >= minPrice && price <= maxPrice;
             });
             setFilteredProducts(filteredData);
         };
@@ -55,9 +52,7 @@ function Product() {
     const fetchCategories = async () => {
         try {
             const response = await getCategories();
-            const sortedCategories = response.data.content.sort((a, b) =>
-                a.categoryName.localeCompare(b.categoryName)
-            );
+            const sortedCategories = response.data.content.sort((a, b) => a.categoryName.localeCompare(b.categoryName));
             setCategories(sortedCategories);
         } catch (error) {
             toast.error('Failed to fetch categories');
@@ -71,7 +66,7 @@ function Product() {
                 size: limit,
                 sort: `productId:${sortOrder}`,
             };
-    
+
             if (search) {
                 params.product = `name~${search}`;
             }
@@ -83,7 +78,7 @@ function Product() {
             const response = await getFilteredProducts(params);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
-            setNumbers([...Array(response.data.totalPages).keys()].map(i => i + 1));
+            setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
         } catch (error) {
             toast.error('Failed to fetch products');
         }
@@ -100,14 +95,17 @@ function Product() {
             setPriceRange(value);
         }
     }, 0);
-    
+
     const handleSliderChange = (value) => {
         debouncedHandleSliderChange(value);
     };
 
-    const handleSearch = useCallback(debounce((value) => {
-        setSearch(value);
-    }, 500), []);
+    const handleSearch = useCallback(
+        debounce((value) => {
+            setSearch(value);
+        }, 500),
+        [],
+    );
 
     const handleSort = (order) => {
         setSortOrder(order);
@@ -134,7 +132,7 @@ function Product() {
             toast.error('Failed to delete product');
         }
     };
- 
+
     return (
         <>
             <div className="content-wrapper">
@@ -157,8 +155,8 @@ function Product() {
                                                 className="price-slider"
                                                 range
                                                 min={0}
-                                                max={90905.00}
-                                                defaultValue={[0, 90905.00]}
+                                                max={90905.0}
+                                                defaultValue={[0, 90905.0]}
                                                 value={priceRange}
                                                 onChange={handleSliderChange}
                                             />
@@ -166,7 +164,10 @@ function Product() {
                                     </div>
                                     <div className="float-left filter-sort-group">
                                         <div className="sort-container">
-                                            <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
+                                            <select
+                                                className="sort-dropdown"
+                                                onChange={(e) => handleSort(e.target.value)}
+                                            >
                                                 <option value="desc">Sort Date</option>
                                                 <option value="asc">Sort Ascending</option>
                                                 <option value="desc">Sort Descending</option>
@@ -203,11 +204,21 @@ function Product() {
                                                 <tr key={item.productId}>
                                                     <td>{(currentPage - 1) * limit + index + 1}</td>
                                                     <td>
-                                                        <Link to={`/product/detail/${item.productId}`}>{item.name}</Link>
+                                                        <Link to={`/product/detail/${item.productId}`}>
+                                                            {item.name}
+                                                        </Link>
                                                     </td>
                                                     <td>
                                                         {item.images.length > 0 ? (
-                                                            <img src={`http://localhost:8080/api/v1/product-images/imagesPost/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                            <img
+                                                                src={`http://localhost:8080/api/v1/product-images/imagesPost/${item.images[0].imageUrl}`}
+                                                                alt={item.name}
+                                                                style={{
+                                                                    width: '70px',
+                                                                    height: '70px',
+                                                                    borderRadius: '0px',
+                                                                }}
+                                                            />
                                                         ) : (
                                                             'No Image'
                                                         )}
@@ -216,11 +227,19 @@ function Product() {
                                                     <td>{item.category ? item.category.categoryName : 'N/A'}</td>
                                                     <td>{item.stockQuantity}</td>
                                                     <td>
-                                                        <Link to={`/edit/product/${item.productId}`} className="btn btn-primary" title="Edit">
+                                                        <Link
+                                                            to={`/edit/product/${item.productId}`}
+                                                            className="btn btn-primary"
+                                                            title="Edit"
+                                                        >
                                                             <i className="fas fa-pencil-alt"></i>
                                                         </Link>
                                                         &nbsp;
-                                                        <button className="btn btn-danger" onClick={() => handleDelete(item.productId)} title="Delete">
+                                                        <button
+                                                            className="btn btn-danger"
+                                                            onClick={() => handleDelete(item.productId)}
+                                                            title="Delete"
+                                                        >
                                                             <i className="fas fa-trash"></i>
                                                         </button>
                                                     </td>
@@ -230,8 +249,8 @@ function Product() {
                                     </table>
                                 </div>
                                 <Pagination
-                                    prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                    nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                    prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                    nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                     changeCPage={handlePageChange}
                                     currentPage={currentPage}
                                     numbers={numbers}

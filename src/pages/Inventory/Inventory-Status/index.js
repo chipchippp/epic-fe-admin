@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { getCategory, deleteCategory } from '~/services/Category/categoryService';
-import { debounce } from 'lodash';
+import { getAllInventoryStatus } from '~/services/Inventory/inventoryStatusService';
 
-function Category() {
+function InventoryStatus() {
     const [loading, setLoading] = useState(true);
-    const [deleteShow, setDeleteShow] = useState(false);
-    const [deleteId, setDeleteId] = useState(null);
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -21,66 +18,32 @@ function Category() {
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
-    const debouncedSearch = useCallback(
-        debounce((query) => {
-            const filteredData = data.filter((item) => item.categoryName.toLowerCase().includes(query.toLowerCase()));
-            setSearchedData(filteredData);
-        }, 500),
-        [data],
-    );
+    useEffect(() => {
+        const filteredData = data.filter((item) =>
+            item.name.toString().toLowerCase().includes(search.toLowerCase()),
+        );
+        const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+        setNumbers(pagesArray);
+        setSearchedData(filteredData);
+    }, [search, data, totalPages]);
 
     useEffect(() => {
-        debouncedSearch(search);
-    }, [search, debouncedSearch]);
-
-    useEffect(() => {
-        getData();
-    }, [currentPage, limit]);
-
-    const getData = async () => {
-        try {
-            const response = await getCategory(currentPage, limit);
-
-            if (response && response.data && response.data.content) {
+        const fetchInventory = async () => {
+            try {
+                const response = await getAllInventoryStatus(currentPage, limit);
                 setData(response.data.content);
                 setSearchedData(response.data.content);
                 setTotalPages(response.data.totalPages);
-                const pagesArray = Array.from({ length: response.data.totalPages }, (_, i) => i + 1);
-                setNumbers(pagesArray);
-            } else {
-                toast.error('Invalid response structure from server');
+            } catch (error) {
+                toast.error(`Failed to fetch inventory: ${error.message}`);
             }
             setLoading(false);
-        } catch (error) {
-            toast.error('Failed to fetch categories');
-        }
-    };
-
-    const handleDelete = (id) => {
-        setDeleteId(id);
-        setDeleteShow(true);
-    };
-
-    const handleDeleteConfirm = async () => {
-        try {
-            await deleteCategory(deleteId);
-            toast.success('Category has been deleted successfully');
-            handleClose();
-            getData();
-        } catch (error) {
-            toast.error('Failed to delete category');
-        }
-    };
-
-    const handleClose = () => setDeleteShow(false);
+        };
+        fetchInventory();
+    }, [currentPage, limit]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-    };
-
-    const handleLimitChange = (e) => {
-        setLimit(e.target.value);
-        setCurrentPage(1);
     };
 
     return (
@@ -94,8 +57,8 @@ function Category() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <h3 className="font-weight-bold">Categories</h3>
-                                        <Link to="/category/create" className="float-left btn btn-primary">
+                                        <h3 className="font-weight-bold">Inventory Status</h3>
+                                        <Link to="/inventory-status/create" className="float-left btn btn-primary">
                                             <i className="fas fa-plus"></i> New
                                         </Link>
                                         <Search setSearch={setSearch} />
@@ -105,33 +68,28 @@ function Category() {
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Category Name</th>
+                                                        <th>Name</th>
                                                         <th>Description</th>
+                                                        <th>createdAt</th>
+                                                        <th>AddAction</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {searchedData.map((item, index) => (
-                                                        <tr key={item.categoryId}>
+                                                        <tr key={item.id}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
-                                                            <td>{item.categoryName}</td>
+                                                            <td>{item.name}</td>
                                                             <td>{item.description}</td>
+                                                            <td>{item.createdAt}</td>
+                                                            <td>{item.addAction}</td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/category/edit/${item.categoryId}`}
-                                                                    className="btn btn-primary"
-                                                                    title="Edit"
+                                                                    to={`/inventory-status/edit/${item.id}`}
+                                                                    className="btn btn-primary mr-2"
                                                                 >
                                                                     <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
-                                                                &nbsp;
-                                                                <button
-                                                                    className="btn btn-danger"
-                                                                    onClick={() => handleDelete(item.categoryId)}
-                                                                    title="Delete"
-                                                                >
-                                                                    <i className="fas fa-trash"></i>
-                                                                </button>
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -151,26 +109,10 @@ function Category() {
                         </div>
                     </div>
                 </div>
-
-                <Modal show={deleteShow} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Confirm Delete</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this category?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Cancel
-                        </Button>
-                        <Button variant="danger" onClick={handleDeleteConfirm}>
-                            Delete
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
                 <ToastContainer />
             </div>
         </>
     );
 }
 
-export default Category;
+export default InventoryStatus;

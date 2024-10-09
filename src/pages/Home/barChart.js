@@ -10,7 +10,7 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 const BarChart = () => {
     const [chartData, setChartData] = useState([]);
     const [timeRange, setTimeRange] = useState('Date');
-    
+
     useEffect(() => {
         const fetchChartData = async () => {
             try {
@@ -18,22 +18,22 @@ const BarChart = () => {
                 if (response.code !== 200) {
                     throw new Error('Failed to fetch chart data');
                 }
-    
+
                 const jsonData = response.data;
-                const filteredData = jsonData.content.filter((order) => order.status === "COMPLETE");
-    
+                const filteredData = jsonData.content.filter((order) => order.status === 'COMPLETE');
+
                 const processData = (data, format, unit, totalUnits, fixedLabels) => {
                     const latestOrderDate = data.reduce((latestDate, item) => {
                         const orderDate = dayjs(item.createdAt);
                         return orderDate.isAfter(latestDate) ? orderDate : latestDate;
                     }, dayjs('2000-01-01'));
-                
+
                     const latestUnits =
                         fixedLabels ||
                         Array.from({ length: totalUnits }, (_, index) =>
                             latestOrderDate.subtract(index, unit).format(format),
                         ).reverse();
-                
+
                     const revenueByTime = data.reduce((acc, item) => {
                         const time = dayjs(item.createdAt).format(format);
                         if (!acc[time]) {
@@ -43,7 +43,7 @@ const BarChart = () => {
                         acc[time].totalRevenue += item.totalPrice;
                         return acc;
                     }, {});
-                
+
                     const chartData = latestUnits.map((time) => {
                         const dailyData = revenueByTime[time];
                         return {
@@ -52,10 +52,10 @@ const BarChart = () => {
                             totalRevenue: dailyData ? dailyData.totalRevenue : 0,
                         };
                     });
-                
+
                     return chartData;
                 };
-    
+
                 let chartData;
                 if (timeRange === 'Date') {
                     chartData = processData(filteredData, 'YYYY-MM-DD', 'day', 7);
@@ -68,13 +68,13 @@ const BarChart = () => {
                 } else if (timeRange === 'Year') {
                     chartData = processData(filteredData, 'YYYY', 'year', 7);
                 }
-    
+
                 setChartData(chartData);
             } catch (error) {
                 toast.error('Failed to fetch chart data');
             }
         };
-    
+
         fetchChartData();
     }, [timeRange]);
 
@@ -107,7 +107,7 @@ const BarChart = () => {
             },
         ],
     };
-    
+
     const options = {
         maintainAspectRatio: false,
         scales: {
@@ -146,7 +146,6 @@ const BarChart = () => {
             },
         },
     };
-    
 
     return (
         <div className="section-body">

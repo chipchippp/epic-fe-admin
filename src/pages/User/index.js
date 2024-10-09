@@ -23,12 +23,10 @@ function User() {
 
     const debouncedSearch = useCallback(
         debounce((query) => {
-            const filteredData = data.filter((item) =>
-                item.username.toLowerCase().includes(query.toLowerCase())
-            );
+            const filteredData = data.filter((item) => item.username.toLowerCase().includes(query.toLowerCase()));
             setSearchedData(filteredData);
         }, 500),
-        [data]
+        [data],
     );
 
     useEffect(() => {
@@ -90,10 +88,10 @@ function User() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                    <h3 className="font-weight-bold">Users</h3>
-                                    <Link to="/users/create" className="float-left btn btn-primary mb-3">
-                                        <i className="fas fa-plus"></i> New
-                                    </Link>
+                                        <h3 className="font-weight-bold">Users</h3>
+                                        <Link to="/users/create" className="float-left btn btn-primary mb-3">
+                                            <i className="fas fa-plus"></i> New
+                                        </Link>
                                         <Search setSearch={setSearch} />
                                         <div className="table-responsive">
                                             <Table className="table table-striped">
@@ -136,8 +134,8 @@ function User() {
                                             </Table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}

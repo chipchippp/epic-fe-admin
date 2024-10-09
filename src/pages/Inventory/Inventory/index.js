@@ -20,7 +20,7 @@ function Inventory() {
 
     useEffect(() => {
         const filteredData = data.filter((item) =>
-            item.quantity.toString().toLowerCase().includes(search.toLowerCase())
+            item.quantity.toString().toLowerCase().includes(search.toLowerCase()),
         );
         const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
         setNumbers(pagesArray);
@@ -62,13 +62,13 @@ function Inventory() {
                                             <i className="fas fa-plus"></i> New
                                         </Link>
                                         <Search setSearch={setSearch} />
-                                    
+
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>ProductId</th>
+                                                        <th>Product</th>
                                                         <th>Quantity</th>
                                                         <th>Status</th>
                                                         <th>Reason</th>
@@ -80,13 +80,16 @@ function Inventory() {
                                                     {searchedData.map((item, index) => (
                                                         <tr key={item.id}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
-                                                            <td>{item.productId}</td>
+                                                            <td>{item.productResponse.name}</td>
                                                             <td>{item.quantity}</td>
                                                             <td>{item.status}</td>
                                                             <td>{item.reason}</td>
                                                             <td>{item.date}</td>
                                                             <td>
-                                                                <Link to={`/inventory/edit/${item.id}`} className="btn btn-primary mr-2">
+                                                                <Link
+                                                                    to={`/inventory/edit/${item.id}`}
+                                                                    className="btn btn-primary mr-2"
+                                                                >
                                                                     <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
                                                             </td>
@@ -96,8 +99,8 @@ function Inventory() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}

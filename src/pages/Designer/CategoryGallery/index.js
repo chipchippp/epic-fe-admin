@@ -17,18 +17,16 @@ function Category() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-    
+
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
     const debouncedSearch = useCallback(
         debounce((query) => {
-            const filteredData = data.filter((item) =>
-                item.name.toLowerCase().includes(query.toLowerCase())
-            );
+            const filteredData = data.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()));
             setSearchedData(filteredData);
         }, 500),
-        [data]
+        [data],
     );
 
     useEffect(() => {
@@ -42,7 +40,7 @@ function Category() {
     const getData = async () => {
         try {
             const response = await getCategoryGallery(currentPage, limit);
-    
+
             if (response && response.data && response.data.content) {
                 setData(response.data.content);
                 setSearchedData(response.data.content);
@@ -57,7 +55,7 @@ function Category() {
             toast.error('Failed to fetch categories');
         }
     };
-    
+
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
@@ -109,7 +107,11 @@ function Category() {
                                 ) : (
                                     <>
                                         <div className="float-left">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
+                                            <select
+                                                onChange={handleLimitChange}
+                                                className="btn-primary form-control selectric"
+                                                value={limit}
+                                            >
                                                 <option value={5}>Show</option>
                                                 <option value={10}>10</option>
                                                 <option value={20}>20</option>
@@ -117,7 +119,7 @@ function Category() {
                                             </select>
                                         </div>
                                         <Search setSearch={setSearch} />
-                                    
+
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -157,8 +159,8 @@ function Category() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
@@ -169,7 +171,7 @@ function Category() {
                         </div>
                     </div>
                 </div>
-                
+
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>

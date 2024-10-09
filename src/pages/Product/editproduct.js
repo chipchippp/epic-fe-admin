@@ -32,7 +32,7 @@ const EditProduct = () => {
                 setLoading(false);
             }
         };
-    
+
         const fetchCategories = async () => {
             try {
                 const response = await getCategories();
@@ -41,7 +41,7 @@ const EditProduct = () => {
                 toast('Failed to fetch categories');
             }
         };
-    
+
         fetchProduct();
         fetchCategories();
     }, [id]);
@@ -54,7 +54,7 @@ const EditProduct = () => {
     const handleFileChange = (e) => {
         const filesArray = Array.from(e.target.files);
         setImagesNew([]);
-        
+
         filesArray.forEach((file) => {
             const reader = new FileReader();
             reader.onload = (x) => {
@@ -77,7 +77,7 @@ const EditProduct = () => {
     //     e.preventDefault();
     //     setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
     // };
-    
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -85,28 +85,26 @@ const EditProduct = () => {
                 ...product,
                 categoryId: product.categoryId || (product.category && product.category.categoryId),
             };
-    
+
             const formData = new FormData();
             formData.append('productDTO', new Blob([JSON.stringify(updatedProduct)], { type: 'application/json' }));
-    
+
             if (selectedFiles.length > 0) {
                 selectedFiles.forEach((file) => formData.append('files', file));
             }
-    
+
             if (removedImages.length > 0) {
                 formData.append('removedImages', JSON.stringify(removedImages));
             }
             console.log('FormData:', formData);
-    
+
             await updateProduct(id, formData);
             navigate('/product');
         } catch (error) {
             toast('Failed to update product');
         }
     };
-    
-    
-    
+
     if (loading) {
         return <div>Loading...</div>;
     }
@@ -119,14 +117,13 @@ const EditProduct = () => {
         e.preventDefault();
         try {
             const imageId = imagesOld[index].imageId;
-            await deleteProductImg(imageId); 
+            await deleteProductImg(imageId);
             setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
             setRemovedImages((prevImages) => [...prevImages, imageId]);
         } catch (error) {
             toast.error('Failed to remove image');
         }
     };
-    
 
     return (
         <div className="content-wrapper">
@@ -135,7 +132,7 @@ const EditProduct = () => {
                     <div className="card-body">
                         <h4 className="card-title">Edit Product</h4>
                         <Link to="/product" className="btn btn-primary mb-3">
-                        <i className="fas fa-arrow-left"></i> Back
+                            <i className="fas fa-arrow-left"></i> Back
                         </Link>
                         <form onSubmit={handleSubmit}>
                             <div className="row mb-4">
@@ -247,66 +244,76 @@ const EditProduct = () => {
                                 <div className="col-md-6">
                                     <label className="col-form-label text-md-right">Images</label>
                                     <input
-                                      type="file"
-                                      name="images"
-                                      className="form-control"
-                                      multiple
-                                      onChange={handleFileChange}
+                                        type="file"
+                                        name="images"
+                                        className="form-control"
+                                        multiple
+                                        onChange={handleFileChange}
                                     />
-                                </div> 
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
-                            <div>
-                                <h4>List of available products:</h4>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                                    {imagesOld.length > 0 ? (
-                                        imagesOld.map((image, index) => (
-                                            <div key={index} style={{ position: 'relative' }}>
-                                                <img
-                                                    src={`http://localhost:8080/api/v1/product-images/imagesPost/${image.imageUrl}`}
-                                                    alt={image.imageName}
-                                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                                                />
-                                                <button
-                                                    onClick={(e) => handleRemoveOldImage(e, index)}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        top: '5px',
-                                                        right: '5px',
-                                                        background: 'red',
-                                                        color: 'white',
-                                                        border: 'none',
-                                                        cursor: 'pointer',
-                                                        padding: '2px 5px',
-                                                    }}
-                                                >
-                                                    X
-                                                </button>
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p>No Images</p>
-                                    )}
                                 </div>
-                            </div>
-                            <div>
-                                <h4>Preview new images:</h4>
-                                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                                    {imagesNew.length > 0 ? (
-                                        imagesNew.map((image, index) => (
-                                            <div key={index}>
-                                                <img
-                                                    src={image.imageSrc}
-                                                    alt={image.imageName}
-                                                    style={{ width: '100px', height: '100px', objectFit: 'cover' }}
-                                                />
-                                            </div>
-                                        ))
-                                    ) : (
-                                        <p>No Images</p>
-                                    )}
+                                <div
+                                    style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}
+                                >
+                                    <div>
+                                        <h4>List of available products:</h4>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                                            {imagesOld.length > 0 ? (
+                                                imagesOld.map((image, index) => (
+                                                    <div key={index} style={{ position: 'relative' }}>
+                                                        <img
+                                                            src={`http://localhost:8080/api/v1/product-images/imagesPost/${image.imageUrl}`}
+                                                            alt={image.imageName}
+                                                            style={{
+                                                                width: '100px',
+                                                                height: '100px',
+                                                                objectFit: 'cover',
+                                                            }}
+                                                        />
+                                                        <button
+                                                            onClick={(e) => handleRemoveOldImage(e, index)}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                top: '5px',
+                                                                right: '5px',
+                                                                background: 'red',
+                                                                color: 'white',
+                                                                border: 'none',
+                                                                cursor: 'pointer',
+                                                                padding: '2px 5px',
+                                                            }}
+                                                        >
+                                                            X
+                                                        </button>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p>No Images</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4>Preview new images:</h4>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+                                            {imagesNew.length > 0 ? (
+                                                imagesNew.map((image, index) => (
+                                                    <div key={index}>
+                                                        <img
+                                                            src={image.imageSrc}
+                                                            alt={image.imageName}
+                                                            style={{
+                                                                width: '100px',
+                                                                height: '100px',
+                                                                objectFit: 'cover',
+                                                            }}
+                                                        />
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p>No Images</p>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            </div>
                             </div>
                             <button type="submit" className="btn btn-primary">
                                 Save

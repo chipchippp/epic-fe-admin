@@ -53,7 +53,7 @@ export const editDesign = async (id) => {
     }
 };
 
-export const updateDesign = async (id, status) => { 
+export const updateDesign = async (id, status) => {
     try {
         const response = await put(service, `/designer_profile/updateStatus/${id}`, null, {
             params: { status },

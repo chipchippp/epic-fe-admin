@@ -16,40 +16,38 @@ function Category() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-    
+
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
     useEffect(() => {
-        const filteredData = data.filter((item) =>
-            item.categoryName.toLowerCase().includes(search.toLowerCase())
-        );
+        const filteredData = data.filter((item) => item.categoryName.toLowerCase().includes(search.toLowerCase()));
         const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
         setNumbers(pagesArray);
         setSearchedData(filteredData);
     }, [search, data, totalPages]);
 
-        useEffect(() => {
-            getData();
-        }, [currentPage, limit]);
+    useEffect(() => {
+        getData();
+    }, [currentPage, limit]);
 
-        const getData = async () => {
-            try {
-                const response = await getTrashCategory(currentPage, limit);
-        
-                if (response && response.data && response.data.content) {
-                    setData(response.data.content);
-                    setSearchedData(response.data.content);
-                    setTotalPages(response.data.totalPages);
-                } else {
-                    toast.error('Invalid response structure from server');
-                }
-                setLoading(false);
-            } catch (error) {
-                toast.error('Failed to fetch categories');
+    const getData = async () => {
+        try {
+            const response = await getTrashCategory(currentPage, limit);
+
+            if (response && response.data && response.data.content) {
+                setData(response.data.content);
+                setSearchedData(response.data.content);
+                setTotalPages(response.data.totalPages);
+            } else {
+                toast.error('Invalid response structure from server');
             }
-        };
-        
+            setLoading(false);
+        } catch (error) {
+            toast.error('Failed to fetch categories');
+        }
+    };
+
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
@@ -57,12 +55,11 @@ function Category() {
 
     const handleDeleteConfirm = async () => {
         try {
-            deleteCategory(deleteId)
-            .then(() => {
+            deleteCategory(deleteId).then(() => {
                 toast.success('CategoryParents has been deleted');
                 handleClose();
                 getData();
-            })
+            });
         } catch (error) {
             toast.error('Failed to delete category');
         }
@@ -91,7 +88,7 @@ function Category() {
                                     <>
                                         <h3 className="font-weight-bold">Trash Categories</h3>
                                         <Search setSearch={setSearch} />
-                                    
+
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -113,8 +110,8 @@ function Category() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
@@ -125,7 +122,7 @@ function Category() {
                         </div>
                     </div>
                 </div>
-                
+
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>

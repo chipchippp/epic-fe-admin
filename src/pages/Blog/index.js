@@ -17,18 +17,16 @@ function Blog() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-    
+
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
     const debouncedSearch = useCallback(
         debounce((query) => {
-            const filteredData = data.filter((item) =>
-                item.title.toLowerCase().includes(query.toLowerCase())
-            );
+            const filteredData = data.filter((item) => item.title.toLowerCase().includes(query.toLowerCase()));
             setSearchedData(filteredData);
         }, 500),
-        [data]
+        [data],
     );
 
     useEffect(() => {
@@ -42,7 +40,7 @@ function Blog() {
     const getData = async () => {
         try {
             const response = await getBlog(currentPage, limit);
-    
+
             if (response && response.data && response.data.content) {
                 setData(response.data.content);
                 setSearchedData(response.data.content);
@@ -57,7 +55,7 @@ function Blog() {
             toast.error('Failed to fetch categories');
         }
     };
-    
+
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
@@ -101,7 +99,7 @@ function Blog() {
                                             <i className="fas fa-plus"></i> New
                                         </Link>
                                         <Search setSearch={setSearch} />
-                                    
+
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -109,9 +107,7 @@ function Blog() {
                                                         <th>#</th>
                                                         <th>Title</th>
                                                         <th>ImageTitle</th>
-                                                        <th>Content</th>
                                                         <th>Author</th>
-                                                        <th>User</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -121,19 +117,21 @@ function Blog() {
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.title}</td>
                                                             <td>
-                                            {item.imageTitle ? (
-                                                <img
-                                                    src={`http://localhost:8080/api/v1/blogs/blog/${item.imageTitle}`}
-                                                    alt={item.title}
-                                                    style={{ width: '70px', height: '70px', borderRadius: '0px' }}
-                                                />
-                                            ) : (
-                                                'No Image'
-                                            )}
-                                        </td>
-                                                            <td>{item.content}</td>
+                                                                {item.imageTitle ? (
+                                                                    <img
+                                                                        src={`http://localhost:8080/api/v1/blogs/blog/${item.imageTitle}`}
+                                                                        alt={item.title}
+                                                                        style={{
+                                                                            width: '70px',
+                                                                            height: '70px',
+                                                                            borderRadius: '0px',
+                                                                        }}
+                                                                    />
+                                                                ) : (
+                                                                    'No Image'
+                                                                )}
+                                                            </td>
                                                             <td>{item.author}</td>
-                                                            <td>{item.user.username}</td>
                                                             <td>
                                                                 <Link
                                                                     to={`/blog/edit/${item.id}`}
@@ -157,8 +155,8 @@ function Blog() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
@@ -169,7 +167,7 @@ function Blog() {
                         </div>
                     </div>
                 </div>
-                
+
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>

@@ -32,7 +32,8 @@
     margin-right: 0px;
 }
 
-.min-price, .max-price {
+.min-price,
+.max-price {
     font-size: 14px;
     color: #333;
 }
@@ -86,4 +87,3 @@
     outline: none;
     border-color: #0056b3;
 }
-

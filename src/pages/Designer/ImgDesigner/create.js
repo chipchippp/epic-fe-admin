@@ -32,7 +32,6 @@ const CreateImgDesign = () => {
         setData({ ...data, [name]: value });
     };
 
-    
     const handleFileChange = (e) => {
         setSelectedFiles(e.target.files);
     };
@@ -42,17 +41,16 @@ const CreateImgDesign = () => {
         try {
             const formData = new FormData();
             formData.append('imagesDesign', new Blob([JSON.stringify(data)], { type: 'application/json' }));
-    
+
             if (selectedFiles.length > 0) {
                 Array.from(selectedFiles).forEach((file) => formData.append('file', file));
             }
-    
+
             await createImgDesign(formData);
-    
+
             toast.success('ImgDesign created successfully');
             navigate('/img-designer');
         } catch (error) {
-            
             toast.error(`Failed to create img-designer: ${error.message}`);
         }
     };

@@ -8,7 +8,7 @@ function Search({ setSearch }) {
         setQuery(value);
         setSearch(value);
     };
-    
+
     return (
         <div className="float-right">
             <form onSubmit={(e) => e.preventDefault()}>

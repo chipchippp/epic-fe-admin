@@ -22,6 +22,16 @@ export const getAllOrders = async () => {
     }
 };
 
+export const getOrderCount = async () => {
+    try {
+        const response = await get(service, `/orders/count/status`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Orders data:', error);
+        throw error;
+    }
+};
+
 export const createOrders = async (params) => {
     try {
         const response = await get(service, `/orders/search-by-specification`, { params });

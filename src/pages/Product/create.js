@@ -37,7 +37,7 @@ const CreateProduct = () => {
         const { name, value } = e.target;
         setProduct({ ...product, [name]: value });
     };
-    
+
     const handleFileChange = (e) => {
         setSelectedFiles(e.target.files);
     };
@@ -47,13 +47,13 @@ const CreateProduct = () => {
         try {
             const formData = new FormData();
             formData.append('productDTO', new Blob([JSON.stringify(product)], { type: 'application/json' }));
-    
+
             if (selectedFiles.length > 0) {
                 Array.from(selectedFiles).forEach((file) => formData.append('files', file));
             }
-    
+
             await createProduct(formData);
-    
+
             toast.success('Product created successfully');
             navigate('/product');
         } catch (error) {

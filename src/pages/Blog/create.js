@@ -4,6 +4,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { createBlog } from '~/services/Inventory/blogService';
 import { getUsers } from '~/services/User/userService';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import './CreateBlog.css';
 
 const CreateBlog = () => {
     const navigate = useNavigate();
@@ -11,29 +14,19 @@ const CreateBlog = () => {
         title: '',
         content: '',
         author: '',
-        userId: '',
+        userId: 1,
     });
-    const [users, setUsers] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([]);
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await getUsers();
-                setUsers(response.data.content || []);
-            } catch (error) {
-                toast.error('Failed to fetch Users');
-            }
-        };
-
-        fetchUsers();
-    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setBlog({ ...blog, [name]: value });
     };
-    
+
+    const handleContentChange = (value) => {
+        setBlog({ ...blog, content: value });
+    };
+
     const handleFileChange = (e) => {
         setSelectedFiles(e.target.files);
     };
@@ -43,19 +36,50 @@ const CreateBlog = () => {
         try {
             const formData = new FormData();
             formData.append('blog', new Blob([JSON.stringify(blog)], { type: 'application/json' }));
-    
+
             if (selectedFiles.length > 0) {
                 Array.from(selectedFiles).forEach((file) => formData.append('file', file));
             }
-    
+
             await createBlog(formData);
-    
+
             toast.success('Blog created successfully');
             navigate('/Blog');
         } catch (error) {
             toast.error(`Failed to create Blog: ${error.message}`);
         }
     };
+
+    const modules = {
+        toolbar: [
+            [{ header: '1' }, { header: '2' }, { font: [] }],
+            [{ size: [] }],
+            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+            [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
+            ['link', 'image'],
+            [{ align: [] }, { color: [] }, { background: [] }],
+            ['clean'],
+        ],
+    };
+
+    const formats = [
+        'header',
+        'font',
+        'size',
+        'bold',
+        'italic',
+        'underline',
+        'strike',
+        'blockquote',
+        'list',
+        'bullet',
+        'indent',
+        'link',
+        'image',
+        'align',
+        'color',
+        'background',
+    ];
 
     return (
         <div className="content-wrapper">
@@ -81,19 +105,6 @@ const CreateBlog = () => {
                                         />
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Content</label>
-                                        <input
-                                            type="text"
-                                            name="content"
-                                            className="form-control"
-                                            value={blog.content}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div className="row mb-4">
-                                    <div className="col-md-6">
                                         <label className="col-form-label text-md-right">Author</label>
                                         <input
                                             type="text"
@@ -104,24 +115,18 @@ const CreateBlog = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Users</label>
-                                        <select
-                                            name="userId"
-                                            className="form-control"
-                                            value={blog.userId}
-                                            onChange={handleInputChange}
-                                            required
-                                        >
-                                            <option value="" disabled>
-                                                Select UserId
-                                            </option>
-                                            {users.map((user) => (
-                                                <option key={user.id} value={user.id}>
-                                                    {user.username}
-                                                </option>
-                                            ))}
-                                        </select>
+                                </div>
+                                <div className="row mb-4">
+                                    <div className="col-md-12">
+                                        <label className="col-form-label text-md-right">Content</label>
+                                        <ReactQuill
+                                            value={blog.content}
+                                            onChange={handleContentChange}
+                                            modules={modules}
+                                            formats={formats}
+                                            className="custom-quill"
+                                            theme="snow"
+                                        />
                                     </div>
                                 </div>
                                 <div className="form-group">

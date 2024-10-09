@@ -9,7 +9,7 @@ function CreateCategory() {
     const [data, setData] = useState({
         name: '',
         description: '',
-        parentCategoryGalleryId: 0
+        parentCategoryGalleryId: 0,
     });
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
@@ -23,10 +23,10 @@ function CreateCategory() {
                 toast.error('Failed to fetch categories', error);
             }
         };
-    
+
         fetchCategories();
     }, []);
-    
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -37,7 +37,7 @@ function CreateCategory() {
             toast.error('Failed to create category');
         }
     };
-    
+
     return (
         <>
             <div className="content-wrapper">
@@ -47,7 +47,7 @@ function CreateCategory() {
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">New Category Gallery</h3>
                                 <Link to="/category-gallery" className="btn btn-primary mb-3">
-                                 <i className="fas fa-arrow-left"></i> Back
+                                    <i className="fas fa-arrow-left"></i> Back
                                 </Link>
                             </div>
                         </div>
@@ -100,7 +100,10 @@ function CreateCategory() {
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Submit
                                 </button>
-                                <Link to="/category-gallery" className="btn btn-light"> Back </Link>
+                                <Link to="/category-gallery" className="btn btn-light">
+                                    {' '}
+                                    Back{' '}
+                                </Link>
                             </form>
                         </div>
                     </div>

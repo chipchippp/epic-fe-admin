@@ -8,11 +8,12 @@ function AdminLayout({ children }) {
         <div className="container-scroller">
             <HeaderAdmin />
             <div className="container-fluid page-body-wrapper">
-            <PartialAdmin />
-            <SidebarAdmin />
-            <div className="main-panel">{children}
-            <FooterAdmin />
-            </div>
+                <PartialAdmin />
+                <SidebarAdmin />
+                <div className="main-panel">
+                    {children}
+                    <FooterAdmin />
+                </div>
             </div>
         </div>
     );

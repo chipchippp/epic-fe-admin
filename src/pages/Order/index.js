@@ -9,7 +9,7 @@ import debounce from 'lodash.debounce';
 
 function Order() {
     const [loading, setLoading] = useState(true);
-    const [status, setStatus] = useState('');   
+    const [status, setStatus] = useState('');
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -21,11 +21,10 @@ function Order() {
 
     useEffect(() => {
         let filteredData = data;
-        
+
         if (search) {
-            filteredData = filteredData.filter(
-                (item) =>
-                    item.id.toString().toLowerCase().includes(search.toLowerCase())
+            filteredData = filteredData.filter((item) =>
+                item.id.toString().toLowerCase().includes(search.toLowerCase()),
             );
         }
         if (status !== '') {
@@ -56,7 +55,7 @@ function Order() {
             const response = await getFilteredOrders(params);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
-            setNumbers([...Array(response.data.totalPages).keys()].map(i => i + 1));
+            setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
             setLoading(false);
         } catch (error) {
             toast.error('Failed to fetch products', error);
@@ -81,9 +80,12 @@ function Order() {
         setSortOrder(order);
     };
 
-    const handleSearch = useCallback(debounce((value) => {
-        setSearch(value);
-    }, 500), []);
+    const handleSearch = useCallback(
+        debounce((value) => {
+            setSearch(value);
+        }, 500),
+        [],
+    );
 
     return (
         <>
@@ -96,13 +98,10 @@ function Order() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                    <h3 className="font-weight-bold">Orders</h3>
+                                        <h3 className="font-weight-bold">Orders</h3>
 
                                         <div className="float-left">
-                                            <select
-                                                className="form-control selectric"
-                                                onChange={handleStatusChange}
-                                            >
+                                            <select className="form-control selectric" onChange={handleStatusChange}>
                                                 <option value="">Sort Status</option>
                                                 <option value="CREATED">Created</option>
                                                 <option value="PAYMENT_FAILED">Payment Failed</option>
@@ -115,11 +114,14 @@ function Order() {
                                             </select>
                                         </div>
                                         <div className="float-left ml-2">
-                                                <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
-                                                    <option value="asc">Sort Date</option>
-                                                    <option value="asc">Sort Ascending</option>
-                                                    <option value="desc">Sort Descending</option>
-                                                </select>
+                                            <select
+                                                className="sort-dropdown"
+                                                onChange={(e) => handleSort(e.target.value)}
+                                            >
+                                                <option value="asc">Sort Date</option>
+                                                <option value="asc">Sort Ascending</option>
+                                                <option value="desc">Sort Descending</option>
+                                            </select>
                                         </div>
                                         <Search className="float-left ml-2" setSearch={handleSearch} />
                                         <div className="table-responsive">
@@ -140,32 +142,38 @@ function Order() {
                                                         <tr key={item.id}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.id}</td>
-                                                            <td>{item.firstName} {item.lastName}</td>
+                                                            <td>
+                                                                {item.firstName} {item.lastName}
+                                                            </td>
                                                             <td>{item.totalPrice}</td>
                                                             <td>{item.createdAt}</td>
                                                             <td>
-                                                                {item.status === "CREATED" && (
+                                                                {item.status === 'CREATED' && (
                                                                     <div className="badge badge-warning">Created</div>
                                                                 )}
-                                                                 {item.status === "PAYMENT_FAILED" && (
-                                                                    <div className="badge badge-secondary">Payment Failed</div>
+                                                                {item.status === 'PAYMENT_FAILED' && (
+                                                                    <div className="badge badge-secondary">
+                                                                        Payment Failed
+                                                                    </div>
                                                                 )}
-                                                                {item.status === "PENDING" && (
+                                                                {item.status === 'PENDING' && (
                                                                     <div className="badge badge-secondary">Pending</div>
                                                                 )}
-                                                                {item.status === "PROCESSING" && (
-                                                                    <div className="badge badge-primary">Processing</div>
+                                                                {item.status === 'PROCESSING' && (
+                                                                    <div className="badge badge-primary">
+                                                                        Processing
+                                                                    </div>
                                                                 )}
-                                                                {item.status === "ONDELIVERY" && (
+                                                                {item.status === 'ONDELIVERY' && (
                                                                     <div className="badge badge-info">On Delivery</div>
                                                                 )}
-                                                                {item.status === "DELIVERED" && (
+                                                                {item.status === 'DELIVERED' && (
                                                                     <div className="badge badge-success">Delivered</div>
                                                                 )}
-                                                                {item.status === "CANCEL" && (
+                                                                {item.status === 'CANCEL' && (
                                                                     <div className="badge badge-danger">Cancel</div>
                                                                 )}
-                                                                {item.status === "COMPLETE" && (
+                                                                {item.status === 'COMPLETE' && (
                                                                     <div className="badge badge-success">Complete</div>
                                                                 )}
                                                             </td>
@@ -184,8 +192,8 @@ function Order() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
