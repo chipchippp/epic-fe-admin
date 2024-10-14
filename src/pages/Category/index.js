@@ -83,6 +83,11 @@ function Category() {
         setCurrentPage(1);
     };
 
+    const formatDescription = (description, maxLength = 70) => {
+        const regex = new RegExp(`.{1,${maxLength}}`, 'g');
+        return description.match(regex).join('\n');
+    };
+
     return (
         <>
             <div className="content-wrapper">
@@ -115,7 +120,9 @@ function Category() {
                                                         <tr key={item.categoryId}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.categoryName}</td>
-                                                            <td>{item.description}</td>
+                                                            <td style={{ whiteSpace: 'pre-wrap' }}>
+                                                                {formatDescription(item.description)}
+                                                            </td>
                                                             <td>
                                                                 <Link
                                                                     to={`/category/edit/${item.categoryId}`}

@@ -9,6 +9,7 @@ function OrderDetail() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({
         id: '',
+        codeOrder: '',
         userId: '',
         firstName: '',
         lastName: '',
@@ -116,7 +117,7 @@ function OrderDetail() {
                                         <div className="col-lg-12">
                                             <div className="invoice-title">
                                                 <h4>
-                                                    Order <span style={{ color: 'gray' }}>#{id}</span>
+                                                    Order <span style={{ color: 'gray' }}>#{data.codeOrder}</span>
                                                 </h4>
                                             </div>
                                             <Link to="/order" className="btn btn-primary mb-3">
@@ -197,7 +198,7 @@ function OrderDetail() {
                                                                                 item.product.images &&
                                                                                 item.product.images.length > 0 ? (
                                                                                     <img
-                                                                                        src={`http://localhost:8080/api/v1/product-images/images/${item.product.images[0].imageUrl}`}
+                                                                                        src={`http://localhost:8080/api/v1/product-images/imagesPost/${item.product.images[0].imageUrl}`}
                                                                                         alt={item.product.name}
                                                                                         style={{
                                                                                             width: '70px',

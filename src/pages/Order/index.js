@@ -18,6 +18,8 @@ function Order() {
     const [search, setSearch] = useState('');
     const [sortOrder, setSortOrder] = useState('desc');
     const [filteredOrders, setFilteredOrders] = useState([]);
+    const [dateStart, setDateStart] = useState('');
+    const [dateEnd, setDateEnd] = useState('');
 
     useEffect(() => {
         let filteredData = data;
@@ -38,7 +40,7 @@ function Order() {
 
     useEffect(() => {
         getFilteredData();
-    }, [currentPage, limit, sortOrder, search]);
+    }, [currentPage, limit, sortOrder, search, dateStart, dateEnd]);
 
     const getFilteredData = async () => {
         try {
@@ -50,6 +52,12 @@ function Order() {
 
             if (search) {
                 params.order = `id~${search}`;
+            }
+            if (dateStart) {
+                params.dateStart = dateStart;
+            }
+            if (dateEnd) {
+                params.dateEnd = dateEnd;
             }
 
             const response = await getFilteredOrders(params);
@@ -87,6 +95,20 @@ function Order() {
         [],
     );
 
+    const handleDateStartChange = useCallback(
+        debounce((value) => {
+            setDateStart(value);
+        }, 500),
+        [],
+    );
+
+    const handleDateEndChange = useCallback(
+        debounce((value) => {
+            setDateEnd(value);
+        }, 500),
+        [],
+    );
+
     return (
         <>
             <div className="content-wrapper">
@@ -101,7 +123,10 @@ function Order() {
                                         <h3 className="font-weight-bold">Orders</h3>
 
                                         <div className="float-left">
-                                            <select className="form-control selectric" onChange={handleStatusChange}>
+                                            <select
+                                                className="form-control selectric btn-primary"
+                                                onChange={handleStatusChange}
+                                            >
                                                 <option value="">Sort Status</option>
                                                 <option value="CREATED">Created</option>
                                                 <option value="PAYMENT_FAILED">Payment Failed</option>
@@ -113,6 +138,23 @@ function Order() {
                                                 <option value="COMPLETE">Complete</option>
                                             </select>
                                         </div>
+                                        {/* <div className="float-left ml-2">
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                value={dateStart}
+                                                onChange={(e) => handleDateStartChange(e.target.value)}
+                                            />
+                                        </div>
+                                        <div className="float-left ml-2">
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                value={dateEnd}
+                                                onChange={(e) => handleDateEndChange(e.target.value)}
+                                            />
+                                        </div> */}
+
                                         <div className="float-left ml-2">
                                             <select
                                                 className="sort-dropdown"
@@ -128,7 +170,6 @@ function Order() {
                                             <table className="table table-striped">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
                                                         <th>OrderCode</th>
                                                         <th>Full Name</th>
                                                         <th>Total Price</th>
@@ -140,8 +181,7 @@ function Order() {
                                                 <tbody>
                                                     {filteredOrders.map((item, index) => (
                                                         <tr key={item.id}>
-                                                            <td>{(currentPage - 1) * limit + index + 1}</td>
-                                                            <td>{item.id}</td>
+                                                            <td>{item.codeOrder}</td>
                                                             <td>
                                                                 {item.firstName} {item.lastName}
                                                             </td>

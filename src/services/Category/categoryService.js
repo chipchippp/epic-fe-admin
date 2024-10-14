@@ -52,6 +52,16 @@ export const updateCategory = async (id, data) => {
     }
 };
 
+export const updateRestoreCategory = async (id) => {
+    try {
+        await put(service, `/categories/restore/${id}`);
+        return true;
+    } catch (error) {
+        console.error('Failed to update restore category', error);
+        throw error;
+    }
+};
+
 export const deleteCategory = async (id) => {
     try {
         await del(service, `/categories/in-trash/${id}`);
