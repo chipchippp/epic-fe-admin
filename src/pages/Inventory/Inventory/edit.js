@@ -2,18 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { editInventoryStatus, updateInventoryStatus, getInventoryStatus } from '~/services/Inventory/inventoryStatusService';
+import { editInventory, updateInventory } from '~/services/Inventory/inventoryService';
+import { getInventoryStatus } from '~/services/Inventory/inventoryStatusService';
 import { getProduct } from '~/services/Product/productService';
 
 function EditInventoryStatus() {
     const { id } = useParams();
     const [products, setProducts] = useState([]);
-    const [inventoryStatuses, setInventoryStatuses] = useState([]);
+    const [inventoryStatus, setInventoryStatus] = useState([]);
+
     const [data, setData] = useState({
         productId: '',
         inventoryStatusId: '',
         quantity: '',
-        reason: '',
+        note: '',
         date: '',
     });
 
@@ -32,7 +34,7 @@ function EditInventoryStatus() {
         const fetchInventoryStatuses = async () => {
             try {
                 const response = await getInventoryStatus();
-                setInventoryStatuses(response.data.content);
+                setInventoryStatus(response.data.content);
             } catch (error) {
                 toast.error('Failed to fetch inventory statuses');
             }
@@ -44,21 +46,32 @@ function EditInventoryStatus() {
 
     useEffect(() => {
         const fetchData = async () => {
+            if (!id || inventoryStatus.length === 0) return;
+    
             try {
-                const result = await editInventoryStatus(id);
+                const result = await editInventory(id);
+                const parsedDate = new Date(result.date);
+                const formattedDate = parsedDate.toISOString().slice(0, 16);
+    
+                const statusId = inventoryStatus.find(
+                    (status) => status.name === result.status
+                )?.id;
+    
                 setData({
-                    productId: result.productId || '',
-                    inventoryStatusId: result.inventoryStatusId || '',
-                    quantity: result.quantity || '',
-                    reason: result.reason || '',
-                    date: result.date || '',
+                    productId: result.productResponse.productId,
+                    inventoryStatusId: statusId || '',
+                    quantity: result.quantity,
+                    note: result.note,
+                    date: formattedDate,
                 });
             } catch (error) {
                 toast.error('Failed to fetch inventory data');
             }
         };
+    
         fetchData();
-    }, [id]);
+    }, [id, inventoryStatus]);
+    
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -79,7 +92,7 @@ function EditInventoryStatus() {
                 date: formattedDate,
             };
 
-            await updateInventoryStatus(id, inventoryData);
+            await updateInventory(id, inventoryData);
             toast.success('Inventory updated successfully');
             navigate('/inventory');
         } catch (error) {
@@ -87,14 +100,28 @@ function EditInventoryStatus() {
         }
     };
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+
+        if (name === 'quantity' && value < 1) {
+            toast.warning('Quantity must be 1 or higher');
+            return;
+        }
+
+        setData({ ...data, [name]: value });
+    };
+
     return (
         <>
             <div className="content-wrapper">
+                <div className="row">
+                    <div className="col-md-12 grid-margin"></div>
+                </div>
                 <div className="col-12 grid-margin stretch-card">
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Edit Inventory</h4>
-                            <Link to="/inventory" className="btn btn-primary">
+                            <Link to="/inventory" className="btn btn-primary mb-3">
                                 <i className="fas fa-arrow-left"></i> Back
                             </Link>
                             <form onSubmit={handleSubmit}>
@@ -103,8 +130,9 @@ function EditInventoryStatus() {
                                         <label className="col-form-label text-md-right">Product</label>
                                         <select
                                             className="form-control"
+                                            name="productId"
                                             value={data.productId}
-                                            onChange={(e) => setData({ ...data, productId: e.target.value })}
+                                            onChange={handleInputChange}
                                             required
                                         >
                                             <option value="">Select product</option>
@@ -121,8 +149,9 @@ function EditInventoryStatus() {
                                             type="number"
                                             className="form-control"
                                             placeholder="Quantity"
+                                            name="quantity"
                                             value={data.quantity}
-                                            onChange={(e) => setData({ ...data, quantity: e.target.value })}
+                                            onChange={handleInputChange}
                                             required
                                         />
                                     </div>
@@ -132,12 +161,13 @@ function EditInventoryStatus() {
                                         <label className="col-form-label text-md-right">Status</label>
                                         <select
                                             className="form-control"
+                                            name="inventoryStatusId"
                                             value={data.inventoryStatusId}
-                                            onChange={(e) => setData({ ...data, inventoryStatusId: e.target.value })}
+                                            onChange={handleInputChange}
                                             required
                                         >
                                             <option value="">Select Inventory Status</option>
-                                            {inventoryStatuses.map((status) => (
+                                            {inventoryStatus.map((status) => (
                                                 <option key={status.id} value={status.id}>
                                                     {status.name}
                                                 </option>
@@ -145,14 +175,14 @@ function EditInventoryStatus() {
                                         </select>
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Reason</label>
+                                        <label className="col-form-label text-md-right">Note</label>
                                         <input
                                             type="text"
                                             className="form-control"
-                                            placeholder="Reason"
-                                            value={data.reason}
-                                            onChange={(e) => setData({ ...data, reason: e.target.value })}
-                                            required
+                                            placeholder="Note"
+                                            name="note"
+                                            value={data.note}
+                                            onChange={handleInputChange}
                                         />
                                     </div>
                                     <div className="col-md-6">
@@ -160,8 +190,9 @@ function EditInventoryStatus() {
                                         <input
                                             type="datetime-local"
                                             className="form-control"
+                                            name="date"
                                             value={data.date}
-                                            onChange={(e) => setData({ ...data, date: e.target.value })}
+                                            onChange={handleInputChange}
                                             required
                                         />
                                     </div>

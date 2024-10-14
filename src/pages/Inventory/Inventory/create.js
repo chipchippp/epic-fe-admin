@@ -8,12 +8,12 @@ import { getInventoryStatus } from '~/services/Inventory/inventoryStatusService'
 
 function ManageInventory() {
     const [products, setProducts] = useState([]);
-    const [inventoryStatus, setInventoryStatusId] = useState([]);
+    const [inventoryStatus, setInventoryStatus] = useState([]);
     const [data, setData] = useState({
         productId: '',
         inventoryStatusId: '',
         quantity: '',
-        reason: '',
+        note: '',
         date: '',
     });
 
@@ -32,7 +32,7 @@ function ManageInventory() {
         const fetchInventoryStatus = async () => {
             try {
                 const statusData = await getInventoryStatus();
-                setInventoryStatusId(statusData.data.content);
+                setInventoryStatus(statusData.data.content);
             } catch (error) {
                 toast.error('Failed to fetch status');
             }
@@ -46,27 +46,38 @@ function ManageInventory() {
         event.preventDefault();
         try {
             const parsedDate = new Date(data.date);
-            if (isNaN(parsedDate.getTime())) { 
+            if (isNaN(parsedDate.getTime())) {
                 toast.error('Please enter a valid date');
                 return;
             }
-    
+
             const formattedDate = `${parsedDate.getFullYear()}-${String(parsedDate.getMonth() + 1).padStart(2, '0')}-${String(parsedDate.getDate()).padStart(2, '0')} ${String(parsedDate.getHours()).padStart(2, '0')}:${String(parsedDate.getMinutes()).padStart(2, '0')}:${String(parsedDate.getSeconds()).padStart(2, '0')}`;
-    
+
             const inventoryData = {
                 productId: Number(data.productId),
                 quantity: Number(data.quantity),
                 inventoryStatusId: Number(data.inventoryStatusId),
-                reason: data.reason,
+                note: data.note,
                 date: formattedDate,
             };
-            console.log(inventoryData);
+
             await createInventory(inventoryData);
             toast.success('Inventory created successfully');
             navigate('/inventory');
         } catch (error) {
             toast.error(`Failed to create inventory: ${error.message}`);
         }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+
+        if (name === 'quantity' && value < 1) {
+            toast.warning('Quantity must be 1 or higher');
+            return;
+        }
+
+        setData({ ...data, [name]: value });
     };
 
     return (
@@ -79,7 +90,7 @@ function ManageInventory() {
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Create Inventory</h4>
-                            <Link to="/inventory" className="btn btn-primary">
+                            <Link to="/inventory" className="btn btn-primary mb-3">
                                 <i className="fas fa-arrow-left"></i> Back
                             </Link>
                             <form onSubmit={handleSubmit}>
@@ -88,8 +99,10 @@ function ManageInventory() {
                                         <label className="col-form-label text-md-right">Product</label>
                                         <select
                                             className="form-control"
+                                            name="productId"
                                             value={data.productId}
-                                            onChange={(e) => setData({ ...data, productId: e.target.value })}
+                                            onChange={handleInputChange}
+                                            required
                                         >
                                             <option value="">Select product</option>
                                             {products.map((product) => (
@@ -105,8 +118,10 @@ function ManageInventory() {
                                             type="number"
                                             className="form-control"
                                             placeholder="Quantity"
+                                            name="quantity"
                                             value={data.quantity}
-                                            onChange={(e) => setData({ ...data, quantity: e.target.value })}
+                                            onChange={handleInputChange}
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -115,8 +130,10 @@ function ManageInventory() {
                                         <label className="col-form-label text-md-right">Status</label>
                                         <select
                                             className="form-control"
+                                            name="inventoryStatusId"
                                             value={data.inventoryStatusId}
-                                            onChange={(e) => setData({ ...data, inventoryStatusId: e.target.value })}
+                                            onChange={handleInputChange}
+                                            required
                                         >
                                             <option value="">Select Inventory Status</option>
                                             {inventoryStatus.map((status) => (
@@ -127,13 +144,14 @@ function ManageInventory() {
                                         </select>
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Reason</label>
+                                        <label className="col-form-label text-md-right">Note</label>
                                         <input
                                             type="text"
                                             className="form-control"
-                                            placeholder="Reason"
-                                            value={data.reason}
-                                            onChange={(e) => setData({ ...data, reason: e.target.value })}
+                                            placeholder="Note"
+                                            name="note"
+                                            value={data.note}
+                                            onChange={handleInputChange}
                                         />
                                     </div>
                                     <div className="col-md-6">
@@ -141,8 +159,10 @@ function ManageInventory() {
                                         <input
                                             type="datetime-local"
                                             className="form-control"
+                                            name="date"
                                             value={data.date}
-                                            onChange={(e) => setData({ ...data, date: e.target.value })}
+                                            onChange={handleInputChange}
+                                            required
                                         />
                                     </div>
                                 </div>

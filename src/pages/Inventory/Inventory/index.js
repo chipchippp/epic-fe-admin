@@ -14,18 +14,27 @@ function Inventory() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
+    const [status, setStatus] = useState('');
 
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
     useEffect(() => {
-        const filteredData = data.filter((item) =>
-            item.quantity.toString().toLowerCase().includes(search.toLowerCase()),
-        );
+        let filteredData = data;
+
+        if (search) {
+            filteredData = filteredData.filter((item) =>
+                item.productResponse.name.toString().toLowerCase().includes(search.toLowerCase()),
+            );
+        }
+
+        if (status !== '') {
+            filteredData = filteredData.filter((item) => item.status === status);
+        }
         const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
         setNumbers(pagesArray);
         setSearchedData(filteredData);
-    }, [search, data, totalPages]);
+    }, [search, data, totalPages, status]);
 
     useEffect(() => {
         const fetchInventory = async () => {
@@ -45,6 +54,9 @@ function Inventory() {
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
+    const handleStatusChange = (event) => {
+        setStatus(event.target.value);
+    };
 
     return (
         <>
@@ -61,7 +73,15 @@ function Inventory() {
                                         <Link to="/inventory/create" className="float-left btn btn-primary">
                                             <i className="fas fa-plus"></i> New
                                         </Link>
-                                        <Search setSearch={setSearch} />
+                                        
+                                        <div className="float-left ml-2">
+                                            <select className="form-control selectric btn-primary" onChange={handleStatusChange}>
+                                                <option value="">Sort Status</option>
+                                                <option value="IN">In</option>
+                                                <option value="OUT">Out</option>
+                                            </select>
+                                        </div>
+                                        <Search className="float-left" setSearch={setSearch} />
 
                                         <div className="table-responsive">
                                             <table className="table table-striped">
@@ -71,7 +91,7 @@ function Inventory() {
                                                         <th>Product</th>
                                                         <th>Quantity</th>
                                                         <th>Status</th>
-                                                        <th>Reason</th>
+                                                        <th>Note</th>
                                                         <th>Date</th>
                                                         <th>Action</th>
                                                     </tr>
@@ -83,7 +103,7 @@ function Inventory() {
                                                             <td>{item.productResponse.name}</td>
                                                             <td>{item.quantity}</td>
                                                             <td>{item.status}</td>
-                                                            <td>{item.reason}</td>
+                                                            <td>{item.note}</td>
                                                             <td>{item.date}</td>
                                                             <td>
                                                                 <Link

@@ -70,8 +70,7 @@ function InventoryStatus() {
                                                         <th>#</th>
                                                         <th>Name</th>
                                                         <th>Description</th>
-                                                        <th>createdAt</th>
-                                                        <th>AddAction</th>
+                                                        <th>Date</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -82,7 +81,6 @@ function InventoryStatus() {
                                                             <td>{item.name}</td>
                                                             <td>{item.description}</td>
                                                             <td>{item.createdAt}</td>
-                                                            <td>{item.addAction}</td>
                                                             <td>
                                                                 <Link
                                                                     to={`/inventory-status/edit/${item.id}`}
