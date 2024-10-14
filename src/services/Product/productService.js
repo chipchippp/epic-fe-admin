@@ -2,7 +2,7 @@ import { get, post, put, del } from '~/utils/httpRequest';
 
 const service = 'product';
 
-export const getProduct = async (currentPage = 1, limit = 7) => {
+export const getProduct = async () => {
     try {
         const response = await get(service, `http://localhost:8080/api/v1/products/getAll?page=1&limit=1000`);
         return response;

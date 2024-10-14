@@ -1,23 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Table, Button, Modal } from 'react-bootstrap';
+import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { getUsers, deleteUsers } from '~/services/User/userService';
+import { getUsers } from '~/services/User/userService';
 import { debounce } from 'lodash';
 
 function User() {
     const [loading, setLoading] = useState(true);
-    const [deleteShow, setDeleteShow] = useState(false);
-    const [deleteId, setDeleteId] = useState(null);
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
@@ -30,51 +27,31 @@ function User() {
     );
 
     useEffect(() => {
+        const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
+        setNumbers(pagesArray);
+    }, [data, totalPages]);
+
+    useEffect(() => {
         debouncedSearch(search);
     }, [search, debouncedSearch]);
 
     useEffect(() => {
-        getData();
+        const fetchInventory = async () => {
+            try {
+                const response = await getUsers(currentPage, limit);
+                setData(response.data.content);
+                setSearchedData(response.data.content);
+                setTotalPages(response.data.totalPages);
+            } catch (error) {
+                toast.error(`Failed to fetch inventory: ${error.message}`);
+            }
+            setLoading(false);
+        };
+        fetchInventory();
     }, [currentPage, limit]);
-
-    const getData = async () => {
-        try {
-            const response = await getUsers(currentPage, limit);
-            setData(response.data.content);
-            setSearchedData(response.data.content);
-            setTotalPages(response.data.totalPages);
-            setLoading(false);
-        } catch (error) {
-            toast.error('Error fetching users:', error);
-            setLoading(false);
-        }
-    };
-
-    const handleDelete = (id) => {
-        setDeleteId(id);
-        setDeleteShow(true);
-    };
-
-    const handleDeleteConfirm = async () => {
-        try {
-            await deleteUsers(deleteId);
-            toast.success('User has been deleted');
-            handleClose();
-            getData();
-        } catch (error) {
-            toast.error('Failed to delete user');
-        }
-    };
-
-    const handleClose = () => setDeleteShow(false);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-    };
-
-    const handleLimitChange = (e) => {
-        setLimit(e.target.value);
-        setCurrentPage(1);
     };
 
     return (
@@ -89,18 +66,19 @@ function User() {
                                 ) : (
                                     <>
                                         <h3 className="font-weight-bold">Users</h3>
-                                        <Link to="/users/create" className="float-left btn btn-primary mb-3">
+                                        <Link to="/users/create" className="float-left btn btn-primary">
                                             <i className="fas fa-plus"></i> New
                                         </Link>
                                         <Search setSearch={setSearch} />
+
                                         <div className="table-responsive">
-                                            <Table className="table table-striped">
+                                            <table className="table table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Username</th>
+                                                        <th>Name</th>
                                                         <th>Email</th>
-                                                        <th>Phone</th>
+                                                        <th>PhoneNumber</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -131,7 +109,7 @@ function User() {
                                                         </tr>
                                                     ))}
                                                 </tbody>
-                                            </Table>
+                                            </table>
                                         </div>
                                         <Pagination
                                             prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -146,22 +124,6 @@ function User() {
                         </div>
                     </div>
                 </div>
-
-                <Modal show={deleteShow} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Confirm Delete</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this user?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Cancel
-                        </Button>
-                        <Button variant="danger" onClick={handleDeleteConfirm}>
-                            Delete
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
-
                 <ToastContainer />
             </div>
         </>

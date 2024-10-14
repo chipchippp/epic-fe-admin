@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const CreateProduct = () => {
     const navigate = useNavigate();
-    const [product, setProduct] = useState({
+    const [data, setData] = useState({
         name: '',
         description: '',
         price: '',
@@ -35,7 +35,16 @@ const CreateProduct = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setProduct({ ...product, [name]: value });
+
+        if (name === 'stockQuantity' && value < 1) {
+            toast.warning('Stock quantity must be 1 or higher');
+            return;
+        }
+        if (name === 'price' && value < 1) {
+            toast.warning('Stock quantity must be 1 or higher');
+            return;
+        }
+        setData({ ...data, [name]: value });
     };
 
     const handleFileChange = (e) => {
@@ -46,7 +55,7 @@ const CreateProduct = () => {
         e.preventDefault();
         try {
             const formData = new FormData();
-            formData.append('productDTO', new Blob([JSON.stringify(product)], { type: 'application/json' }));
+            formData.append('productDTO', new Blob([JSON.stringify(data)], { type: 'application/json' }));
 
             if (selectedFiles.length > 0) {
                 Array.from(selectedFiles).forEach((file) => formData.append('files', file));
@@ -58,7 +67,7 @@ const CreateProduct = () => {
             navigate('/product');
         } catch (error) {
             toast.error(`Failed to create product: ${error.message}`);
-        }
+        } 
     };
 
     return (
@@ -79,7 +88,7 @@ const CreateProduct = () => {
                                             type="text"
                                             name="name"
                                             className="form-control"
-                                            value={product.name}
+                                            value={data.name}
                                             onChange={handleInputChange}
                                             required
                                         />
@@ -90,7 +99,7 @@ const CreateProduct = () => {
                                             type="text"
                                             name="description"
                                             className="form-control"
-                                            value={product.description}
+                                            value={data.description}
                                             onChange={handleInputChange}
                                             required
                                         />
@@ -103,7 +112,7 @@ const CreateProduct = () => {
                                             type="number"
                                             name="price"
                                             className="form-control"
-                                            value={product.price}
+                                            value={data.price}
                                             onChange={handleInputChange}
                                             required
                                         />
@@ -113,7 +122,7 @@ const CreateProduct = () => {
                                         <select
                                             name="categoryId"
                                             className="form-control"
-                                            value={product.categoryId}
+                                            value={data.categoryId}
                                             onChange={handleInputChange}
                                             required
                                         >
@@ -135,7 +144,7 @@ const CreateProduct = () => {
                                             type="number"
                                             name="stockQuantity"
                                             className="form-control"
-                                            value={product.stockQuantity}
+                                            value={data.stockQuantity}
                                             onChange={handleInputChange}
                                             required
                                         />
@@ -146,7 +155,7 @@ const CreateProduct = () => {
                                             type="text"
                                             name="manufacturer"
                                             className="form-control"
-                                            value={product.manufacturer}
+                                            value={data.manufacturer}
                                             onChange={handleInputChange}
                                             required
                                         />
@@ -159,7 +168,7 @@ const CreateProduct = () => {
                                             type="text"
                                             name="size"
                                             className="form-control"
-                                            value={product.size}
+                                            value={data.size}
                                             onChange={handleInputChange}
                                             required
                                         />
@@ -170,7 +179,7 @@ const CreateProduct = () => {
                                             type="text"
                                             name="weight"
                                             className="form-control"
-                                            value={product.weight}
+                                            value={data.weight}
                                             onChange={handleInputChange}
                                             required
                                         />

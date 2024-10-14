@@ -1,89 +1,94 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { editProduct, updateProduct, getCategories, deleteProductImg } from '~/services/Product/productService';
+import { editProduct, updateProduct } from '~/services/Product/productService';
+import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const EditProduct = () => {
-    const navigate = useNavigate();
     const { id } = useParams();
-    const [categories, setCategories] = useState([]);
-    const [error, setError] = useState(null);
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
-    const [selectedFiles, setSelectedFiles] = useState([]);
-    const [product, setProduct] = useState({});
+    const [data, setData] = useState({
+        name: '',
+        description: '',
+        price: '',
+        categoryId: '',
+        stockQuantity: '',
+        manufacturer: '',
+        size: '',
+        weight: '',
+    });
+
+    const [categories, setCategories] = useState([]);
     const [imagesOld, setImagesOld] = useState([]);
     const [imagesNew, setImagesNew] = useState([]);
-    const [removedImages, setRemovedImages] = useState([]);
+    const [selectedFiles, setSelectedFiles] = useState([]);
 
     useEffect(() => {
-        const fetchProduct = async () => {
-            setLoading(true);
+        const fetchData = async () => {
             try {
-                const response = await editProduct(id);
-                const productData = response.data;
-                if (productData.category && productData.category.categoryId) {
-                    productData.categoryId = productData.category.categoryId;
-                }
-                setProduct(productData);
+                const result = await editProduct(id);
+                const productData = result.data;
+                setData(productData);
                 setImagesOld(productData.images || []);
             } catch (error) {
-                setError('Failed to fetch product details');
+                toast.error('Failed to fetch product data');
             } finally {
                 setLoading(false);
             }
         };
+        fetchData();
+    }, [id]);
 
+    useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await getCategories();
-                setCategories(response.data.content || []);
+                const response = await axios.get('http://localhost:8080/api/v1/categories/getAll');
+                setCategories(response.data.data.content || []);
             } catch (error) {
-                toast('Failed to fetch categories');
+                toast.error('Failed to fetch categories data');
             }
         };
-
-        fetchProduct();
         fetchCategories();
-    }, [id]);
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setProduct({ ...product, [name]: value });
+
+        if ((name === 'stockQuantity' || name === 'price') && value < 1) {
+            toast.warning(`${name.charAt(0).toUpperCase() + name.slice(1)} must be 1 or higher`);
+            return;
+        }
+        setData({ ...data, [name]: value });
     };
 
     const handleFileChange = (e) => {
         const filesArray = Array.from(e.target.files);
         setImagesNew([]);
-
         filesArray.forEach((file) => {
             const reader = new FileReader();
             reader.onload = (x) => {
                 setImagesNew((prevImages) => [
                     ...prevImages,
-                    {
-                        imageId: null,
-                        imageName: file.name,
-                        imageSrc: x.target.result,
-                    },
+                    { imageId: null, imageName: file.name, imageSrc: x.target.result },
                 ]);
             };
             reader.readAsDataURL(file);
         });
-
         setSelectedFiles(filesArray);
     };
 
-    // const handleRemoveOldImage = (e, index) => {
-    //     e.preventDefault();
-    //     setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
-    // };
+    const handleRemoveOldImage = (e, index) => {
+        e.preventDefault();
+        setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const updatedProduct = {
-                ...product,
-                categoryId: product.categoryId || (product.category && product.category.categoryId),
+                ...data,
+                categoryId: Number(data.categoryId) || (data.categoryId === '' ? null : data.category.categoryId),
             };
 
             const formData = new FormData();
@@ -93,37 +98,20 @@ const EditProduct = () => {
                 selectedFiles.forEach((file) => formData.append('files', file));
             }
 
-            if (removedImages.length > 0) {
-                formData.append('removedImages', JSON.stringify(removedImages));
-            }
-            console.log('FormData:', formData);
+            console.log(updatedProduct);
+            console.log(formData);
 
             await updateProduct(id, formData);
+            toast.success('Product updated successfully');
             navigate('/product');
         } catch (error) {
-            toast('Failed to update product');
+            toast.error('Failed to update product');
         }
     };
 
     if (loading) {
         return <div>Loading...</div>;
     }
-
-    if (error) {
-        return <div>{error}</div>;
-    }
-
-    const handleRemoveOldImage = async (e, index) => {
-        e.preventDefault();
-        try {
-            const imageId = imagesOld[index].imageId;
-            await deleteProductImg(imageId);
-            setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
-            setRemovedImages((prevImages) => [...prevImages, imageId]);
-        } catch (error) {
-            toast.error('Failed to remove image');
-        }
-    };
 
     return (
         <div className="content-wrapper">
@@ -142,7 +130,7 @@ const EditProduct = () => {
                                         type="text"
                                         name="name"
                                         className="form-control"
-                                        value={product.name}
+                                        value={data.name}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -153,7 +141,7 @@ const EditProduct = () => {
                                         type="text"
                                         name="description"
                                         className="form-control"
-                                        value={product.description}
+                                        value={data.description}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -166,7 +154,7 @@ const EditProduct = () => {
                                         type="number"
                                         name="price"
                                         className="form-control"
-                                        value={product.price}
+                                        value={data.price}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -176,13 +164,11 @@ const EditProduct = () => {
                                     <select
                                         name="categoryId"
                                         className="form-control"
-                                        value={product.category.categoryId || ''}
-                                        onChange={(e) => setProduct({ ...product, categoryId: e.target.value })}
+                                        value={data.categoryId}
+                                        onChange={handleInputChange}
                                         required
                                     >
-                                        <option value="" disabled>
-                                            Select Category
-                                        </option>
+                                        <option value="" disabled>Select Category</option>
                                         {categories.map((category) => (
                                             <option key={category.categoryId} value={category.categoryId}>
                                                 {category.categoryName}
@@ -198,7 +184,7 @@ const EditProduct = () => {
                                         type="number"
                                         name="stockQuantity"
                                         className="form-control"
-                                        value={product.stockQuantity}
+                                        value={data.stockQuantity}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -209,7 +195,7 @@ const EditProduct = () => {
                                         type="text"
                                         name="manufacturer"
                                         className="form-control"
-                                        value={product.manufacturer}
+                                        value={data.manufacturer}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -222,7 +208,7 @@ const EditProduct = () => {
                                         type="text"
                                         name="size"
                                         className="form-control"
-                                        value={product.size}
+                                        value={data.size}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -233,13 +219,12 @@ const EditProduct = () => {
                                         type="text"
                                         name="weight"
                                         className="form-control"
-                                        value={product.weight}
+                                        value={data.weight}
                                         onChange={handleInputChange}
                                         required
                                     />
                                 </div>
                             </div>
-
                             <div className="row mb-4">
                                 <div className="col-md-6">
                                     <label className="col-form-label text-md-right">Images</label>
@@ -251,11 +236,9 @@ const EditProduct = () => {
                                         onChange={handleFileChange}
                                     />
                                 </div>
-                                <div
-                                    style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}
-                                >
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
                                     <div>
-                                        <h4>List of available products:</h4>
+                                        <h4>Current Images:</h4>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                                             {imagesOld.length > 0 ? (
                                                 imagesOld.map((image, index) => (
@@ -292,7 +275,7 @@ const EditProduct = () => {
                                         </div>
                                     </div>
                                     <div>
-                                        <h4>Preview new images:</h4>
+                                        <h4>New Images Preview:</h4>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                                             {imagesNew.length > 0 ? (
                                                 imagesNew.map((image, index) => (
@@ -316,11 +299,8 @@ const EditProduct = () => {
                                 </div>
                             </div>
                             <button type="submit" className="btn btn-primary">
-                                Save
+                                Update Product
                             </button>
-                            <Link to="/product" className="btn btn-light">
-                                Back
-                            </Link>
                         </form>
                     </div>
                 </div>

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { getTrashCategory, deleteCategory } from '~/services/Category/categoryService';
+import { getTrashCategory, updateRestoreCategory } from '~/services/Category/categoryService';
 
 function Category() {
     const [loading, setLoading] = useState(true);
@@ -55,13 +54,12 @@ function Category() {
 
     const handleDeleteConfirm = async () => {
         try {
-            deleteCategory(deleteId).then(() => {
-                toast.success('CategoryParents has been deleted');
-                handleClose();
-                getData();
-            });
+            await updateRestoreCategory(deleteId);
+            toast.success('Category has been restored');
+            handleClose();
+            getData();
         } catch (error) {
-            toast.error('Failed to delete category');
+            toast.error('Failed to restore category');
         }
     };
 
@@ -104,6 +102,15 @@ function Category() {
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.categoryName}</td>
                                                             <td>{item.description}</td>
+                                                            <td>
+                                                                <button
+                                                                    className="btn btn-success"
+                                                                    onClick={() => handleDelete(item.categoryId)}
+                                                                    title="Update Restore"
+                                                                >
+                                                                    <i class="fa-solid fa-check"></i>
+                                                                </button>
+                                                            </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
@@ -125,15 +132,15 @@ function Category() {
 
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
-                        <Modal.Title>Confirm Delete</Modal.Title>
+                        <Modal.Title>Confirm Update</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this category?</Modal.Body>
+                    <Modal.Body>Are you sure you want to update this category?</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel
                         </Button>
-                        <Button variant="danger" onClick={handleDeleteConfirm}>
-                            Delete
+                        <Button variant="success" onClick={handleDeleteConfirm}>
+                            Update
                         </Button>
                     </Modal.Footer>
                 </Modal>
