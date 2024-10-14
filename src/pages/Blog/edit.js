@@ -10,7 +10,6 @@ import './CreateBlog.css';
 const EditBlog = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [blog, setBlog] = useState({});
@@ -30,7 +29,7 @@ const EditBlog = () => {
                 setImagesOld(blogData.imageTitle ? [blogData.imageTitle] : []);
                 setLoading(false);
             } catch (error) {
-                setError('Failed to fetch blog details');
+                toast.error('Failed to fetch blog details');
             }
         };
 
@@ -97,10 +96,6 @@ const EditBlog = () => {
 
     if (loading) {
         return <div>Loading...</div>;
-    }
-
-    if (error) {
-        return <div>{error}</div>;
     }
 
     const modules = {

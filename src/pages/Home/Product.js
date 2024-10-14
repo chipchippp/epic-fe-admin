@@ -35,7 +35,7 @@ const Product = () => {
             <div className="col-lg-20 grid-margin stretch-card">
                 <div className="card">
                     <div className="card-body">
-                        <h3 className="font-weight-bold">Top Products</h3>
+                        <h3 className="font-weight-bold">Best Selling Products</h3>
 
                         <div className="table-responsive">
                             <table className="table table-striped">
@@ -66,9 +66,7 @@ const Product = () => {
                                                     'No Image'
                                                 )}
                                             </td>
-                                            <td className="col-name">
-                                                <Link to={`/productdetail/${item.productId}`}>{item.name}</Link>
-                                            </td>
+                                            <td className="col-name">{item.name}</td>
                                             <td className="col-category">
                                                 {item.category ? item.category.categoryName : 'N/A'}
                                             </td>
@@ -77,7 +75,7 @@ const Product = () => {
                                             <td className="col-price">{item.price}$</td>
                                             <td className="col-actions">
                                                 <Link
-                                                    to={`/product/detail/${item.id}`}
+                                                    to={`/product/detail/${item.productId}`}
                                                     className="btn btn-primary"
                                                     title="Details"
                                                 >

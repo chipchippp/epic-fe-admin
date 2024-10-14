@@ -83,6 +83,11 @@ function Blog() {
         setCurrentPage(1);
     };
 
+    const formatDescription = (content, maxLength = 70) => {
+        const regex = new RegExp(`.{1,${maxLength}}`, 'g');
+        return content.match(regex).join('\n');
+    };
+
     return (
         <>
             <div className="content-wrapper">
@@ -108,6 +113,7 @@ function Blog() {
                                                         <th>Title</th>
                                                         <th>ImageTitle</th>
                                                         <th>Author</th>
+                                                        {/* <th>Content</th> */}
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -132,6 +138,9 @@ function Blog() {
                                                                 )}
                                                             </td>
                                                             <td>{item.author}</td>
+                                                            {/* <td style={{ whiteSpace: 'pre-wrap' }}>
+                                                                {formatDescription(item.content)}
+                                                            </td> */}
                                                             <td>
                                                                 <Link
                                                                     to={`/blog/edit/${item.id}`}

@@ -60,9 +60,6 @@ function SidebarAdmin() {
                                     <Link className="nav-link" to="/inventory-status">
                                         Inventory Status
                                     </Link>
-                                    <Link className="nav-link" to="/blog">
-                                        Blogs
-                                    </Link>
                                 </li>
                             </ul>
                         </div>
@@ -85,6 +82,9 @@ function SidebarAdmin() {
                                 <li className="nav-item">
                                     <Link className="nav-link" to="/users">
                                         Users
+                                    </Link>
+                                    <Link className="nav-link" to="/blog">
+                                        Blogs
                                     </Link>
                                 </li>
                             </ul>
@@ -139,9 +139,9 @@ function SidebarAdmin() {
                                     <Link className="nav-link" to="/trash/categories">
                                         Trash Category
                                     </Link>
-                                    <Link className="nav-link" to="/trash/products">
+                                    {/* <Link className="nav-link" to="/trash/products">
                                         Trash Products
-                                    </Link>
+                                    </Link> */}
                                 </li>
                             </ul>
                         </div>

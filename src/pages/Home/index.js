@@ -11,7 +11,7 @@ function HomeAdmin() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        getOrderData();
+        // getOrderData();
         getProductData();
         getOrderCounts();
         getUserData();
@@ -30,6 +30,7 @@ function HomeAdmin() {
     const getOrderCounts = () => {
         getOrderCount()
             .then((data) => {
+                console.log(data.data);
                 setOrders(data.data);
             })
             .catch((error) => {
@@ -40,7 +41,6 @@ function HomeAdmin() {
     const getProductData = () => {
         getProduct()
             .then((data) => {
-                console.log(data.data.content);
                 setProducts(data.data.content);
             })
             .catch((error) => {
@@ -92,7 +92,7 @@ function HomeAdmin() {
                                 <div className="card-body">
                                     <p className="mb-4">Today’s Bookings</p>
                                     <p className="fs-30 mb-2">4006</p>
-                                    <p>10.00% (30 days)</p>
+                                    <p> </p>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +101,7 @@ function HomeAdmin() {
                                 <div className="card-body">
                                     <p className="mb-4">Total Order Completed</p>
                                     <p className="fs-30 mb-2">{orders.complete}</p>
-                                    <p>abc</p>
+                                    <p> </p>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +110,7 @@ function HomeAdmin() {
                                 <div className="card-body">
                                     <p className="mb-4">Total Product</p>
                                     <p className="fs-30 mb-2">{products.length}</p>
-                                    <p>abc</p>
+                                    <p> </p>
                                 </div>
                             </div>
                         </div>
@@ -119,7 +119,7 @@ function HomeAdmin() {
                                 <div className="card-body">
                                     <p className="mb-4">Total Users</p>
                                     <p className="fs-30 mb-2">{users.length}</p>
-                                    <p>abc</p>
+                                    <p> </p>
                                 </div>
                             </div>
                         </div>
@@ -190,7 +190,6 @@ function HomeAdmin() {
                                         <tr>
                                             <th>User</th>
                                             <th>Admin</th>
-                                            <th>Designer</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -209,15 +208,6 @@ function HomeAdmin() {
                                                     {
                                                         users.filter((user) =>
                                                             user.roles.some((role) => role.name === 'ROLE_ADMIN'),
-                                                        ).length
-                                                    }
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p className="fs-20 mb-2">
-                                                    {
-                                                        users.filter((user) =>
-                                                            user.roles.some((role) => role.name === 'ROLE_DESIGNER'),
                                                         ).length
                                                     }
                                                 </p>
