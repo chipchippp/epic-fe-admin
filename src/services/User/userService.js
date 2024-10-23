@@ -2,6 +2,16 @@ import { get, post, put, del } from '~/utils/httpRequest';
 
 const service = 'user';
 
+export const getAllUsers = async (currentPage = 1, limit = 10) => {
+    try {
+        const response = await get(service, `/users?page=1&limit=100`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Users data:', error);
+        throw error;
+    }
+};
+
 export const getUsers = async (currentPage = 1, limit = 10) => {
     try {
         const response = await get(service, `/users?page=${currentPage}&limit=${limit}`);

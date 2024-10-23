@@ -55,7 +55,7 @@ const EditProduct = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
-        if ((name === 'stockQuantity' || name === 'price') && value < 1) {
+        if (name === 'price' && value < 1) {
             toast.warning(`${name.charAt(0).toUpperCase() + name.slice(1)} must be 1 or higher`);
             return;
         }
@@ -168,7 +168,9 @@ const EditProduct = () => {
                                         onChange={handleInputChange}
                                         required
                                     >
-                                        <option value="" disabled>Select Category</option>
+                                        <option value="" disabled>
+                                            Select Category
+                                        </option>
                                         {categories.map((category) => (
                                             <option key={category.categoryId} value={category.categoryId}>
                                                 {category.categoryName}
@@ -178,17 +180,6 @@ const EditProduct = () => {
                                 </div>
                             </div>
                             <div className="row mb-4">
-                                <div className="col-md-6">
-                                    <label className="col-form-label text-md-right">Stock Quantity</label>
-                                    <input
-                                        type="number"
-                                        name="stockQuantity"
-                                        className="form-control"
-                                        value={data.stockQuantity}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
                                 <div className="col-md-6">
                                     <label className="col-form-label text-md-right">Manufacturer</label>
                                     <input
@@ -200,8 +191,6 @@ const EditProduct = () => {
                                         required
                                     />
                                 </div>
-                            </div>
-                            <div className="row mb-4">
                                 <div className="col-md-6">
                                     <label className="col-form-label text-md-right">Size</label>
                                     <input
@@ -213,6 +202,8 @@ const EditProduct = () => {
                                         required
                                     />
                                 </div>
+                            </div>
+                            <div className="row mb-4">
                                 <div className="col-md-6">
                                     <label className="col-form-label text-md-right">Weight</label>
                                     <input
@@ -236,7 +227,9 @@ const EditProduct = () => {
                                         onChange={handleFileChange}
                                     />
                                 </div>
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}>
+                                <div
+                                    style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}
+                                >
                                     <div>
                                         <h4>Current Images:</h4>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
@@ -244,7 +237,7 @@ const EditProduct = () => {
                                                 imagesOld.map((image, index) => (
                                                     <div key={index} style={{ position: 'relative' }}>
                                                         <img
-                                                            src={`http://localhost:8080/api/v1/product-images/imagesPost/${image.imageUrl}`}
+                                                            src={image.imageUrl}
                                                             alt={image.imageName}
                                                             style={{
                                                                 width: '100px',

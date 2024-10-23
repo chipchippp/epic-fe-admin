@@ -12,7 +12,6 @@ const CreateProduct = () => {
         description: '',
         price: '',
         categoryId: '',
-        stockQuantity: '',
         manufacturer: '',
         size: '',
         weight: '',
@@ -36,14 +35,11 @@ const CreateProduct = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === 'stockQuantity' && value < 1) {
-            toast.warning('Stock quantity must be 1 or higher');
-            return;
-        }
         if (name === 'price' && value < 1) {
-            toast.warning('Stock quantity must be 1 or higher');
+            toast.warning('Price must be 1 or higher');
             return;
         }
+
         setData({ ...data, [name]: value });
     };
 
@@ -67,8 +63,22 @@ const CreateProduct = () => {
             navigate('/product');
         } catch (error) {
             toast.error(`Failed to create product: ${error.message}`);
-        } 
+        }
     };
+
+    const renderInput = (label, name, type = 'text', value) => (
+        <div className="col-md-6">
+            <label className="col-form-label text-md-right">{label}</label>
+            <input
+                type={type}
+                name={name}
+                className="form-control"
+                value={value}
+                onChange={handleInputChange}
+                required
+            />
+        </div>
+    );
 
     return (
         <div className="content-wrapper">
@@ -82,41 +92,11 @@ const CreateProduct = () => {
                             </Link>
                             <form onSubmit={handleSubmit}>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Name</label>
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            className="form-control"
-                                            value={data.name}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Description</label>
-                                        <input
-                                            type="text"
-                                            name="description"
-                                            className="form-control"
-                                            value={data.description}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
+                                    {renderInput('Name', 'name', 'text', data.name)}
+                                    {renderInput('Description', 'description', 'text', data.description)}
                                 </div>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Price</label>
-                                        <input
-                                            type="number"
-                                            name="price"
-                                            className="form-control"
-                                            value={data.price}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
+                                    {renderInput('Price', 'price', 'number', data.price)}
                                     <div className="col-md-6">
                                         <label className="col-form-label text-md-right">Category</label>
                                         <select
@@ -129,72 +109,35 @@ const CreateProduct = () => {
                                             <option value="" disabled>
                                                 Select Category
                                             </option>
-                                            {categories.map((category) => (
-                                                <option key={category.categoryId} value={category.categoryId}>
-                                                    {category.categoryName}
-                                                </option>
-                                            ))}
+                                            {categories.length > 0 ? (
+                                                categories.map((category) => (
+                                                    <option key={category.categoryId} value={category.categoryId}>
+                                                        {category.categoryName}
+                                                    </option>
+                                                ))
+                                            ) : (
+                                                <option disabled>No categories available</option>
+                                            )}
                                         </select>
                                     </div>
                                 </div>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Stock Quantity</label>
-                                        <input
-                                            type="number"
-                                            name="stockQuantity"
-                                            className="form-control"
-                                            value={data.stockQuantity}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Manufacturer</label>
-                                        <input
-                                            type="text"
-                                            name="manufacturer"
-                                            className="form-control"
-                                            value={data.manufacturer}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
+                                    {renderInput('Size', 'size', 'text', data.size)}
+                                    {renderInput('Manufacturer', 'manufacturer', 'text', data.manufacturer)}
                                 </div>
                                 <div className="row mb-4">
+                                    {renderInput('Weight', 'weight', 'text', data.weight)}
                                     <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Size</label>
+                                        <label className="col-form-label text-md-right">Images</label>
                                         <input
-                                            type="text"
-                                            name="size"
-                                            className="form-control"
-                                            value={data.size}
-                                            onChange={handleInputChange}
+                                            type="file"
+                                            name="images"
                                             required
+                                            className="form-control"
+                                            multiple
+                                            onChange={handleFileChange}
                                         />
                                     </div>
-                                    <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Weight</label>
-                                        <input
-                                            type="text"
-                                            name="weight"
-                                            className="form-control"
-                                            value={data.weight}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div className="form-group">
-                                    <label>Images</label>
-                                    <input
-                                        type="file"
-                                        name="images"
-                                        required
-                                        className="form-control"
-                                        multiple
-                                        onChange={handleFileChange}
-                                    />
                                 </div>
                                 <button type="submit" className="btn btn-primary">
                                     Create

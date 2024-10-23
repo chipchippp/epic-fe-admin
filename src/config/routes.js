@@ -14,7 +14,7 @@ const routes = {
     product: '/product',
 
     productdetail: '/product/detail/:id',
-    createProduct: '/add/create',
+    createProduct: '/create/product',
     editProduct: '/edit/product/:id',
 
     //      Inventory

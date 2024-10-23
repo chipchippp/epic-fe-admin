@@ -13,6 +13,7 @@ function ManageInventory() {
         productId: '',
         inventoryStatusId: '',
         quantity: '',
+        unitPrice: '',
         note: '',
         date: '',
     });
@@ -57,6 +58,7 @@ function ManageInventory() {
                 productId: Number(data.productId),
                 quantity: Number(data.quantity),
                 inventoryStatusId: Number(data.inventoryStatusId),
+                unitPrice: data.unitPrice,
                 note: data.note,
                 date: formattedDate,
             };
@@ -163,6 +165,16 @@ function ManageInventory() {
                                             value={data.date}
                                             onChange={handleInputChange}
                                             required
+                                        />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label className="col-form-label text-md-right">UnitPrice</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            name="unitPrice"
+                                            value={data.unitPrice}
+                                            onChange={handleInputChange}
                                         />
                                     </div>
                                 </div>

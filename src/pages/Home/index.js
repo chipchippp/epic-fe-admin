@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getProduct } from '~/services/Product/productService';
-import { getUsers } from '~/services/User/userService';
+import { getAllUsers } from '~/services/User/userService';
 import { getAllOrders, getOrderCount } from '~/services/Orders/orderService';
 import Product from './Product';
 import { toast } from 'react-toastify';
@@ -30,7 +30,6 @@ function HomeAdmin() {
     const getOrderCounts = () => {
         getOrderCount()
             .then((data) => {
-                console.log(data.data);
                 setOrders(data.data);
             })
             .catch((error) => {
@@ -49,8 +48,9 @@ function HomeAdmin() {
     };
 
     const getUserData = () => {
-        getUsers()
+        getAllUsers()
             .then((data) => {
+                console.log(data.data.content);
                 setUsers(data.data.content);
             })
             .catch((error) => {

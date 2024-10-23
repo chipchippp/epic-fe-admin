@@ -125,7 +125,7 @@ function Blog() {
                                                             <td>
                                                                 {item.imageTitle ? (
                                                                     <img
-                                                                        src={`http://localhost:8080/api/v1/blogs/blog/${item.imageTitle}`}
+                                                                        src={item.imageTitle}
                                                                         alt={item.title}
                                                                         style={{
                                                                             width: '70px',

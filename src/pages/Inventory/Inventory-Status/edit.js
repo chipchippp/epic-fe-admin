@@ -9,7 +9,7 @@ function EditInventoryStatus() {
     const [data, setData] = useState({
         name: '',
         description: '',
-        isAddAction: '',
+        addAction: '',
     });
 
     const navigate = useNavigate();
@@ -21,7 +21,7 @@ function EditInventoryStatus() {
                 setData({
                     name: result.name,
                     description: result.description,
-                    isAddAction: result.isAddAction,
+                    addAction: result.addAction || '',
                 });
             } catch (error) {
                 toast.error('Failed to fetch inventory-status data');
@@ -33,10 +33,7 @@ function EditInventoryStatus() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const inventoryData = {
-                ...data,
-            };
-            await updateInventoryStatus(id, inventoryData);
+            await updateInventoryStatus(id, data);
             toast.success('InventoryStatus updated successfully');
             navigate('/inventory-status');
         } catch (error) {
@@ -82,10 +79,10 @@ function EditInventoryStatus() {
                                         <label className="col-form-label text-md-right">IsAddAction</label>
                                         <select
                                             className="form-control"
-                                            value={data.isAddAction}
-                                            onChange={(e) => setData({ ...data, isAddAction: e.target.value })}
+                                            value={data.addAction}
+                                            onChange={(e) => setData({ ...data, addAction: e.target.value })}
                                         >
-                                            <option value="">Select isAddAction</option>
+                                            <option value="">Select addAction</option>
                                             <option value="true">True</option>
                                             <option value="false">False</option>
                                         </select>

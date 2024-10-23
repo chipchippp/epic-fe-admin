@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
@@ -73,9 +72,12 @@ function Inventory() {
                                         <Link to="/inventory/create" className="float-left btn btn-primary">
                                             <i className="fas fa-plus"></i> New
                                         </Link>
-                                        
+
                                         <div className="float-left ml-2">
-                                            <select className="form-control selectric btn-primary" onChange={handleStatusChange}>
+                                            <select
+                                                className="form-control selectric btn-primary"
+                                                onChange={handleStatusChange}
+                                            >
                                                 <option value="">Sort Status</option>
                                                 <option value="IN">In</option>
                                                 <option value="OUT">Out</option>
@@ -93,7 +95,7 @@ function Inventory() {
                                                         <th>Status</th>
                                                         <th>Note</th>
                                                         <th>Date</th>
-                                                        <th>Action</th>
+                                                        {/* <th>Action</th> */}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -105,14 +107,14 @@ function Inventory() {
                                                             <td>{item.status}</td>
                                                             <td>{item.note}</td>
                                                             <td>{item.date}</td>
-                                                            <td>
+                                                            {/* <td>
                                                                 <Link
                                                                     to={`/inventory/edit/${item.id}`}
                                                                     className="btn btn-primary mr-2"
                                                                 >
                                                                     <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
-                                                            </td>
+                                                            </td> */}
                                                         </tr>
                                                     ))}
                                                 </tbody>

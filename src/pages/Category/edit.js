@@ -119,8 +119,7 @@ function EditCategory() {
                                     Submit
                                 </button>
                                 <Link to="/category" className="btn btn-light">
-                                    {' '}
-                                    Back{' '}
+                                    Back
                                 </Link>
                             </form>
                         </div>

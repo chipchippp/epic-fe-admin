@@ -15,6 +15,7 @@ function EditInventoryStatus() {
         productId: '',
         inventoryStatusId: '',
         quantity: '',
+        unitPrice: '',
         note: '',
         date: '',
     });

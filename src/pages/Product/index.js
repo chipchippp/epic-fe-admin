@@ -142,7 +142,7 @@ function Product() {
                             <div className="card-body">
                                 <h3 className="font-weight-bold">Products</h3>
                                 <div className="filter-product">
-                                    <Link to="/add/create" className="btn btn-primary">
+                                    <Link to="/create/product" className="btn btn-primary">
                                         <i className="fas fa-plus"></i> New
                                     </Link>
                                     <div className="filter-container">
@@ -211,7 +211,7 @@ function Product() {
                                                     <td>
                                                         {item.images.length > 0 ? (
                                                             <img
-                                                                src={`http://localhost:8080/api/v1/product-images/imagesPost/${item.images[0].imageUrl}`}
+                                                                src={`${item.images[0].imageUrl}`}
                                                                 alt={item.name}
                                                                 style={{
                                                                     width: '70px',
