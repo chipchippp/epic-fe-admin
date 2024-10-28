@@ -15,7 +15,7 @@ import CategoryEdit from '~/pages/Category/edit';
 import Product from '~/pages/Product/index';
 import CreateProduct from '~/pages/Product/create';
 import ProductDetail from '~/pages/Product/productdetail';
-import EditProduct from '~/pages/Product/editproduct';
+import EditProduct from '~/pages/Product/edit';
 
 // Inventory
 import Inventory from '~/pages/Inventory/Inventory/index';
@@ -90,9 +90,9 @@ export const publicRoutes = [
     { path: config.routes.editInventory, component: InventoryEdit, layout: AdminLayout },
 
     // Inventory Status
-    {path: config.routes.inventoryStatus, component: InventoryStatus, layout: AdminLayout},
-    {path: config.routes.createInventoryStatus, component: InventoryStatusCreate, layout: AdminLayout},
-    {path: config.routes.editInventoryStatus, component: InventoryStatusEdit, layout: AdminLayout},
+    { path: config.routes.inventoryStatus, component: InventoryStatus, layout: AdminLayout },
+    { path: config.routes.createInventoryStatus, component: InventoryStatusCreate, layout: AdminLayout },
+    { path: config.routes.editInventoryStatus, component: InventoryStatusEdit, layout: AdminLayout },
 
     // Blog
     { path: config.routes.blog, component: Blog, layout: AdminLayout },

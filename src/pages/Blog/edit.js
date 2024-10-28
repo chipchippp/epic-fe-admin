@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { editBlog, updateBlog } from '~/services/Inventory/blogService';
-import { getUsers } from '~/services/User/userService';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './CreateBlog.css';
@@ -12,7 +11,7 @@ const EditBlog = () => {
     const { id } = useParams();
     const [loading, setLoading] = useState(true);
     const [selectedFiles, setSelectedFiles] = useState([]);
-    const [blog, setBlog] = useState({});
+    const [data, setData] = useState({});
     const [imagesOld, setImagesOld] = useState([]);
     const [imagesNew, setImagesNew] = useState([]);
 
@@ -25,7 +24,7 @@ const EditBlog = () => {
                 if (blogData.user && blogData.user.userId) {
                     blogData.userId = blogData.user.userId;
                 }
-                setBlog(blogData);
+                setData(blogData);
                 setImagesOld(blogData.imageTitle ? [blogData.imageTitle] : []);
                 setLoading(false);
             } catch (error) {
@@ -38,7 +37,7 @@ const EditBlog = () => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setBlog({ ...blog, [name]: value });
+        setData({ ...data, [name]: value });
     };
 
     const handleFileChange = (e) => {
@@ -72,8 +71,8 @@ const EditBlog = () => {
         e.preventDefault();
         try {
             const updatedBlog = {
-                ...blog,
-                userId: blog.userId || (blog.user && blog.user.userId),
+                ...data,
+                userId: data.userId || (data.user && data.user.userId),
             };
 
             const formData = new FormData();
@@ -83,6 +82,9 @@ const EditBlog = () => {
                 selectedFiles.forEach((file) => formData.append('file', file));
             }
 
+            console.log('formData', formData);
+            console.log('selectedFiles', selectedFiles);
+
             await updateBlog(id, formData);
             navigate('/blog');
         } catch (error) {
@@ -91,7 +93,7 @@ const EditBlog = () => {
     };
 
     const handleContentChange = (value) => {
-        setBlog({ ...blog, content: value });
+        setData({ ...data, content: value });
     };
 
     if (loading) {
@@ -148,7 +150,7 @@ const EditBlog = () => {
                                         type="text"
                                         name="title"
                                         className="form-control"
-                                        value={blog.title}
+                                        value={data.title}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -159,7 +161,7 @@ const EditBlog = () => {
                                         type="text"
                                         name="author"
                                         className="form-control"
-                                        value={blog.author}
+                                        value={data.author}
                                         onChange={handleInputChange}
                                         required
                                     />
@@ -167,7 +169,7 @@ const EditBlog = () => {
                                 <div className="col-md-12">
                                     <label className="col-form-label text-md-right">Content</label>
                                     <ReactQuill
-                                        value={blog.content}
+                                        value={data.content}
                                         onChange={handleContentChange}
                                         modules={modules}
                                         formats={formats}
@@ -192,7 +194,7 @@ const EditBlog = () => {
                                     style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}
                                 >
                                     <div>
-                                        <h4>List of available blogs:</h4>
+                                        <h4>List of available blog:</h4>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                                             {imagesOld.length > 0 ? (
                                                 imagesOld.map((image, index) => (

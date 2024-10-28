@@ -24,14 +24,17 @@ const BarChart = () => {
                 const currentYear = dayjs().year();
 
                 const currentYearOrders = completeOrders.filter(
-                    (order) => dayjs(order.createdAt, 'YYYY-MM-DD HH:mm:ss').year() === currentYear,
+                    (order) => dayjs(order.createdAt, 'DD-MM-YYYY HH:mm:ss').year() === currentYear,
                 );
 
                 const processData = (data, format, unit, totalUnits, fixedLabels) => {
-                    const latestOrderDate = data.reduce((latestDate, order) => {
-                        const orderDate = dayjs(order.createdAt, 'YYYY-MM-DD HH:mm:ss');
-                        return orderDate.isAfter(latestDate) ? orderDate : latestDate;
-                    }, dayjs('2000-01-01'));
+                    const latestOrderDate = data.reduce(
+                        (latestDate, order) => {
+                            const orderDate = dayjs(order.createdAt, 'DD-MM-YYYY HH:mm:ss');
+                            return orderDate.isAfter(latestDate) ? orderDate : latestDate;
+                        },
+                        dayjs('01-01-2000', 'DD-MM-YYYY'),
+                    );
 
                     const labels =
                         fixedLabels ||
@@ -40,7 +43,7 @@ const BarChart = () => {
                         ).reverse();
 
                     const revenueByTime = data.reduce((acc, order) => {
-                        const time = dayjs(order.createdAt, 'YYYY-MM-DD HH:mm:ss').format(format);
+                        const time = dayjs(order.createdAt, 'DD-MM-YYYY HH:mm:ss').format(format);
                         if (!acc[time]) {
                             acc[time] = { orderCount: 0, totalRevenue: 0 };
                         }
@@ -58,7 +61,7 @@ const BarChart = () => {
 
                 let chartData;
                 if (timeRange === 'Date') {
-                    chartData = processData(currentYearOrders, 'MM-DD-YYYY', 'day', 7);
+                    chartData = processData(currentYearOrders, 'DD', 'day', 7);
                 } else if (timeRange === 'Month') {
                     const months = Array.from({ length: 12 }, (_, index) =>
                         dayjs(new Date(currentYear, index)).format('MMMM'),
