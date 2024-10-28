@@ -189,32 +189,92 @@ function Order() {
                                                             <td>{item.createdAt}</td>
                                                             <td>
                                                                 {item.status === 'CREATED' && (
-                                                                    <div className="badge badge-warning">Created</div>
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#FFA500',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Created
+                                                                    </div>
                                                                 )}
                                                                 {item.status === 'PAYMENT_FAILED' && (
-                                                                    <div className="badge badge-secondary">
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#FF0000',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
                                                                         Payment Failed
                                                                     </div>
                                                                 )}
                                                                 {item.status === 'PENDING' && (
-                                                                    <div className="badge badge-secondary">Pending</div>
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#808080',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Pending
+                                                                    </div>
                                                                 )}
                                                                 {item.status === 'PROCESSING' && (
-                                                                    <div className="badge badge-primary">
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#0000FF',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
                                                                         Processing
                                                                     </div>
                                                                 )}
                                                                 {item.status === 'ONDELIVERY' && (
-                                                                    <div className="badge badge-info">On Delivery</div>
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#17A2B8',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        On Delivery
+                                                                    </div>
                                                                 )}
                                                                 {item.status === 'DELIVERED' && (
-                                                                    <div className="badge badge-success">Delivered</div>
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#28A745',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Delivered
+                                                                    </div>
                                                                 )}
                                                                 {item.status === 'CANCEL' && (
-                                                                    <div className="badge badge-danger">Cancel</div>
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#DC3545',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Cancel
+                                                                    </div>
                                                                 )}
                                                                 {item.status === 'COMPLETE' && (
-                                                                    <div className="badge badge-success">Complete</div>
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#008000',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Complete
+                                                                    </div>
                                                                 )}
                                                             </td>
                                                             <td>

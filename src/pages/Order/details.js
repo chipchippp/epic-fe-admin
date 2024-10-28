@@ -198,7 +198,7 @@ function OrderDetail() {
                                                                                 item.product.images &&
                                                                                 item.product.images.length > 0 ? (
                                                                                     <img
-                                                                                        src={`http://localhost:8080/api/v1/product-images/imagesPost/${item.product.images[0].imageUrl}`}
+                                                                                        src={item.product.images[0].imageUrl}
                                                                                         alt={item.product.name}
                                                                                         style={{
                                                                                             width: '70px',
@@ -216,7 +216,7 @@ function OrderDetail() {
                                                                             </td>
                                                                             <td>${item.unitPrice}</td>
                                                                             <td>{item.quantity}</td>
-                                                                            <td>${item.unitPrice * item.quantity}</td>
+                                                                            <td>${item.totalPrice}</td>
                                                                         </tr>
                                                                     ))}
                                                             </tbody>
