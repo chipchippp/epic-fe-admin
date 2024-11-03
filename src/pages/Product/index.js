@@ -193,6 +193,7 @@ function Product() {
                                                 <th>Id</th>
                                                 <th>Name</th>
                                                 <th>Images</th>
+                                                <th>Code Product</th>
                                                 <th>Price</th>
                                                 <th>Category</th>
                                                 <th>Stock Quantity</th>
@@ -223,6 +224,7 @@ function Product() {
                                                             'No Image'
                                                         )}
                                                     </td>
+                                                    <td>{item.codeProduct}</td>
                                                     <td>{item.price}$</td>
                                                     <td>{item.category ? item.category.categoryName : 'N/A'}</td>
                                                     <td>{item.stockQuantity}</td>

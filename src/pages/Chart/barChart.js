@@ -15,13 +15,12 @@ const BarChart = () => {
         const fetchChartData = async () => {
             try {
                 const response = await getAllOrders();
-                if (response.code !== 200) {
-                    throw new Error('Failed to fetch chart data');
-                }
+                if (response.code !== 200) throw new Error('Failed to fetch chart data');
 
                 const orders = response.data.content;
                 const completeOrders = orders.filter((order) => order.status === 'COMPLETE');
                 const currentYear = dayjs().year();
+                console.log('completeOrders', completeOrders);
 
                 const currentYearOrders = completeOrders.filter(
                     (order) => dayjs(order.createdAt, 'DD-MM-YYYY HH:mm:ss').year() === currentYear,
@@ -30,10 +29,10 @@ const BarChart = () => {
                 const processData = (data, format, unit, totalUnits, fixedLabels) => {
                     const latestOrderDate = data.reduce(
                         (latestDate, order) => {
-                            const orderDate = dayjs(order.createdAt, 'DD-MM-YYYY HH:mm:ss');
+                            const orderDate = dayjs(order.createdAt, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
                             return orderDate.isAfter(latestDate) ? orderDate : latestDate;
                         },
-                        dayjs('01-01-2000', 'DD-MM-YYYY'),
+                        dayjs('2000-01-01', 'YYYY-MM-DD'),
                     );
 
                     const labels =
@@ -43,7 +42,7 @@ const BarChart = () => {
                         ).reverse();
 
                     const revenueByTime = data.reduce((acc, order) => {
-                        const time = dayjs(order.createdAt, 'DD-MM-YYYY HH:mm:ss').format(format);
+                        const time = dayjs(order.createdAt, 'YYYY-MM-DD HH:mm:ss.SSSSSS').format(format);
                         if (!acc[time]) {
                             acc[time] = { orderCount: 0, totalRevenue: 0 };
                         }
@@ -61,7 +60,7 @@ const BarChart = () => {
 
                 let chartData;
                 if (timeRange === 'Date') {
-                    chartData = processData(currentYearOrders, 'DD', 'day', 7);
+                    chartData = processData(currentYearOrders, 'DD-MM-YYYY', 'day', 7);
                 } else if (timeRange === 'Month') {
                     const months = Array.from({ length: 12 }, (_, index) =>
                         dayjs(new Date(currentYear, index)).format('MMMM'),
@@ -71,6 +70,7 @@ const BarChart = () => {
                     chartData = processData(completeOrders, 'YYYY', 'year', 7);
                 }
 
+                console.log('chartData', chartData);
                 setChartData(chartData);
             } catch (error) {
                 toast.error('Failed to fetch chart data');
@@ -113,17 +113,13 @@ const BarChart = () => {
                 beginAtZero: true,
                 position: 'left',
                 ticks: {
-                    callback: function (value) {
-                        return Number.isInteger(value) ? value : '';
-                    },
+                    callback: (value) => (Number.isInteger(value) ? value : ''),
                 },
             },
             y1: {
                 beginAtZero: true,
                 position: 'right',
-                grid: {
-                    display: false,
-                },
+                grid: { display: false },
             },
         },
         plugins: {
@@ -133,11 +129,7 @@ const BarChart = () => {
                     afterLabel: (context) => (context.dataset.label === 'Revenue' ? ' $' : ''),
                 },
             },
-            legend: {
-                labels: {
-                    fontSize: 12,
-                },
-            },
+            legend: { labels: { fontSize: 12 } },
         },
     };
 

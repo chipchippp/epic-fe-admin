@@ -1,11 +1,11 @@
 import { get, post, put, del } from '~/utils/httpRequest';
 
-export const getRoom = async (currentPage = 1, limit = 7) => {
+export const getContact = async (currentPage = 1, limit = 7) => {
     try {
         const response = await get(`/room_specifications/getAll?page=${currentPage}&limit=${limit}`);
         return response;
     } catch (error) {
-        console.error('Error fetching Room data:', error);
+        console.error('Error fetching Contact data:', error);
         throw error;
     }
 };
@@ -20,41 +20,41 @@ export const getUsers = async () => {
     }
 };
 
-export const createRoom = async (data) => {
+export const createContact = async (data) => {
     try {
         const response = await post('/room_specifications', data);
         return response;
     } catch (error) {
-        console.error('Error creating Room:', error);
+        console.error('Error creating Contact:', error);
         throw error;
     }
 };
 
-export const editRoom = async (id) => {
+export const editContact = async (id) => {
     try {
         const response = await get(`/room_specifications/id/${id}`);
         return response;
     } catch (error) {
-        console.error('Error fetching Room data:', error);
+        console.error('Error fetching Contact data:', error);
         throw error;
     }
 };
 
-export const updateRoom = async (id, data) => {
+export const updateContact = async (id, data) => {
     try {
         const response = await put(`/room_specifications/${id}`, data);
         return response;
     } catch (error) {
-        console.error('Error updating Room:', error);
+        console.error('Error updating Contact:', error);
         throw error;
     }
 };
-export const deleteRoom = async (id) => {
+export const deleteContact = async (id) => {
     try {
         const response = await del(`/room_specifications/${id}`);
         return response;
     } catch (error) {
-        console.error('Error deleting Room:', error);
+        console.error('Error deleting Contact:', error);
         throw error;
     }
 };

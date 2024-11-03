@@ -81,17 +81,28 @@ const EditProduct = () => {
             const updatedProduct = {
                 ...data,
                 categoryId: data.categoryId,
+                price: parseFloat(data.price),
             };
+
+            console.log('Updated Product Data:', updatedProduct);
+
             const formData = new FormData();
             formData.append('productDTO', new Blob([JSON.stringify(updatedProduct)], { type: 'application/json' }));
 
             selectedFiles.forEach((file) => formData.append('files', file));
 
-            await updateProduct(id, formData);
+            const response = await updateProduct(id, formData);
+            console.log('Update response:', response);
+
             toast.success('Product updated successfully');
             navigate('/product');
         } catch (error) {
-            toast.error(error.message);
+            if (error.response) {
+                console.error('Error response data:', error.response.data);
+            } else {
+                console.error('Error message:', error.message);
+            }
+            toast.error('Failed to update product');
         }
     };
 

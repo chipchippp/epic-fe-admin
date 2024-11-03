@@ -14,7 +14,7 @@ export const getFilteredOrders = async (params) => {
 
 export const getAllOrders = async () => {
     try {
-        const response = await get(service, `/orders/search-by-specification?page=1&limit=1000&order=status:COMPLETE`);
+        const response = await get(service, `/orders?page=1&limit=100`);
         return response;
     } catch (error) {
         console.error('Error fetching Orders data:', error);

@@ -32,6 +32,11 @@ import Blog from '~/pages/Blog/index';
 import BlogCreate from '~/pages/Blog/create';
 import BlogEdit from '~/pages/Blog/edit';
 
+// Contact
+import Contact from '~/pages/Contact/index';
+// import CreateContact from '~/pages/Contact/create';
+// import EditContact from '~/pages/Contact/edit';
+
 // Designer
 import Designer from '~/pages/Designer/Designer/index';
 import DesignerDetail from '~/pages/Designer/Designer/details';
@@ -118,6 +123,11 @@ export const publicRoutes = [
     // Order
     { path: config.routes.orders, component: Order, layout: AdminLayout },
     { path: config.routes.orderDetail, component: OrderDetail, layout: AdminLayout },
+
+    // Contact
+    { path: config.routes.contact, component: Contact, layout: AdminLayout },
+    // { path: config.routes.createContact, component: CreateContact, layout: AdminLayout },
+    // { path: config.routes.editContact, component: EditContact, layout: AdminLayout },
 
     // Chart
     { path: config.routes.chart, component: Chart, layout: AdminLayout },

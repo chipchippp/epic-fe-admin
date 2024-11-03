@@ -32,6 +32,11 @@ const routes = {
     createBlog: '/blog/create',
     editBlog: '/blog/edit/:id',
 
+    //    Contact
+    contact: '/contact',
+    createContact: '/contact/create',
+    editContact: '/contact/edit/:id',
+
     //     Designer
     designer: '/designer',
     detailDesigner: '/designer-detail/:id',
