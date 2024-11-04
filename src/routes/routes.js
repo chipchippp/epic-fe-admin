@@ -35,7 +35,7 @@ import BlogEdit from '~/pages/Blog/edit';
 // Contact
 import Contact from '~/pages/Contact/index';
 // import CreateContact from '~/pages/Contact/create';
-// import EditContact from '~/pages/Contact/edit';
+import EditContact from '~/pages/Contact/edit';
 
 // Designer
 import Designer from '~/pages/Designer/Designer/index';
@@ -127,7 +127,7 @@ export const publicRoutes = [
     // Contact
     { path: config.routes.contact, component: Contact, layout: AdminLayout },
     // { path: config.routes.createContact, component: CreateContact, layout: AdminLayout },
-    // { path: config.routes.editContact, component: EditContact, layout: AdminLayout },
+    { path: config.routes.editContact, component: EditContact, layout: AdminLayout },
 
     // Chart
     { path: config.routes.chart, component: Chart, layout: AdminLayout },

@@ -3,6 +3,8 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { createProduct } from '~/services/Product/productService';
+import { getCategories } from '~/services/Category/categoryService';
+
 import axios from 'axios';
 
 const CreateProduct = () => {
@@ -96,7 +98,7 @@ const CreateProduct = () => {
                                     {renderInput('Description', 'description', 'text', data.description)}
                                 </div>
                                 <div className="row mb-4">
-                                    {renderInput('Price', 'price', 'number', data.price)}
+                                    {renderInput('Price', 'price', 'text', data.price)}
                                     <div className="col-md-6">
                                         <label className="col-form-label text-md-right">Category</label>
                                         <select

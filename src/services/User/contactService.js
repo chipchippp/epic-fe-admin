@@ -1,8 +1,10 @@
 import { get, post, put, del } from '~/utils/httpRequest';
 
+const service = 'user';
+
 export const getContact = async (currentPage = 1, limit = 7) => {
     try {
-        const response = await get(`/room_specifications/getAll?page=${currentPage}&limit=${limit}`);
+        const response = await get(service, `/contact/getAll?page=${currentPage}&limit=${limit}`);
         return response;
     } catch (error) {
         console.error('Error fetching Contact data:', error);
@@ -10,19 +12,9 @@ export const getContact = async (currentPage = 1, limit = 7) => {
     }
 };
 
-export const getUsers = async () => {
-    try {
-        const response = await get(`/users?page=1&limit=100`);
-        return response;
-    } catch (error) {
-        console.error('Error fetching category data:', error);
-        throw error;
-    }
-};
-
 export const createContact = async (data) => {
     try {
-        const response = await post('/room_specifications', data);
+        const response = await post(service, '/contact', data);
         return response;
     } catch (error) {
         console.error('Error creating Contact:', error);
@@ -32,7 +24,7 @@ export const createContact = async (data) => {
 
 export const editContact = async (id) => {
     try {
-        const response = await get(`/room_specifications/id/${id}`);
+        const response = await get(service, `/contact/id/${id}`);
         return response;
     } catch (error) {
         console.error('Error fetching Contact data:', error);
@@ -42,7 +34,7 @@ export const editContact = async (id) => {
 
 export const updateContact = async (id, data) => {
     try {
-        const response = await put(`/room_specifications/${id}`, data);
+        const response = await put(service, `/contact/${id}`, data);
         return response;
     } catch (error) {
         console.error('Error updating Contact:', error);
@@ -51,7 +43,7 @@ export const updateContact = async (id, data) => {
 };
 export const deleteContact = async (id) => {
     try {
-        const response = await del(`/room_specifications/${id}`);
+        const response = await del(service, `/contact/${id}`);
         return response;
     } catch (error) {
         console.error('Error deleting Contact:', error);

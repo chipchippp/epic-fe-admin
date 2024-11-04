@@ -12,6 +12,16 @@ export const getCategory = async (currentPage = 1, limit = 10) => {
     }
 };
 
+export const getCategories = async (currentPage = 1, limit = 10) => {
+    try {
+        const response = await get(service, `/categories/getAll`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching category data:', error);
+        throw error;
+    }
+};
+
 export const getTrashCategory = async (currentPage = 1, limit = 10) => {
     try {
         const response = await get(service, `/categories/trash?page=${currentPage}&limit=${limit}`);

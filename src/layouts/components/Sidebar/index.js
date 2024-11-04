@@ -86,6 +86,9 @@ function SidebarAdmin() {
                                     <Link className="nav-link" to="/blog">
                                         Blogs
                                     </Link>
+                                    <Link className="nav-link" to="/contact">
+                                        Contact
+                                    </Link>
                                 </li>
                             </ul>
                         </div>

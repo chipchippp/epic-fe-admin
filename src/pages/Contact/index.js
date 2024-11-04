@@ -23,7 +23,7 @@ function Contact() {
 
     const debouncedSearch = useCallback(
         debounce((query) => {
-            const filteredData = data.filter((item) => item.categoryName.toLowerCase().includes(query.toLowerCase()));
+            const filteredData = data.filter((item) => item.username.toLowerCase().includes(query.toLowerCase()));
             setSearchedData(filteredData);
         }, 500),
         [data],
@@ -52,7 +52,7 @@ function Contact() {
             }
             setLoading(false);
         } catch (error) {
-            toast.error('Failed to fetch categories');
+            toast.error('Failed to fetch contact');
         }
     };
 
@@ -68,7 +68,7 @@ function Contact() {
             handleClose();
             getData();
         } catch (error) {
-            toast.error('Failed to delete category');
+            toast.error('Failed to delete contact');
         }
     };
 
@@ -76,16 +76,6 @@ function Contact() {
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-    };
-
-    const handleLimitChange = (e) => {
-        setLimit(e.target.value);
-        setCurrentPage(1);
-    };
-
-    const formatDescription = (description, maxLength = 70) => {
-        const regex = new RegExp(`.{1,${maxLength}}`, 'g');
-        return description.match(regex).join('\n');
     };
 
     return (
@@ -99,10 +89,10 @@ function Contact() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <h3 className="font-weight-bold">Categories</h3>
-                                        <Link to="/category/create" className="float-left btn btn-primary">
+                                        <h3 className="font-weight-bold">Contact</h3>
+                                        {/* <Link to="/contact/create" className="float-left btn btn-primary">
                                             <i className="fas fa-plus"></i> New
-                                        </Link>
+                                        </Link> */}
                                         <Search setSearch={setSearch} />
 
                                         <div className="table-responsive">
@@ -110,22 +100,24 @@ function Contact() {
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>Contact Name</th>
-                                                        <th>Description</th>
+                                                        <th>Username</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Note</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     {searchedData.map((item, index) => (
-                                                        <tr key={item.categoryId}>
+                                                        <tr key={item.id}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
-                                                            <td>{item.categoryName}</td>
-                                                            <td style={{ whiteSpace: 'pre-wrap' }}>
-                                                                {formatDescription(item.description)}
-                                                            </td>
+                                                            <td>{item.username}</td>
+                                                            <td>{item.email}</td>
+                                                            <td>{item.phoneNumber}</td>
+                                                            <td>{item.note}</td>
                                                             <td>
                                                                 <Link
-                                                                    to={`/category/edit/${item.categoryId}`}
+                                                                    to={`/contact/edit/${item.id}`}
                                                                     className="btn btn-primary"
                                                                     title="Edit"
                                                                 >
@@ -134,7 +126,7 @@ function Contact() {
                                                                 &nbsp;
                                                                 <button
                                                                     className="btn btn-danger"
-                                                                    onClick={() => handleDelete(item.categoryId)}
+                                                                    onClick={() => handleDelete(item.id)}
                                                                     title="Delete"
                                                                 >
                                                                     <i className="fas fa-trash"></i>
@@ -163,7 +155,7 @@ function Contact() {
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this category?</Modal.Body>
+                    <Modal.Body>Are you sure you want to delete this contact?</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel

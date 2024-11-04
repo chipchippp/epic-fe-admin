@@ -82,9 +82,6 @@ const EditBlog = () => {
                 selectedFiles.forEach((file) => formData.append('file', file));
             }
 
-            console.log('formData', formData);
-            console.log('selectedFiles', selectedFiles);
-
             await updateBlog(id, formData);
             navigate('/blog');
         } catch (error) {
@@ -200,8 +197,8 @@ const EditBlog = () => {
                                                 imagesOld.map((image, index) => (
                                                     <div key={index} style={{ position: 'relative' }}>
                                                         <img
-                                                            src={imageUrl}
-                                                            alt={image.imageTitle}
+                                                            src={image.imageTitle}
+                                                            alt={image.imageName}
                                                             style={{
                                                                 width: '100px',
                                                                 height: '100px',

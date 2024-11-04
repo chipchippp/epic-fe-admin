@@ -2,43 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams, Link } from 'react-router-dom';
-import { editCategory, updateCategory } from '~/services/Category/categoryService';
-import axios from 'axios';
+import { editContact, updateContact } from '~/services/User/contactService';
 
-function EditCategory() {
+function EditContact() {
     const { id } = useParams();
     const [data, setData] = useState({
-        categoryName: '',
-        description: '',
-        parentCategoryId: 0,
+        isRead: '',
+        isImportant: '',
+        isSpam: '',
     });
-    const [categories, setCategories] = useState([]);
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchCategories = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/api/v1/categories/parentCategoryIsNull');
-                setCategories(response.data.data.content);
-            } catch (error) {
-                toast.error('Failed to fetch categories');
-                console.error('Fetch error:', error);
-            }
-        };
-
-        fetchCategories();
-    }, []);
-
-    useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await editCategory(id);
+                const result = await editContact(id);
                 setData({
-                    categoryId: result.categoryId,
-                    categoryName: result.categoryName,
-                    description: result.description,
-                    parentCategoryId: result.parentCategoryId || 0,
+                    isRead: result.isRead,
+                    isImportant: result.isImportant,
+                    isSpam: result.isSpam,
                 });
             } catch (error) {
                 toast.error('Failed to fetch category data');
@@ -52,11 +35,11 @@ function EditCategory() {
         event.preventDefault();
 
         try {
-            await updateCategory(id, data);
-            toast.success('Category updated successfully');
-            navigate('/category');
+            await updateContact(id, data);
+            toast.success('Contact updated successfully');
+            navigate('/contact');
         } catch (error) {
-            toast.error('Failed to update category');
+            toast.error('Failed to update contact');
             console.error('Update error:', error);
         }
     };
@@ -67,58 +50,56 @@ function EditCategory() {
                 <div className="col-12 grid-margin stretch-card">
                     <div className="card">
                         <div className="card-body">
-                            <h3 className="font-weight-bold">Edit Category</h3>
-                            <Link to="/category" className="btn btn-primary mb-3">
+                            <h3 className="font-weight-bold">Edit Contact</h3>
+                            <Link to="/contact" className="btn btn-primary mb-3">
                                 <i className="fas fa-arrow-left"></i> Back
                             </Link>
                             <form className="forms-sample" onSubmit={handleSubmit}>
                                 <div className="row mb-4">
                                     <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Name</label>
-                                        <input
-                                            type="text"
+                                        <label className="col-form-label text-md-right">IsRead</label>
+                                        <select
                                             className="form-control"
-                                            id="exampleInputName1"
-                                            placeholder="Name"
-                                            value={data.categoryName}
-                                            onChange={(e) => setData({ ...data, categoryName: e.target.value })}
-                                        />
+                                            value={data.isRead}
+                                            onChange={(e) => setData({ ...data, isRead: e.target.value })}
+                                        >
+                                            <option value="">Select isRead</option>
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
                                     </div>
                                     <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Description</label>
-                                        <input
-                                            type="text"
+                                        <label className="col-form-label text-md-right">IsImportant</label>
+                                        <select
                                             className="form-control"
-                                            id="exampleInputCity1"
-                                            placeholder="Description"
-                                            value={data.description}
-                                            onChange={(e) => setData({ ...data, description: e.target.value })}
-                                        />
+                                            value={data.isImportant}
+                                            onChange={(e) => setData({ ...data, isImportant: e.target.value })}
+                                        >
+                                            <option value="">Select isImportant</option>
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
                                     </div>
                                 </div>
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputCity1">ParentCategoryId</label>
-                                    <select
-                                        name="categoryId"
-                                        className="form-control"
-                                        value={data.parentCategoryId || ''}
-                                        onChange={(e) => setData({ ...data, parentCategoryId: e.target.value || null })}
-                                    >
-                                        <option value="" disabled>
-                                            Select Category
-                                        </option>
-                                        {categories.map((category) => (
-                                            <option key={category.categoryId} value={category.categoryId}>
-                                                {category.categoryName}
-                                            </option>
-                                        ))}
-                                    </select>
+                                <div className="row mb-4">
+                                    <div className="col-md-6">
+                                        <label className="col-form-label text-md-right">IsSpam</label>
+                                        <select
+                                            className="form-control"
+                                            value={data.isSpam}
+                                            onChange={(e) => setData({ ...data, isSpam: e.target.value })}
+                                        >
+                                            <option value="">Select isSpam</option>
+                                            <option value="true">True</option>
+                                            <option value="false">False</option>
+                                        </select>
+                                    </div>
                                 </div>
 
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Submit
                                 </button>
-                                <Link to="/category" className="btn btn-light">
+                                <Link to="/contact" className="btn btn-light">
                                     Back
                                 </Link>
                             </form>
@@ -130,4 +111,4 @@ function EditCategory() {
     );
 }
 
-export default EditCategory;
+export default EditContact;
