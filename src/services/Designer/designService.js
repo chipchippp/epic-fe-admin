@@ -45,7 +45,6 @@ export const createDesign = async (data) => {
 export const editDesign = async (id) => {
     try {
         const response = await get(service, `/designer_profile/${id}`);
-        console.log('response', response);
         return response;
     } catch (error) {
         console.error('Error fetching Design data:', error);

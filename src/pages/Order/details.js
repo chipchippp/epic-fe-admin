@@ -47,7 +47,6 @@ function OrderDetail() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            console.log('Updating order status to:', tempStatus);
             await updateOrders(id, tempStatus);
             toast.success('Order status updated successfully');
             navigate(`/order/detail/${id}`);

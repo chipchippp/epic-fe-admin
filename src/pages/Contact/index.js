@@ -17,7 +17,6 @@ function Contact() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 

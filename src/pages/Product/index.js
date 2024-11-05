@@ -54,6 +54,7 @@ function Product() {
             const response = await getCategories();
             const sortedCategories = response.data.content.sort((a, b) => a.categoryName.localeCompare(b.categoryName));
             setCategories(sortedCategories);
+            toast.success('Categories fetched successfully');
         } catch (error) {
             toast.error('Failed to fetch categories');
         }
@@ -79,6 +80,7 @@ function Product() {
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
+            toast.success('Products fetched successfully');
         } catch (error) {
             toast.error('Failed to fetch products');
         }

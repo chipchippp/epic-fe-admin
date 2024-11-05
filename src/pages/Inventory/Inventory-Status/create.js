@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { createInventoryStatus } from '~/services/Inventory/inventoryStatusService';
@@ -8,7 +8,7 @@ function ManageInventoryStatus() {
     const [data, setData] = useState({
         name: '',
         description: '',
-        isAddAction: '',
+        inventoryActionType: '',
     });
 
     const navigate = useNavigate();
@@ -66,10 +66,10 @@ function ManageInventoryStatus() {
                                         <label className="col-form-label text-md-right">IsAddAction</label>
                                         <select
                                             className="form-control"
-                                            value={data.isAddAction}
-                                            onChange={(e) => setData({ ...data, isAddAction: e.target.value })}
+                                            value={data.inventoryActionType}
+                                            onChange={(e) => setData({ ...data, inventoryActionType: e.target.value })}
                                         >
-                                            <option value="">Select isAddAction</option>
+                                            <option value="">Select inventoryActionType</option>
                                             <option value="true">True</option>
                                             <option value="false">False</option>
                                         </select>

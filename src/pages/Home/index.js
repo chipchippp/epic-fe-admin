@@ -50,7 +50,6 @@ function HomeAdmin() {
     const getUserData = () => {
         getAllUsers()
             .then((data) => {
-                console.log(data.data.content);
                 setUsers(data.data.content);
             })
             .catch((error) => {

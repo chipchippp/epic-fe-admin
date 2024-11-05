@@ -50,7 +50,6 @@ const EditProduct = () => {
                 categoryId: data.categoryId || (data.category && data.category.categoryId),
             };
 
-            console.log('Updated Product Data:', updatedProduct);
 
             const formData = new FormData();
             formData.append('productDTO', new Blob([JSON.stringify(updatedProduct)], { type: 'application/json' }));
@@ -64,7 +63,6 @@ const EditProduct = () => {
             }
 
             const response = await updateProduct(id, formData);
-            console.log('Update response:', response);
 
             toast.success('Product updated successfully');
             navigate('/product');

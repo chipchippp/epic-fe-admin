@@ -20,7 +20,6 @@ const BarChart = () => {
                 const orders = response.data.content;
                 const completeOrders = orders.filter((order) => order.status === 'COMPLETE');
                 const currentYear = dayjs().year();
-                console.log('completeOrders', completeOrders);
 
                 const currentYearOrders = completeOrders.filter(
                     (order) => dayjs(order.createdAt, 'DD-MM-YYYY HH:mm:ss').year() === currentYear,
@@ -70,7 +69,6 @@ const BarChart = () => {
                     chartData = processData(completeOrders, 'YYYY', 'year', 7);
                 }
 
-                console.log('chartData', chartData);
                 setChartData(chartData);
             } catch (error) {
                 toast.error('Failed to fetch chart data');

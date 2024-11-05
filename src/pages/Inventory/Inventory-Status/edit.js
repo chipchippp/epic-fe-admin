@@ -9,7 +9,7 @@ function EditInventoryStatus() {
     const [data, setData] = useState({
         name: '',
         description: '',
-        addAction: '',
+        inventoryActionType: '',
     });
 
     const navigate = useNavigate();
@@ -21,7 +21,7 @@ function EditInventoryStatus() {
                 setData({
                     name: result.name,
                     description: result.description,
-                    addAction: result.addAction || '',
+                    inventoryActionType: result.inventoryActionType || '',
                 });
             } catch (error) {
                 toast.error('Failed to fetch inventory-status data');
@@ -79,10 +79,10 @@ function EditInventoryStatus() {
                                         <label className="col-form-label text-md-right">IsAddAction</label>
                                         <select
                                             className="form-control"
-                                            value={data.addAction}
-                                            onChange={(e) => setData({ ...data, addAction: e.target.value })}
+                                            value={data.inventoryActionType}
+                                            onChange={(e) => setData({ ...data, inventoryActionType: e.target.value })}
                                         >
-                                            <option value="">Select addAction</option>
+                                            <option value="">Select inventoryActionType</option>
                                             <option value="true">True</option>
                                             <option value="false">False</option>
                                         </select>

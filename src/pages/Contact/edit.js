@@ -25,7 +25,6 @@ function EditContact() {
                 });
             } catch (error) {
                 toast.error('Failed to fetch category data');
-                console.error('Fetch error:', error);
             }
         };
         fetchData();
@@ -40,7 +39,6 @@ function EditContact() {
             navigate('/contact');
         } catch (error) {
             toast.error('Failed to update contact');
-            console.error('Update error:', error);
         }
     };
 
@@ -99,9 +97,6 @@ function EditContact() {
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Submit
                                 </button>
-                                <Link to="/contact" className="btn btn-light">
-                                    Back
-                                </Link>
                             </form>
                         </div>
                     </div>

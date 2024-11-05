@@ -45,7 +45,6 @@ export const createImgDesign = async (data) => {
 export const editImgDesign = async (id) => {
     try {
         const response = await get(service, `/images_design/id/${id}`);
-        console.log('response', response);
         return response;
     } catch (error) {
         console.error('Error fetching ImgDesign data:', error);
