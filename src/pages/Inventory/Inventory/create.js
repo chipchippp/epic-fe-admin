@@ -58,7 +58,7 @@ function ManageInventory() {
                 productId: Number(data.productId),
                 quantity: Number(data.quantity),
                 inventoryStatusId: Number(data.inventoryStatusId),
-                unitPrice: data.unitPrice,
+                // unitPrice: data.unitPrice,
                 note: data.note,
                 date: formattedDate,
             };
@@ -167,7 +167,7 @@ function ManageInventory() {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-6">
+                                    {/* <div className="col-md-6">
                                         <label className="col-form-label text-md-right">UnitPrice</label>
                                         <input
                                             type="number"
@@ -176,7 +176,7 @@ function ManageInventory() {
                                             value={data.unitPrice}
                                             onChange={handleInputChange}
                                         />
-                                    </div>
+                                    </div> */}
                                 </div>
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Save

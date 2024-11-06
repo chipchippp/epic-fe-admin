@@ -30,11 +30,7 @@ function Login() {
 
                 if (response && response.data && response.data.accessToken) {
                     const accessToken = response.data.accessToken;
-                    let decodedToken;
-
                     try {
-                        decodedToken = jwtDecode(accessToken);
-
                         const id = response.data.id;
                         const roles = response.data.roles;
                         const refreshToken = response.data.refreshToken;

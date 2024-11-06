@@ -82,18 +82,16 @@ function EditInventoryStatus() {
                                             value={data.inventoryActionType}
                                             onChange={(e) => setData({ ...data, inventoryActionType: e.target.value })}
                                         >
-                                            <option value="">Select inventoryActionType</option>
-                                            <option value="true">True</option>
-                                            <option value="false">False</option>
+                                            <option value="">Select Action Type</option>
+                                            <option value="ADD">Add</option>
+                                            <option value="SUBTRACT">Subtract</option>
+                                            <option value="NONE">None</option>
                                         </select>
                                     </div>
                                 </div>
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Save
                                 </button>
-                                <Link to="/inventory-status" className="btn btn-light">
-                                    Back
-                                </Link>
                             </form>
                         </div>
                     </div>

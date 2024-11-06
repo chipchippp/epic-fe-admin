@@ -123,13 +123,13 @@ function Contact() {
                                                                     <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
                                                                 &nbsp;
-                                                                <button
+                                                                {/* <button
                                                                     className="btn btn-danger"
                                                                     onClick={() => handleDelete(item.id)}
                                                                     title="Delete"
                                                                 >
                                                                     <i className="fas fa-trash"></i>
-                                                                </button>
+                                                                </button> */}
                                                             </td>
                                                         </tr>
                                                     ))}

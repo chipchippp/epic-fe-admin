@@ -19,12 +19,12 @@ function EditContact() {
             try {
                 const result = await editContact(id);
                 setData({
-                    isRead: result.isRead,
-                    isImportant: result.isImportant,
-                    isSpam: result.isSpam,
+                    isRead: result.isRead || '',
+                    isImportant: result.isImportant || '',
+                    isSpam: result.isSpam || '',
                 });
             } catch (error) {
-                toast.error('Failed to fetch category data');
+                toast.error('Failed to fetch contact data');
             }
         };
         fetchData();

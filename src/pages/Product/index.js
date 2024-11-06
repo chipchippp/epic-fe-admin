@@ -15,7 +15,7 @@ function Product() {
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
-    const [priceRange, setPriceRange] = useState([0, 90905.0]);
+    const [priceRange, setPriceRange] = useState([0, 500]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [sortOrder, setSortOrder] = useState('desc');
     const [data, setData] = useState([]);
@@ -53,8 +53,8 @@ function Product() {
         try {
             const response = await getCategories();
             const sortedCategories = response.data.content.sort((a, b) => a.categoryName.localeCompare(b.categoryName));
+            console.log('sortedCategories', sortedCategories);
             setCategories(sortedCategories);
-            toast.success('Categories fetched successfully');
         } catch (error) {
             toast.error('Failed to fetch categories');
         }
@@ -80,7 +80,6 @@ function Product() {
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
-            toast.success('Products fetched successfully');
         } catch (error) {
             toast.error('Failed to fetch products');
         }
@@ -88,6 +87,7 @@ function Product() {
 
     const handleCategoryChange = (event) => {
         const categoryId = event.target.value;
+        console.log('categoryId', categoryId);
         setSelectedCategory(categoryId);
         setCurrentPage(1);
     };
@@ -157,8 +157,8 @@ function Product() {
                                                 className="price-slider"
                                                 range
                                                 min={0}
-                                                max={90905.0}
-                                                defaultValue={[0, 90905.0]}
+                                                max={500}
+                                                defaultValue={[0, 500]}
                                                 value={priceRange}
                                                 onChange={handleSliderChange}
                                             />

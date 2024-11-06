@@ -118,9 +118,6 @@ function EditCategory() {
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Submit
                                 </button>
-                                <Link to="/category" className="btn btn-light">
-                                    Back
-                                </Link>
                             </form>
                         </div>
                     </div>
