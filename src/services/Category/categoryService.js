@@ -12,6 +12,16 @@ export const getCategory = async (currentPage = 1, limit = 10) => {
     }
 };
 
+export const getCategories = async (currentPage = 1, limit = 10) => {
+    try {
+        const response = await get(service, `/categories/getAll`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching category data:', error);
+        throw error;
+    }
+};
+
 export const getTrashCategory = async (currentPage = 1, limit = 10) => {
     try {
         const response = await get(service, `/categories/trash?page=${currentPage}&limit=${limit}`);
@@ -48,6 +58,16 @@ export const updateCategory = async (id, data) => {
         return response;
     } catch (error) {
         console.error('Failed to update category', error);
+        throw error;
+    }
+};
+
+export const updateRestoreCategory = async (id) => {
+    try {
+        await put(service, `/categories/restore/${id}`);
+        return true;
+    } catch (error) {
+        console.error('Failed to update restore category', error);
         throw error;
     }
 };

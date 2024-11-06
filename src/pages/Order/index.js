@@ -9,7 +9,7 @@ import debounce from 'lodash.debounce';
 
 function Order() {
     const [loading, setLoading] = useState(true);
-    const [status, setStatus] = useState('');   
+    const [status, setStatus] = useState('');
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -18,14 +18,15 @@ function Order() {
     const [search, setSearch] = useState('');
     const [sortOrder, setSortOrder] = useState('desc');
     const [filteredOrders, setFilteredOrders] = useState([]);
+    const [dateStart, setDateStart] = useState('');
+    const [dateEnd, setDateEnd] = useState('');
 
     useEffect(() => {
         let filteredData = data;
-        
+
         if (search) {
-            filteredData = filteredData.filter(
-                (item) =>
-                    item.id.toString().toLowerCase().includes(search.toLowerCase())
+            filteredData = filteredData.filter((item) =>
+                item.id.toString().toLowerCase().includes(search.toLowerCase()),
             );
         }
         if (status !== '') {
@@ -39,7 +40,7 @@ function Order() {
 
     useEffect(() => {
         getFilteredData();
-    }, [currentPage, limit, sortOrder, search]);
+    }, [currentPage, limit, sortOrder, search, dateStart, dateEnd]);
 
     const getFilteredData = async () => {
         try {
@@ -52,11 +53,17 @@ function Order() {
             if (search) {
                 params.order = `id~${search}`;
             }
+            if (dateStart) {
+                params.dateStart = dateStart;
+            }
+            if (dateEnd) {
+                params.dateEnd = dateEnd;
+            }
 
             const response = await getFilteredOrders(params);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
-            setNumbers([...Array(response.data.totalPages).keys()].map(i => i + 1));
+            setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
             setLoading(false);
         } catch (error) {
             toast.error('Failed to fetch products', error);
@@ -81,22 +88,30 @@ function Order() {
         setSortOrder(order);
     };
 
-    const handleSearch = useCallback(debounce((value) => {
-        setSearch(value);
-    }, 500), []);
+    const handleSearch = useCallback(
+        debounce((value) => {
+            setSearch(value);
+        }, 500),
+        [],
+    );
+
+    const handleDateStartChange = useCallback(
+        debounce((value) => {
+            setDateStart(value);
+        }, 500),
+        [],
+    );
+
+    const handleDateEndChange = useCallback(
+        debounce((value) => {
+            setDateEnd(value);
+        }, 500),
+        [],
+    );
 
     return (
         <>
             <div className="content-wrapper">
-                <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Orders</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
@@ -105,13 +120,16 @@ function Order() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
+                                        <h3 className="font-weight-bold">Orders</h3>
+
                                         <div className="float-left">
                                             <select
-                                                className="form-control selectric"
+                                                className="form-control selectric btn-primary"
                                                 onChange={handleStatusChange}
                                             >
                                                 <option value="">Sort Status</option>
                                                 <option value="CREATED">Created</option>
+                                                <option value="PAYMENT_FAILED">Payment Failed</option>
                                                 <option value="PENDING">Pending</option>
                                                 <option value="PROCESSING">Processing</option>
                                                 <option value="ONDELIVERY">On Delivery</option>
@@ -121,26 +139,39 @@ function Order() {
                                             </select>
                                         </div>
                                         {/* <div className="float-left ml-2">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={10}>Show</option>
-                                                <option value={20}>20</option>
-                                                <option value={40}>40</option>
-                                            </select>
-                                        </div> */}
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                value={dateStart}
+                                                onChange={(e) => handleDateStartChange(e.target.value)}
+                                            />
+                                        </div>
                                         <div className="float-left ml-2">
-                                                <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
-                                                    <option value="asc">Sort Ascending</option>
-                                                    <option value="desc">Sort Descending</option>
-                                                </select>
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                value={dateEnd}
+                                                onChange={(e) => handleDateEndChange(e.target.value)}
+                                            />
+                                        </div> */}
+
+                                        <div className="float-left ml-2">
+                                            <select
+                                                className="sort-dropdown"
+                                                onChange={(e) => handleSort(e.target.value)}
+                                            >
+                                                <option value="asc">Sort Date</option>
+                                                <option value="asc">Sort Ascending</option>
+                                                <option value="desc">Sort Descending</option>
+                                            </select>
                                         </div>
                                         <Search className="float-left ml-2" setSearch={handleSearch} />
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
                                                         <th>OrderCode</th>
-                                                        <th>FirstName</th>
+                                                        <th>Full Name</th>
                                                         <th>Total Price</th>
                                                         <th>Created At</th>
                                                         <th>Status</th>
@@ -150,32 +181,100 @@ function Order() {
                                                 <tbody>
                                                     {filteredOrders.map((item, index) => (
                                                         <tr key={item.id}>
-                                                            <td>{(currentPage - 1) * limit + index + 1}</td>
-                                                            <td>{item.id}</td>
-                                                            <td>{item.firstName}</td>
+                                                            <td>{item.codeOrder}</td>
+                                                            <td>
+                                                                {item.firstName} {item.lastName}
+                                                            </td>
                                                             <td>{item.totalPrice}</td>
                                                             <td>{item.createdAt}</td>
                                                             <td>
-                                                                {item.status === "CREATED" && (
-                                                                    <div className="badge badge-warning">Created</div>
+                                                                {item.status === 'CREATED' && (
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#FFA500',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Created
+                                                                    </div>
                                                                 )}
-                                                                {item.status === "PENDING" && (
-                                                                    <div className="badge badge-secondary">Pending</div>
+                                                                {item.status === 'PAYMENT_FAILED' && (
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#FF0000',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Payment Failed
+                                                                    </div>
                                                                 )}
-                                                                {item.status === "PROCESSING" && (
-                                                                    <div className="badge badge-primary">Processing</div>
+                                                                {item.status === 'PENDING' && (
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#808080',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Pending
+                                                                    </div>
                                                                 )}
-                                                                {item.status === "ONDELIVERY" && (
-                                                                    <div className="badge badge-info">On Delivery</div>
+                                                                {item.status === 'PROCESSING' && (
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#0000FF',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Processing
+                                                                    </div>
                                                                 )}
-                                                                {item.status === "DELIVERED" && (
-                                                                    <div className="badge badge-success">Delivered</div>
+                                                                {item.status === 'ONDELIVERY' && (
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#17A2B8',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        On Delivery
+                                                                    </div>
                                                                 )}
-                                                                {item.status === "CANCEL" && (
-                                                                    <div className="badge badge-danger">Cancel</div>
+                                                                {item.status === 'DELIVERED' && (
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#28A745',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Delivered
+                                                                    </div>
                                                                 )}
-                                                                {item.status === "COMPLETE" && (
-                                                                    <div className="badge badge-success">Complete</div>
+                                                                {item.status === 'CANCEL' && (
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#DC3545',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Cancel
+                                                                    </div>
+                                                                )}
+                                                                {item.status === 'COMPLETE' && (
+                                                                    <div
+                                                                        className="badge"
+                                                                        style={{
+                                                                            backgroundColor: '#008000',
+                                                                            color: '#FFFFFF',
+                                                                        }}
+                                                                    >
+                                                                        Complete
+                                                                    </div>
                                                                 )}
                                                             </td>
                                                             <td>
@@ -193,8 +292,8 @@ function Order() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}

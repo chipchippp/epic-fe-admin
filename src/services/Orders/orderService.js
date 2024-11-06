@@ -14,7 +14,17 @@ export const getFilteredOrders = async (params) => {
 
 export const getAllOrders = async () => {
     try {
-        const response = await get(service, `/orders?page=1&limit=300`);
+        const response = await get(service, `/orders?page=1&limit=100`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Orders data:', error);
+        throw error;
+    }
+};
+
+export const getOrderCount = async () => {
+    try {
+        const response = await get(service, `/orders/count/status`);
         return response;
     } catch (error) {
         console.error('Error fetching Orders data:', error);

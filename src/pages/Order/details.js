@@ -9,6 +9,7 @@ function OrderDetail() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({
         id: '',
+        codeOrder: '',
         userId: '',
         firstName: '',
         lastName: '',
@@ -51,7 +52,8 @@ function OrderDetail() {
             navigate(`/order/detail/${id}`);
             window.location.reload();
         } catch (error) {
-            toast.error('Failed to update order status', error);
+            toast.error('Failed to update order status');
+            console.error('Error updating order:', error);
         }
     };
 
@@ -71,6 +73,7 @@ function OrderDetail() {
     const getSelectableOptions = () => {
         const options = [
             { value: 'CREATED', label: 'Created' },
+            { value: 'PAYMENT_FAILED', label: 'Payment_Failed' },
             { value: 'PENDING', label: 'Pending' },
             { value: 'PROCESSING', label: 'Processing' },
             { value: 'ONDELIVERY', label: 'On Delivery' },
@@ -81,7 +84,9 @@ function OrderDetail() {
 
         switch (data.status) {
             case 'CREATED':
-                return options.filter((option) => ['PENDING', 'PROCESSING', 'CANCEL'].includes(option.value));
+                return options.filter((option) => ['PENDING', 'CANCEL'].includes(option.value));
+            case 'PAYMENT_FAILED':
+                return options.filter((option) => ['PAYMENT_FAILED'].includes(option.value));
             case 'PENDING':
                 return options.filter((option) => ['PENDING', 'PROCESSING', 'CANCEL'].includes(option.value));
             case 'PROCESSING':
@@ -102,18 +107,6 @@ function OrderDetail() {
     return (
         <>
             <div className="content-wrapper">
-                <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Order Details</h3>
-                                <Link to="/order" className="btn btn-primary mb-3">
-                                 <i className="fas fa-arrow-left"></i> Back
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className="col-12 grid-margin stretch-card">
                     <div className="card">
                         <div className="card-body">
@@ -122,14 +115,21 @@ function OrderDetail() {
                                     <div className="row">
                                         <div className="col-lg-12">
                                             <div className="invoice-title">
-                                                <h4>Order <span style={{ color: 'gray' }}>#{id}</span></h4>
+                                                <h4>
+                                                    Order <span style={{ color: 'gray' }}>#{data.codeOrder}</span>
+                                                </h4>
                                             </div>
+                                            <Link to="/order" className="btn btn-primary mb-3">
+                                                <i className="fas fa-arrow-left"></i> Back
+                                            </Link>
                                             <hr />
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <address>
                                                         <strong>Billed To:</strong>
-                                                        <p>FullName: {data.firstName} {data.lastName}</p>
+                                                        <p>
+                                                            FullName: {data.firstName} {data.lastName}
+                                                        </p>
                                                         <p>Email: {data.email}</p>
                                                         <p>Telephone: {data.phone}</p>
                                                         <p>Status: {data.status}</p>
@@ -154,7 +154,9 @@ function OrderDetail() {
                                                             id="status"
                                                             value={tempStatus}
                                                             onChange={(e) => setTempStatus(e.target.value)}
-                                                            disabled={data.status === 'COMPLETE' || data.status === 'CANCEL'}
+                                                            disabled={
+                                                                data.status === 'COMPLETE' || data.status === 'CANCEL'
+                                                            }
                                                         >
                                                             {getSelectableOptions().map((option) => (
                                                                 <option key={option.value} value={option.value}>
@@ -186,27 +188,36 @@ function OrderDetail() {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                {Array.isArray(products) && products.map((item, index) => (
-                                                                    <tr key={index}>
-                                                                        <td>{index + 1}</td>
-                                                                        <td>
-                                                                            {item.product && item.product.images && item.product.images.length > 0 ? (
-                                                                                <img
-                                                                                    src={`https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/product-images/images/${item.product.images[0].imageUrl}`}
-                                                                                    alt={item.product.name}
-                                                                                    style={{ width: '70px', height: '70px', borderRadius: '0px' }}
-                                                                                />
-                                                                            ) : (
-                                                                                'No Image'
-                                                                            )}
-                                                                        </td>
-                                                                        <td>{item.product.name}</td>
-                                                                        <td>{item.product.category.categoryName}</td>
-                                                                        <td>${item.unitPrice}</td>
-                                                                        <td>{item.quantity}</td>
-                                                                        <td>${item.unitPrice * item.quantity}</td>
-                                                                    </tr>
-                                                                ))}
+                                                                {Array.isArray(products) &&
+                                                                    products.map((item, index) => (
+                                                                        <tr key={index}>
+                                                                            <td>{index + 1}</td>
+                                                                            <td>
+                                                                                {item.product &&
+                                                                                item.product.images &&
+                                                                                item.product.images.length > 0 ? (
+                                                                                    <img
+                                                                                        src={item.product.images[0].imageUrl}
+                                                                                        alt={item.product.name}
+                                                                                        style={{
+                                                                                            width: '70px',
+                                                                                            height: '70px',
+                                                                                            borderRadius: '0px',
+                                                                                        }}
+                                                                                    />
+                                                                                ) : (
+                                                                                    'No Image'
+                                                                                )}
+                                                                            </td>
+                                                                            <td>{item.product.name}</td>
+                                                                            <td>
+                                                                                {item.product.category.categoryName}
+                                                                            </td>
+                                                                            <td>${item.unitPrice}</td>
+                                                                            <td>{item.quantity}</td>
+                                                                            <td>${item.totalPrice}</td>
+                                                                        </tr>
+                                                                    ))}
                                                             </tbody>
                                                         </table>
                                                     </div>
@@ -214,14 +225,16 @@ function OrderDetail() {
                                                         <div className="col-lg-8">
                                                             <div className="section-title">Payment Method</div>
                                                             <p className="section-lead">
-                                                                The payment method that we provide is to make it easier for you to pay
-                                                                invoices.
+                                                                The payment method that we provide is to make it easier
+                                                                for you to pay invoices.
                                                             </p>
                                                         </div>
                                                         <div className="col-lg-4 text-right">
                                                             <div className="invoice-detail-item">
                                                                 <div className="invoice-detail-name">Subtotal</div>
-                                                                <div className="invoice-detail-value">${data.totalPrice}</div>
+                                                                <div className="invoice-detail-value">
+                                                                    ${data.totalPrice}
+                                                                </div>
                                                             </div>
                                                             <hr className="mt-2 mb-2" />
                                                             <div className="invoice-detail-item">
@@ -236,11 +249,6 @@ function OrderDetail() {
                                             </div>
                                         </div>
                                         <hr />
-                                        <div className="text-md-right">
-                                            <Link to={`/order/invoice/${id}`} className="btn btn-primary me-1">
-                                                <i className="fa-solid fa-download"></i> Invoice
-                                            </Link>
-                                        </div>
                                     </div>
                                 </div>
                             </div>

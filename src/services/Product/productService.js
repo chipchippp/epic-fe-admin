@@ -2,14 +2,14 @@ import { get, post, put, del } from '~/utils/httpRequest';
 
 const service = 'product';
 
-export const getProduct = async (currentPage = 1, limit = 7) => {
+export const getProduct = async () => {
     try {
-        const response = await get(service, `/products/getAll?page=${currentPage}&limit=${limit}`);
+        const response = await get(service, `http://localhost:8080/api/v1/products/getAll?page=1&limit=1000`);
         return response;
     } catch (error) {
         console.error('Error fetching Product data:', error);
         throw error;
-    } 
+    }
 };
 
 export const getFilteredProducts = async (params) => {
@@ -104,8 +104,8 @@ export const updateProduct = async (id, data) => {
 
 export const deleteProduct = async (id) => {
     try {
-        const response = await del(service, `/products/in-trash/${id}`);
-        return response;
+        await del(service, `/products/in-trash/${id}`);
+        return true;
     } catch (error) {
         console.error('Error deleting Product:', error);
         throw error;

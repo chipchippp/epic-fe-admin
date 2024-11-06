@@ -10,77 +10,73 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 const BarChart = () => {
     const [chartData, setChartData] = useState([]);
     const [timeRange, setTimeRange] = useState('Date');
-    
+
     useEffect(() => {
         const fetchChartData = async () => {
             try {
                 const response = await getAllOrders();
-                if (response.code !== 200) {
-                    throw new Error('Failed to fetch chart data');
-                }
-    
-                const jsonData = response.data;
-                const filteredData = jsonData.content.filter((order) => order.status === "COMPLETE");
-    
+                if (response.code !== 200) throw new Error('Failed to fetch chart data');
+
+                const orders = response.data.content;
+                const completeOrders = orders.filter((order) => order.status === 'COMPLETE');
+                const currentYear = dayjs().year();
+
+                const currentYearOrders = completeOrders.filter(
+                    (order) => dayjs(order.createdAt, 'DD-MM-YYYY HH:mm:ss').year() === currentYear,
+                );
+
                 const processData = (data, format, unit, totalUnits, fixedLabels) => {
-                    const latestOrderDate = data.reduce((latestDate, item) => {
-                        const orderDate = dayjs(item.createdAt);
-                        return orderDate.isAfter(latestDate) ? orderDate : latestDate;
-                    }, dayjs('2000-01-01'));
-                
-                    const latestUnits =
+                    const latestOrderDate = data.reduce(
+                        (latestDate, order) => {
+                            const orderDate = dayjs(order.createdAt, 'YYYY-MM-DD HH:mm:ss.SSSSSS');
+                            return orderDate.isAfter(latestDate) ? orderDate : latestDate;
+                        },
+                        dayjs('2000-01-01', 'YYYY-MM-DD'),
+                    );
+
+                    const labels =
                         fixedLabels ||
                         Array.from({ length: totalUnits }, (_, index) =>
                             latestOrderDate.subtract(index, unit).format(format),
                         ).reverse();
-                
-                    const revenueByTime = data.reduce((acc, item) => {
-                        const time = dayjs(item.createdAt).format(format);
+
+                    const revenueByTime = data.reduce((acc, order) => {
+                        const time = dayjs(order.createdAt, 'YYYY-MM-DD HH:mm:ss.SSSSSS').format(format);
                         if (!acc[time]) {
                             acc[time] = { orderCount: 0, totalRevenue: 0 };
                         }
                         acc[time].orderCount += 1;
-                        acc[time].totalRevenue += item.totalPrice;
+                        acc[time].totalRevenue += order.totalPrice;
                         return acc;
                     }, {});
-                
-                    const chartData = latestUnits.map((time) => {
-                        const dailyData = revenueByTime[time];
-                        return {
-                            time,
-                            orderCount: dailyData ? dailyData.orderCount : 0,
-                            totalRevenue: dailyData ? dailyData.totalRevenue : 0,
-                        };
-                    });
-                
-                    return chartData;
+
+                    return labels.map((time) => ({
+                        time,
+                        orderCount: revenueByTime[time]?.orderCount || 0,
+                        totalRevenue: revenueByTime[time]?.totalRevenue || 0,
+                    }));
                 };
-    
+
                 let chartData;
                 if (timeRange === 'Date') {
-                    chartData = processData(filteredData, 'YYYY-MM-DD', 'day', 7);
+                    chartData = processData(currentYearOrders, 'DD-MM-YYYY', 'day', 7);
                 } else if (timeRange === 'Month') {
-                    const currentYear = dayjs().year();
                     const months = Array.from({ length: 12 }, (_, index) =>
-                        dayjs(new Date(currentYear, index)).format('YYYY-MM'),
+                        dayjs(new Date(currentYear, index)).format('MMMM'),
                     );
-                    chartData = processData(filteredData, 'YYYY-MM', 'month', 12, months);
+                    chartData = processData(currentYearOrders, 'MMMM', 'month', 12, months);
                 } else if (timeRange === 'Year') {
-                    chartData = processData(filteredData, 'YYYY', 'year', 7);
+                    chartData = processData(completeOrders, 'YYYY', 'year', 7);
                 }
-    
+
                 setChartData(chartData);
             } catch (error) {
                 toast.error('Failed to fetch chart data', error);
             }
         };
-    
+
         fetchChartData();
     }, [timeRange]);
-
-    if (!chartData || chartData.length === 0) {
-        return <div>Loading...</div>;
-    }
 
     const labels = chartData.map((data) => data.time);
     const orderCount = chartData.map((data) => data.orderCount);
@@ -107,46 +103,37 @@ const BarChart = () => {
             },
         ],
     };
-    
+
     const options = {
         maintainAspectRatio: false,
         scales: {
             y: {
                 beginAtZero: true,
                 position: 'left',
+                ticks: {
+                    callback: (value) => (Number.isInteger(value) ? value : ''),
+                },
             },
             y1: {
                 beginAtZero: true,
                 position: 'right',
-                grid: {
-                    drawOnChartArea: false,
-                },
+                grid: { display: false },
             },
         },
         plugins: {
             tooltip: {
                 callbacks: {
-                    label: function (context) {
-                        const label = context.dataset.label || '';
-                        const value = context.raw;
-                        return `${label}: ${value}`;
-                    },
-                    afterLabel: function (context) {
-                        if (context.dataset.label === 'Revenue') {
-                            return `$`;
-                        }
-                        return '';
-                    },
+                    label: (context) => `${context.dataset.label}: ${context.raw}`,
+                    afterLabel: (context) => (context.dataset.label === 'Revenue' ? ' $' : ''),
                 },
             },
-            legend: {
-                labels: {
-                    fontSize: 25,
-                },
-            },
+            legend: { labels: { fontSize: 12 } },
         },
     };
-    
+
+    if (!chartData.length) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="section-body">

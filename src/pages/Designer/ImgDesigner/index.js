@@ -17,18 +17,16 @@ function ImgDesign() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-    
+
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
     const debouncedSearch = useCallback(
         debounce((query) => {
-            const filteredData = data.filter((item) =>
-                item.name.toLowerCase().includes(query.toLowerCase())
-            );
+            const filteredData = data.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()));
             setSearchedData(filteredData);
         }, 500),
-        [data]
+        [data],
     );
 
     useEffect(() => {
@@ -42,7 +40,7 @@ function ImgDesign() {
     const getData = async () => {
         try {
             const response = await getImgDesign(currentPage, limit);
-    
+
             if (response && response.data && response.data.content) {
                 setData(response.data.content);
                 setSearchedData(response.data.content);
@@ -57,7 +55,7 @@ function ImgDesign() {
             toast.error('Failed to fetch imgDesign');
         }
     };
-    
+
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
@@ -109,7 +107,11 @@ function ImgDesign() {
                                 ) : (
                                     <>
                                         <div className="float-left">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
+                                            <select
+                                                onChange={handleLimitChange}
+                                                className="btn-primary form-control selectric"
+                                                value={limit}
+                                            >
                                                 <option value={5}>Show</option>
                                                 <option value={10}>10</option>
                                                 <option value={20}>20</option>
@@ -117,7 +119,7 @@ function ImgDesign() {
                                             </select>
                                         </div>
                                         <Search setSearch={setSearch} />
-                                    
+
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -137,16 +139,20 @@ function ImgDesign() {
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.name}</td>
                                                             <td>
-                                            {item.imageTitle ? (
-                                                <img
-                                                    src={`https://techwiz5-inventory-service-ekb0h0d4c9gyfpby.eastasia-01.azurewebsites.net/api/v1/images_design/imagesDesign/${item.imageUrl}`}
-                                                    alt={item.name}
-                                                    style={{ width: '70px', height: '70px', borderRadius: '0px' }}
-                                                />
-                                            ) : (
-                                                'No Image'
-                                            )}
-                                        </td>
+                                                                {item.imageTitle ? (
+                                                                    <img
+                                                                        src={`http://localhost:8080/api/v1/images_design/imagesDesign/${item.imageUrl}`}
+                                                                        alt={item.name}
+                                                                        style={{
+                                                                            width: '70px',
+                                                                            height: '70px',
+                                                                            borderRadius: '0px',
+                                                                        }}
+                                                                    />
+                                                                ) : (
+                                                                    'No Image'
+                                                                )}
+                                                            </td>
                                                             <td>{item.tags}</td>
                                                             <td>{item.description}</td>
                                                             <td>{item.categoryGalleryId}</td>
@@ -173,8 +179,8 @@ function ImgDesign() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
@@ -185,7 +191,7 @@ function ImgDesign() {
                         </div>
                     </div>
                 </div>
-                
+
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>

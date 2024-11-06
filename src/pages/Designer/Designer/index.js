@@ -17,19 +17,17 @@ function Design() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-    
+
     const [status, setStatus] = useState('PENDING');
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
     const debouncedSearch = useCallback(
         debounce((query) => {
-            const filteredData = data.filter((item) =>
-                item.username.toLowerCase().includes(query.toLowerCase())
-            );
+            const filteredData = data.filter((item) => item.username.toLowerCase().includes(query.toLowerCase()));
             setSearchedData(filteredData);
         }, 500),
-        [data]
+        [data],
     );
 
     useEffect(() => {
@@ -43,9 +41,9 @@ function Design() {
     const getData = async () => {
         try {
             const response = await getDesign(status);
-    
+
             if (response && response.data) {
-                setData(response.data); 
+                setData(response.data);
                 setSearchedData(response.data);
             } else {
                 toast.error('Invalid response structure from server');
@@ -104,7 +102,11 @@ function Design() {
                                 ) : (
                                     <>
                                         <div className="float-left">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
+                                            <select
+                                                onChange={handleLimitChange}
+                                                className="btn-primary form-control selectric"
+                                                value={limit}
+                                            >
                                                 <option value={5}>Show</option>
                                                 <option value={10}>10</option>
                                                 <option value={20}>20</option>
@@ -113,10 +115,7 @@ function Design() {
                                         </div>
                                         &nbsp;
                                         <div className="float-left">
-                                            <select
-                                                className="form-control selectric"
-                                                onChange={handleStatusChange}
-                                            >
+                                            <select className="form-control selectric" onChange={handleStatusChange}>
                                                 <option value="">Sort Status</option>
                                                 <option value="REJECTED">Rejected</option>
                                                 <option value="PENDING">Pending</option>
@@ -124,7 +123,6 @@ function Design() {
                                             </select>
                                         </div>
                                         <Search setSearch={setSearch} />
-                                    
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -168,8 +166,8 @@ function Design() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
@@ -180,7 +178,7 @@ function Design() {
                         </div>
                     </div>
                 </div>
-                
+
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>

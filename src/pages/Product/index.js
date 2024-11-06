@@ -15,9 +15,9 @@ function Product() {
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
 
-    const [priceRange, setPriceRange] = useState([0, 90905.0]);
+    const [priceRange, setPriceRange] = useState([0, 500]);
     const [filteredProducts, setFilteredProducts] = useState([]);
-    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortOrder, setSortOrder] = useState('desc');
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -33,10 +33,7 @@ function Product() {
             const [minPrice, maxPrice] = priceRange;
             const filteredData = data.filter((item) => {
                 const price = parseFloat(item.price);
-                return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) &&
-                    price >= minPrice && price <= maxPrice
-                );
+                return item.name.toLowerCase().includes(search.toLowerCase()) && price >= minPrice && price <= maxPrice;
             });
             setFilteredProducts(filteredData);
         };
@@ -55,9 +52,8 @@ function Product() {
     const fetchCategories = async () => {
         try {
             const response = await getCategories();
-            const sortedCategories = response.data.content.sort((a, b) =>
-                a.categoryName.localeCompare(b.categoryName)
-            );
+            const sortedCategories = response.data.content.sort((a, b) => a.categoryName.localeCompare(b.categoryName));
+            console.log('sortedCategories', sortedCategories);
             setCategories(sortedCategories);
         } catch (error) {
             toast.error('Failed to fetch categories');
@@ -71,7 +67,7 @@ function Product() {
                 size: limit,
                 sort: `productId:${sortOrder}`,
             };
-    
+
             if (search) {
                 params.product = `name~${search}`;
             }
@@ -83,7 +79,7 @@ function Product() {
             const response = await getFilteredProducts(params);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
-            setNumbers([...Array(response.data.totalPages).keys()].map(i => i + 1));
+            setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
         } catch (error) {
             toast.error('Failed to fetch products');
         }
@@ -91,6 +87,7 @@ function Product() {
 
     const handleCategoryChange = (event) => {
         const categoryId = event.target.value;
+        console.log('categoryId', categoryId);
         setSelectedCategory(categoryId);
         setCurrentPage(1);
     };
@@ -99,15 +96,18 @@ function Product() {
         if (value[0] <= value[1]) {
             setPriceRange(value);
         }
-    }, 300);
-    
+    }, 0);
+
     const handleSliderChange = (value) => {
         debouncedHandleSliderChange(value);
     };
 
-    const handleSearch = useCallback(debounce((value) => {
-        setSearch(value);
-    }, 500), []);
+    const handleSearch = useCallback(
+        debounce((value) => {
+            setSearch(value);
+        }, 500),
+        [],
+    );
 
     const handleSort = (order) => {
         setSortOrder(order);
@@ -139,48 +139,44 @@ function Product() {
         <>
             <div className="content-wrapper">
                 <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Products</h3>
-                                <Link to="/addcreate" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
                             <div className="card-body">
+                                <h3 className="font-weight-bold">Products</h3>
                                 <div className="filter-product">
+                                    <Link to="/create/product" className="btn btn-primary">
+                                        <i className="fas fa-plus"></i> New
+                                    </Link>
                                     <div className="filter-container">
-                                        <div className="price-labels">
+                                        <div className="float-left price-labels">
                                             <span className="min-price">{priceRange[0]}$</span>
                                             <span className="max-price">{priceRange[1]}$</span>
                                         </div>
-                                        <div className="slider-button-group">
+                                        <div className="float-left slider-button-group">
                                             <Slider
                                                 className="price-slider"
                                                 range
                                                 min={0}
-                                                max={90905.00}
-                                                defaultValue={[0, 90905.00]}
+                                                max={500}
+                                                defaultValue={[0, 500]}
                                                 value={priceRange}
                                                 onChange={handleSliderChange}
                                             />
                                         </div>
                                     </div>
-                                    <div className="filter-sort-group">
+                                    <div className="float-left filter-sort-group">
                                         <div className="sort-container">
-                                            <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
+                                            <select
+                                                className="sort-dropdown"
+                                                onChange={(e) => handleSort(e.target.value)}
+                                            >
+                                                <option value="desc">Sort Date</option>
                                                 <option value="asc">Sort Ascending</option>
                                                 <option value="desc">Sort Descending</option>
                                             </select>
                                         </div>
                                     </div>
-                                    <div className="float-left ml-2">
+                                    <div className="float-left">
                                         <select onChange={handleCategoryChange} className="form-control selectric">
                                             <option value="">All Categories</option>
                                             {categories.map((category) => (
@@ -199,6 +195,7 @@ function Product() {
                                                 <th>Id</th>
                                                 <th>Name</th>
                                                 <th>Images</th>
+                                                <th>Code Product</th>
                                                 <th>Price</th>
                                                 <th>Category</th>
                                                 <th>Stock Quantity</th>
@@ -210,26 +207,45 @@ function Product() {
                                                 <tr key={item.productId}>
                                                     <td>{(currentPage - 1) * limit + index + 1}</td>
                                                     <td>
-                                                        <Link to={`/productdetail/${item.productId}`}>{item.name}</Link>
+                                                        <Link to={`/product/detail/${item.productId}`}>
+                                                            {item.name}
+                                                        </Link>
                                                     </td>
                                                     <td>
                                                         {item.images.length > 0 ? (
-                                                            <img src={`https://techwiz-product-service-fpd5bedth9ckdgay.eastasia-01.azurewebsites.net/api/v1/product-images/imagesPost/${item.images[0].imageUrl}`} alt={item.name} style={{ width: '70px', height: '70px', borderRadius: '0px' }} />
+                                                            <img
+                                                                src={`${item.images[0].imageUrl}`}
+                                                                alt={item.name}
+                                                                style={{
+                                                                    width: '70px',
+                                                                    height: '70px',
+                                                                    borderRadius: '0px',
+                                                                }}
+                                                            />
                                                         ) : (
                                                             'No Image'
                                                         )}
                                                     </td>
+                                                    <td>{item.codeProduct}</td>
                                                     <td>{item.price}$</td>
                                                     <td>{item.category ? item.category.categoryName : 'N/A'}</td>
                                                     <td>{item.stockQuantity}</td>
                                                     <td>
-                                                        <Link to={`/editproduct/${item.productId}`} className="btn btn-primary" title="Edit">
+                                                        <Link
+                                                            to={`/edit/product/${item.productId}`}
+                                                            className="btn btn-primary"
+                                                            title="Edit"
+                                                        >
                                                             <i className="fas fa-pencil-alt"></i>
                                                         </Link>
                                                         &nbsp;
-                                                        <button className="btn btn-danger" onClick={() => handleDelete(item.productId)} title="Delete">
+                                                        {/* <button
+                                                            className="btn btn-danger"
+                                                            onClick={() => handleDelete(item.productId)}
+                                                            title="Delete"
+                                                        >
                                                             <i className="fas fa-trash"></i>
-                                                        </button>
+                                                        </button> */}
                                                     </td>
                                                 </tr>
                                             ))}
@@ -237,8 +253,8 @@ function Product() {
                                     </table>
                                 </div>
                                 <Pagination
-                                    prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                    nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                    prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                    nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                     changeCPage={handlePageChange}
                                     currentPage={currentPage}
                                     numbers={numbers}

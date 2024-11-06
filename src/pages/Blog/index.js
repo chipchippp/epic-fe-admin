@@ -17,18 +17,16 @@ function Blog() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-    
+
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
     const debouncedSearch = useCallback(
         debounce((query) => {
-            const filteredData = data.filter((item) =>
-                item.title.toLowerCase().includes(query.toLowerCase())
-            );
+            const filteredData = data.filter((item) => item.title.toLowerCase().includes(query.toLowerCase()));
             setSearchedData(filteredData);
         }, 500),
-        [data]
+        [data],
     );
 
     useEffect(() => {
@@ -42,7 +40,7 @@ function Blog() {
     const getData = async () => {
         try {
             const response = await getBlog(currentPage, limit);
-    
+
             if (response && response.data && response.data.content) {
                 setData(response.data.content);
                 setSearchedData(response.data.content);
@@ -57,7 +55,7 @@ function Blog() {
             toast.error('Failed to fetch categories');
         }
     };
-    
+
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
@@ -85,21 +83,14 @@ function Blog() {
         setCurrentPage(1);
     };
 
+    const formatDescription = (content, maxLength = 70) => {
+        const regex = new RegExp(`.{1,${maxLength}}`, 'g');
+        return content.match(regex).join('\n');
+    };
+
     return (
         <>
             <div className="content-wrapper">
-                <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Blogs</h3>
-                                <Link to="/blog/create" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
@@ -108,16 +99,12 @@ function Blog() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <div className="float-left">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={5}>Show</option>
-                                                <option value={10}>10</option>
-                                                <option value={20}>20</option>
-                                                <option value={30}>30</option>
-                                            </select>
-                                        </div>
+                                        <h3 className="font-weight-bold">Blogs</h3>
+                                        <Link to="/blog/create" className="float-left btn btn-primary">
+                                            <i className="fas fa-plus"></i> New
+                                        </Link>
                                         <Search setSearch={setSearch} />
-                                    
+
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -125,9 +112,8 @@ function Blog() {
                                                         <th>#</th>
                                                         <th>Title</th>
                                                         <th>ImageTitle</th>
-                                                        <th>Content</th>
                                                         <th>Author</th>
-                                                        <th>UserId</th>
+                                                        {/* <th>Content</th> */}
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -137,19 +123,24 @@ function Blog() {
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.title}</td>
                                                             <td>
-                                            {item.imageTitle ? (
-                                                <img
-                                                    src={`https://techwiz5-inventory-service-ekb0h0d4c9gyfpby.eastasia-01.azurewebsites.net/api/v1/blogs/blog/${item.imageTitle}`}
-                                                    alt={item.title}
-                                                    style={{ width: '70px', height: '70px', borderRadius: '0px' }}
-                                                />
-                                            ) : (
-                                                'No Image'
-                                            )}
-                                        </td>
-                                                            <td>{item.content}</td>
+                                                                {item.imageTitle ? (
+                                                                    <img
+                                                                        src={item.imageTitle}
+                                                                        alt={item.title}
+                                                                        style={{
+                                                                            width: '70px',
+                                                                            height: '70px',
+                                                                            borderRadius: '0px',
+                                                                        }}
+                                                                    />
+                                                                ) : (
+                                                                    'No Image'
+                                                                )}
+                                                            </td>
                                                             <td>{item.author}</td>
-                                                            <td>{item.userId}</td>
+                                                            {/* <td style={{ whiteSpace: 'pre-wrap' }}>
+                                                                {formatDescription(item.content)}
+                                                            </td> */}
                                                             <td>
                                                                 <Link
                                                                     to={`/blog/edit/${item.id}`}
@@ -173,8 +164,8 @@ function Blog() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
@@ -185,7 +176,7 @@ function Blog() {
                         </div>
                     </div>
                 </div>
-                
+
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>

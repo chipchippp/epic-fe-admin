@@ -17,18 +17,16 @@ function Category() {
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-    
+
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
     const debouncedSearch = useCallback(
         debounce((query) => {
-            const filteredData = data.filter((item) =>
-                item.categoryName.toLowerCase().includes(query.toLowerCase())
-            );
+            const filteredData = data.filter((item) => item.categoryName.toLowerCase().includes(query.toLowerCase()));
             setSearchedData(filteredData);
         }, 500),
-        [data]
+        [data],
     );
 
     useEffect(() => {
@@ -42,7 +40,7 @@ function Category() {
     const getData = async () => {
         try {
             const response = await getCategory(currentPage, limit);
-    
+
             if (response && response.data && response.data.content) {
                 setData(response.data.content);
                 setSearchedData(response.data.content);
@@ -57,7 +55,7 @@ function Category() {
             toast.error('Failed to fetch categories');
         }
     };
-    
+
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
@@ -85,21 +83,14 @@ function Category() {
         setCurrentPage(1);
     };
 
+    const formatDescription = (description, maxLength = 70) => {
+        const regex = new RegExp(`.{1,${maxLength}}`, 'g');
+        return description.match(regex).join('\n');
+    };
+
     return (
         <>
             <div className="content-wrapper">
-                <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Categories</h3>
-                                <Link to="/category/create" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
@@ -108,16 +99,12 @@ function Category() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <div className="float-left">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={5}>Show</option>
-                                                <option value={10}>10</option>
-                                                <option value={20}>20</option>
-                                                <option value={30}>30</option>
-                                            </select>
-                                        </div>
+                                        <h3 className="font-weight-bold">Categories</h3>
+                                        <Link to="/category/create" className="float-left btn btn-primary">
+                                            <i className="fas fa-plus"></i> New
+                                        </Link>
                                         <Search setSearch={setSearch} />
-                                    
+
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -133,7 +120,9 @@ function Category() {
                                                         <tr key={item.categoryId}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.categoryName}</td>
-                                                            <td>{item.description}</td>
+                                                            <td style={{ whiteSpace: 'pre-wrap' }}>
+                                                                {formatDescription(item.description)}
+                                                            </td>
                                                             <td>
                                                                 <Link
                                                                     to={`/category/edit/${item.categoryId}`}
@@ -157,8 +146,8 @@ function Category() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
@@ -169,7 +158,7 @@ function Category() {
                         </div>
                     </div>
                 </div>
-                
+
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>

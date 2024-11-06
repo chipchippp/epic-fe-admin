@@ -10,7 +10,7 @@ import debounce from 'lodash.debounce';
 function UserDetail() {
     const { userId } = useParams();
     const [loading, setLoading] = useState(true);
-    const [status, setStatus] = useState('');   
+    const [status, setStatus] = useState('');
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -21,17 +21,16 @@ function UserDetail() {
 
     useEffect(() => {
         let filteredData = data;
-        
-        if(search){
-            filteredData = filteredData.filter(
-                (item) =>
-                item.id.orderId.toString().toLowerCase().includes(search.toLowerCase())
+
+        if (search) {
+            filteredData = filteredData.filter((item) =>
+                item.id.orderId.toString().toLowerCase().includes(search.toLowerCase()),
             );
         }
         if (status !== '') {
             filteredData = filteredData.filter((item) => item.status === status);
         }
-    
+
         const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
         setNumbers(pagesArray);
         setSearchedData(filteredData);
@@ -43,14 +42,14 @@ function UserDetail() {
             try {
                 const response = await getOrderUser(userId, { page: currentPage, limit: limit, status: status });
                 const orderDetails = response.data.content || [];
-                const enrichedOrderDetails = orderDetails.map(detail => ({
+                const enrichedOrderDetails = orderDetails.map((detail) => ({
                     ...detail,
                     orderCode: detail.id,
                     userId: detail.userId,
                     totalPrice: detail.totalPrice,
-                    status: detail.status
+                    status: detail.status,
                 }));
-    
+
                 setData(enrichedOrderDetails);
                 setSearchedData(enrichedOrderDetails);
                 setTotalPages(response.data.totalPages || 1);
@@ -62,14 +61,17 @@ function UserDetail() {
         };
         fetchOrders();
     }, [currentPage, limit, userId, status]);
-    
+
     const handleStatusChange = (event) => {
         setStatus(event.target.value);
     };
 
-    const handleSearch = useCallback(debounce((value) => {
-        setSearch(value);
-    }, 500), []);
+    const handleSearch = useCallback(
+        debounce((value) => {
+            setSearch(value);
+        }, 500),
+        [],
+    );
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -80,7 +82,7 @@ function UserDetail() {
         setCurrentPage(1);
     };
 
-    return ( 
+    return (
         <>
             <div className="content-wrapper">
                 <div className="row">
@@ -88,9 +90,9 @@ function UserDetail() {
                         <div className="row">
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold"> UserDetails</h3>
-                            <Link to="/users" className="btn btn-primary mb-3">
-                            <i className="fas fa-arrow-left"></i> Back
-                            </Link>
+                                <Link to="/users" className="btn btn-primary mb-3">
+                                    <i className="fas fa-arrow-left"></i> Back
+                                </Link>
                             </div>
                         </div>
                     </div>
@@ -119,13 +121,17 @@ function UserDetail() {
                                             </select>
                                         </div>
                                         <div className="float-left ml-2">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
+                                            <select
+                                                onChange={handleLimitChange}
+                                                className="btn-primary form-control selectric"
+                                                value={limit}
+                                            >
                                                 <option value={10}>Show</option>
                                                 <option value={20}>20</option>
                                                 <option value={30}>30</option>
                                             </select>
                                         </div>
-                                        <Search  className="float-left ml-2" setSearch={handleSearch} />
+                                        <Search className="float-left ml-2" setSearch={handleSearch} />
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -140,31 +146,41 @@ function UserDetail() {
                                                 </thead>
                                                 <tbody>
                                                     {searchedData.map((item, index) => (
-                                                        <tr key={(item.id?.orderId || index) + '-' + (item.id?.productId || index)}>
+                                                        <tr
+                                                            key={
+                                                                (item.id?.orderId || index) +
+                                                                '-' +
+                                                                (item.id?.productId || index)
+                                                            }
+                                                        >
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.orderCode}</td>
-                                                            <td>{item.firstName} {item.lastName}</td>
+                                                            <td>
+                                                                {item.firstName} {item.lastName}
+                                                            </td>
                                                             <td>{item.totalPrice}</td>
                                                             <td>
-                                                                {item.status === "CREATED" && (
+                                                                {item.status === 'CREATED' && (
                                                                     <div className="badge badge-warning">Created</div>
                                                                 )}
-                                                                {item.status === "PENDING" && (
+                                                                {item.status === 'PENDING' && (
                                                                     <div className="badge badge-secondary">Pending</div>
                                                                 )}
-                                                                {item.status === "PROCESSING" && (
-                                                                    <div className="badge badge-primary">Processing</div>
+                                                                {item.status === 'PROCESSING' && (
+                                                                    <div className="badge badge-primary">
+                                                                        Processing
+                                                                    </div>
                                                                 )}
-                                                                {item.status === "ONDELIVERY" && (
+                                                                {item.status === 'ONDELIVERY' && (
                                                                     <div className="badge badge-info">On Delivery</div>
                                                                 )}
-                                                                {item.status === "DELIVERED" && (
+                                                                {item.status === 'DELIVERED' && (
                                                                     <div className="badge badge-success">Delivered</div>
                                                                 )}
-                                                                {item.status === "CANCEL" && (
+                                                                {item.status === 'CANCEL' && (
                                                                     <div className="badge badge-danger">Cancel</div>
                                                                 )}
-                                                                {item.status === "COMPLETE" && (
+                                                                {item.status === 'COMPLETE' && (
                                                                     <div className="badge badge-success">Complete</div>
                                                                 )}
                                                             </td>
@@ -174,7 +190,7 @@ function UserDetail() {
                                                                     className="btn btn-primary"
                                                                     title="Detail"
                                                                 >
-                                                                    <i className="far fa-eye"></i>
+                                                                    <i class="fa-solid fa-cart-shopping"></i>
                                                                 </Link>
                                                             </td>
                                                         </tr>
@@ -183,8 +199,8 @@ function UserDetail() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
@@ -198,7 +214,7 @@ function UserDetail() {
                 <ToastContainer />
             </div>
         </>
-     );
+    );
 }
 
 export default UserDetail;

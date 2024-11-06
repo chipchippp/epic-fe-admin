@@ -15,16 +15,27 @@ import CategoryEdit from '~/pages/Category/edit';
 import Product from '~/pages/Product/index';
 import CreateProduct from '~/pages/Product/create';
 import ProductDetail from '~/pages/Product/productdetail';
-import EditProduct from '~/pages/Product/editproduct';
+import EditProduct from '~/pages/Product/edit';
 
 // Inventory
-import Inventory from '~/pages/Inventory/index';
-import InventoryCreate from '~/pages/Inventory/create';
+import Inventory from '~/pages/Inventory/Inventory/index';
+import InventoryCreate from '~/pages/Inventory/Inventory/create';
+import InventoryEdit from '~/pages/Inventory/Inventory/edit';
+
+// Inventory Status
+import InventoryStatus from '~/pages/Inventory/Inventory-Status/index';
+import InventoryStatusCreate from '~/pages/Inventory/Inventory-Status/create';
+import InventoryStatusEdit from '~/pages/Inventory/Inventory-Status/edit';
 
 // Blog
 import Blog from '~/pages/Blog/index';
 import BlogCreate from '~/pages/Blog/create';
 import BlogEdit from '~/pages/Blog/edit';
+
+// Contact
+import Contact from '~/pages/Contact/index';
+// import CreateContact from '~/pages/Contact/create';
+import EditContact from '~/pages/Contact/edit';
 
 // Designer
 import Designer from '~/pages/Designer/Designer/index';
@@ -41,7 +52,6 @@ import EditCategoryGallery from '~/pages/Designer/CategoryGallery/edit';
 import ImgDesigner from '~/pages/Designer/ImgDesigner/index';
 import CreateImgDesigner from '~/pages/Designer/ImgDesigner/create';
 import EditImgDesigner from '~/pages/Designer/ImgDesigner/edit';
-
 
 // Order
 import Order from '~/pages/Order/index';
@@ -64,7 +74,7 @@ import TrashProduct from '~/pages/Trash/product';
 export const publicRoutes = [
     //      Home
     { path: config.routes.admin, component: HomeAdmin, layout: AdminLayout },
-   
+
     // Account
     { path: config.routes.login, component: Login, layout: null },
 
@@ -80,33 +90,44 @@ export const publicRoutes = [
     { path: config.routes.productdetail, component: ProductDetail, layout: AdminLayout },
 
     // Inventory
-    {path: config.routes.inventory, component: Inventory, layout: AdminLayout},
-    {path: config.routes.createInventory, component: InventoryCreate, layout: AdminLayout},
+    { path: config.routes.inventory, component: Inventory, layout: AdminLayout },
+    { path: config.routes.createInventory, component: InventoryCreate, layout: AdminLayout },
+    { path: config.routes.editInventory, component: InventoryEdit, layout: AdminLayout },
+
+    // Inventory Status
+    { path: config.routes.inventoryStatus, component: InventoryStatus, layout: AdminLayout },
+    { path: config.routes.createInventoryStatus, component: InventoryStatusCreate, layout: AdminLayout },
+    { path: config.routes.editInventoryStatus, component: InventoryStatusEdit, layout: AdminLayout },
 
     // Blog
-    {path: config.routes.blog, component: Blog, layout: AdminLayout},
-    {path: config.routes.createBlog, component: BlogCreate, layout: AdminLayout},
-    {path: config.routes.editBlog, component: BlogEdit, layout: AdminLayout},
+    { path: config.routes.blog, component: Blog, layout: AdminLayout },
+    { path: config.routes.createBlog, component: BlogCreate, layout: AdminLayout },
+    { path: config.routes.editBlog, component: BlogEdit, layout: AdminLayout },
 
     // Designer
-    {path: config.routes.designer, component: Designer, layout: AdminLayout},
-    {path: config.routes.detailDesigner, component: DesignerDetail, layout: AdminLayout},
-    {path: config.routes.designerAppointment, component: DesignAppointment, layout: AdminLayout},
-    {path: config.routes.designerAppointmentDetail, component: DesignAppointmentDetail, layout: AdminLayout},
+    { path: config.routes.designer, component: Designer, layout: AdminLayout },
+    { path: config.routes.detailDesigner, component: DesignerDetail, layout: AdminLayout },
+    { path: config.routes.designerAppointment, component: DesignAppointment, layout: AdminLayout },
+    { path: config.routes.designerAppointmentDetail, component: DesignAppointmentDetail, layout: AdminLayout },
 
     // Category Gallery
-    {path: config.routes.categoryGallery, component: CategoryGallery, layout: AdminLayout},
-    {path: config.routes.createCategoryGallery, component: CreateCategoryGallery, layout: AdminLayout},
-    {path: config.routes.editCategoryGallery, component: EditCategoryGallery, layout: AdminLayout},
+    { path: config.routes.categoryGallery, component: CategoryGallery, layout: AdminLayout },
+    { path: config.routes.createCategoryGallery, component: CreateCategoryGallery, layout: AdminLayout },
+    { path: config.routes.editCategoryGallery, component: EditCategoryGallery, layout: AdminLayout },
 
     // Img Designer
-    {path: config.routes.imgDesigner, component: ImgDesigner, layout: AdminLayout},
-    {path: config.routes.createImgDesigner, component: CreateImgDesigner, layout: AdminLayout},
-    {path: config.routes.editImgDesigner, component: EditImgDesigner, layout: AdminLayout},
+    { path: config.routes.imgDesigner, component: ImgDesigner, layout: AdminLayout },
+    { path: config.routes.createImgDesigner, component: CreateImgDesigner, layout: AdminLayout },
+    { path: config.routes.editImgDesigner, component: EditImgDesigner, layout: AdminLayout },
 
     // Order
-    {path: config.routes.orders, component: Order, layout: AdminLayout},
-    {path: config.routes.orderDetail, component: OrderDetail, layout: AdminLayout},
+    { path: config.routes.orders, component: Order, layout: AdminLayout },
+    { path: config.routes.orderDetail, component: OrderDetail, layout: AdminLayout },
+
+    // Contact
+    { path: config.routes.contact, component: Contact, layout: AdminLayout },
+    // { path: config.routes.createContact, component: CreateContact, layout: AdminLayout },
+    { path: config.routes.editContact, component: EditContact, layout: AdminLayout },
 
     // Chart
     { path: config.routes.chart, component: Chart, layout: AdminLayout },
@@ -118,8 +139,8 @@ export const publicRoutes = [
     { path: config.routes.userdetail, component: UserDetail, layout: AdminLayout },
 
     // Trash
-    {path: config.routes.trashCategories, component: TrashCategory, layout: AdminLayout},
-    {path: config.routes.trashProducts, component: TrashProduct, layout: AdminLayout},
+    { path: config.routes.trashCategories, component: TrashCategory, layout: AdminLayout },
+    { path: config.routes.trashProducts, component: TrashProduct, layout: AdminLayout },
 ];
 
 // Private routes

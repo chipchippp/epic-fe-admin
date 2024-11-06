@@ -81,7 +81,7 @@ function OrderDetail() {
                             <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                 <h3 className="font-weight-bold">Appointment Details</h3>
                                 <Link to="/designer" className="btn btn-primary mb-3">
-                                 <i className="fas fa-arrow-left"></i> Back
+                                    <i className="fas fa-arrow-left"></i> Back
                                 </Link>
                             </div>
                         </div>
@@ -95,7 +95,9 @@ function OrderDetail() {
                                     <div className="row">
                                         <div className="col-lg-12">
                                             <div className="invoice-title">
-                                                <h4>Appointment <span style={{ color: 'gray' }}>#{id}</span></h4>
+                                                <h4>
+                                                    Appointment <span style={{ color: 'gray' }}>#{id}</span>
+                                                </h4>
                                             </div>
                                             <hr />
                                             <div className="row">

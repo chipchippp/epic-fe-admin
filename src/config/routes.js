@@ -12,20 +12,30 @@ const routes = {
 
     //      products
     product: '/product',
-    
-    productdetail: '/productdetail/:id',
-    createProduct: '/addcreate',
-    editProduct: '/editproduct/:id',
+
+    productdetail: '/product/detail/:id',
+    createProduct: '/create/product',
+    editProduct: '/edit/product/:id',
 
     //      Inventory
     inventory: '/inventory',
     createInventory: '/inventory/create',
     editInventory: '/inventory/edit/:id',
 
+    //     Inventory Status
+    inventoryStatus: '/inventory-status',
+    createInventoryStatus: '/inventory-status/create',
+    editInventoryStatus: '/inventory-status/edit/:id',
+
     //     Blog
     blog: '/blog',
     createBlog: '/blog/create',
     editBlog: '/blog/edit/:id',
+
+    //    Contact
+    contact: '/contact',
+    createContact: '/contact/create',
+    editContact: '/contact/edit/:id',
 
     //     Designer
     designer: '/designer',
@@ -42,12 +52,12 @@ const routes = {
     imgDesigner: '/img-designer',
     createImgDesigner: '/img-designer/create',
     editImgDesigner: '/img-designer/edit/:id',
-    
+
     //     Room
     room: '/room',
     createRoom: '/room/create',
     editRoom: '/room/edit/:id',
-   
+
     //      Orders
     orders: '/order',
     orderDetail: '/order/detail/:id',

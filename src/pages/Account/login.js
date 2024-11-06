@@ -22,21 +22,15 @@ function Login() {
 
         if (validate()) {
             try {
-                const response = await httpRequest.post(
-                    'https://techwiz5-user-service-hbereff9dmexc6er.eastasia-01.azurewebsites.net/api/v1/auth/login',
-                    {
-                        username: username,
-                        password: password,
-                    },
-                );
+                const response = await httpRequest.post('http://localhost:8080/api/v1/auth/login', {
+                    username: username,
+                    password: password,
+                    platform: 'WEB',
+                });
 
                 if (response && response.data && response.data.accessToken) {
                     const accessToken = response.data.accessToken;
-                    let decodedToken;
-
                     try {
-                        decodedToken = jwtDecode(accessToken);
-
                         const id = response.data.id;
                         const roles = response.data.roles;
                         const refreshToken = response.data.refreshToken;
@@ -55,10 +49,10 @@ function Login() {
                         navigate('/');
                         window.location.reload();
                     } catch (error) {
-                        return toast.error('Failed to decode token.');
+                        return toast.warning('Failed to decode token.');
                     }
                 } else {
-                    toast.error('Invalid response from server');
+                    toast.warning('Invalid response from server');
                 }
             } catch (error) {
                 toast.error('Failed to login. Please try again.');
@@ -130,10 +124,7 @@ function Login() {
                                             </Link>
                                         </div>
                                         <div className="mb-2">
-                                            <button
-                                                type="button"
-                                                className="btn btn-block btn-facebook auth-form-btn"
-                                            >
+                                            <button type="button" className="btn btn-block btn-facebook auth-form-btn">
                                                 <i className="ti-facebook mr-2" />
                                                 Connect using facebook
                                             </button>

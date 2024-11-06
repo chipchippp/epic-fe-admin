@@ -1,48 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Link } from 'react-router-dom';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { getInventory, deleteInventory } from '~/services/Inventory/inventoryService';
+import { getContact, deleteContact } from '~/services/User/contactService';
+import { debounce } from 'lodash';
 
-function Inventory() {
+function Contact() {
     const [loading, setLoading] = useState(true);
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
-
     const [search, setSearch] = useState('');
     const [searchedData, setSearchedData] = useState([]);
 
-    useEffect(() => {
-        const filteredData = data.filter((item) =>
-            item.quantity.toString().toLowerCase().includes(search.toLowerCase())
-        );
-        const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
-        setNumbers(pagesArray);
-        setSearchedData(filteredData);
-    }, [search, data, totalPages]);
+    const debouncedSearch = useCallback(
+        debounce((query) => {
+            const filteredData = data.filter((item) => item.username.toLowerCase().includes(query.toLowerCase()));
+            setSearchedData(filteredData);
+        }, 500),
+        [data],
+    );
 
     useEffect(() => {
-        const fetchInventory = async () => {
-            try {
-                const response = await getInventory(currentPage, limit);
+        debouncedSearch(search);
+    }, [search, debouncedSearch]);
+
+    useEffect(() => {
+        getData();
+    }, [currentPage, limit]);
+
+    const getData = async () => {
+        try {
+            const response = await getContact(currentPage, limit);
+
+            if (response && response.data && response.data.content) {
                 setData(response.data.content);
                 setSearchedData(response.data.content);
                 setTotalPages(response.data.totalPages);
-            } catch (error) {
-                toast.error(`Failed to fetch inventory: ${error.message}`);
+                const pagesArray = Array.from({ length: response.data.totalPages }, (_, i) => i + 1);
+                setNumbers(pagesArray);
+            } else {
+                toast.error('Invalid response structure from server');
             }
             setLoading(false);
-        };
-        fetchInventory();
-    }, [currentPage, limit]);
+        } catch (error) {
+            toast.error('Failed to fetch contact');
+        }
+    };
 
     const handleDelete = (id) => {
         setDeleteId(id);
@@ -51,11 +62,12 @@ function Inventory() {
 
     const handleDeleteConfirm = async () => {
         try {
-            await deleteInventory(deleteId);
-            toast.success('Inventory has been deleted');
-            setDeleteShow(false);
+            await deleteContact(deleteId);
+            toast.success('Contact has been deleted successfully');
+            handleClose();
+            getData();
         } catch (error) {
-            toast.error(`Failed to delete inventory: ${error.message}`);
+            toast.error('Failed to delete contact');
         }
     };
 
@@ -65,26 +77,9 @@ function Inventory() {
         setCurrentPage(pageNumber);
     };
 
-    const handleLimitChange = (e) => {
-        setLimit(e.target.value);
-        setCurrentPage(1);
-    };
-
     return (
         <>
             <div className="content-wrapper">
-                <div className="row">
-                    <div className="col-md-12 grid-margin">
-                        <div className="row">
-                            <div className="col-12 col-xl-8 mb-4 mb-xl-0">
-                                <h3 className="font-weight-bold">Inventory</h3>
-                                <Link to="/Inventory/create" className="btn btn-primary">
-                                    <i className="fas fa-plus"></i> New
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div className="row">
                     <div className="col-lg-12 grid-margin stretch-card">
                         <div className="card">
@@ -93,26 +88,21 @@ function Inventory() {
                                     <div>Loading...</div>
                                 ) : (
                                     <>
-                                        <div className="float-left">
-                                            <select onChange={handleLimitChange} className='btn-primary form-control selectric' value={limit}>
-                                                <option value={5}>Show</option>
-                                                <option value={10}>10</option>
-                                                <option value={20}>20</option>
-                                                <option value={30}>30</option>
-                                            </select>
-                                        </div>
+                                        <h3 className="font-weight-bold">Contact</h3>
+                                        {/* <Link to="/contact/create" className="float-left btn btn-primary">
+                                            <i className="fas fa-plus"></i> New
+                                        </Link> */}
                                         <Search setSearch={setSearch} />
-                                    
+
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
-                                                        <th>ProductId</th>
-                                                        <th>Quantity</th>
-                                                        <th>Status</th>
-                                                        <th>Reason</th>
-                                                        <th>Date</th>
+                                                        <th>Username</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Note</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -120,19 +110,26 @@ function Inventory() {
                                                     {searchedData.map((item, index) => (
                                                         <tr key={item.id}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
-                                                            <td>{item.productId}</td>
-                                                            <td>{item.quantity}</td>
-                                                            <td>{item.status}</td>
-                                                            <td>{item.reason}</td>
-                                                            <td>{item.date}</td>
+                                                            <td>{item.username}</td>
+                                                            <td>{item.email}</td>
+                                                            <td>{item.phoneNumber}</td>
+                                                            <td>{item.note}</td>
                                                             <td>
-                                                                <button
+                                                                <Link
+                                                                    to={`/contact/edit/${item.id}`}
+                                                                    className="btn btn-primary"
+                                                                    title="Edit"
+                                                                >
+                                                                    <i className="fas fa-pencil-alt"></i>
+                                                                </Link>
+                                                                &nbsp;
+                                                                {/* <button
                                                                     className="btn btn-danger"
-                                                                    onClick={() => handleDelete(item.InventoryId)}
+                                                                    onClick={() => handleDelete(item.id)}
                                                                     title="Delete"
                                                                 >
                                                                     <i className="fas fa-trash"></i>
-                                                                </button>
+                                                                </button> */}
                                                             </td>
                                                         </tr>
                                                     ))}
@@ -140,8 +137,8 @@ function Inventory() {
                                             </table>
                                         </div>
                                         <Pagination
-                                            prePage={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                                            nextPage={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                                            prePage={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                                            nextPage={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
                                             changeCPage={handlePageChange}
                                             currentPage={currentPage}
                                             numbers={numbers}
@@ -152,12 +149,12 @@ function Inventory() {
                         </div>
                     </div>
                 </div>
-                
+
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>
                     </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this Inventory?</Modal.Body>
+                    <Modal.Body>Are you sure you want to delete this contact?</Modal.Body>
                     <Modal.Footer>
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel
@@ -174,4 +171,4 @@ function Inventory() {
     );
 }
 
-export default Inventory;
+export default Contact;
