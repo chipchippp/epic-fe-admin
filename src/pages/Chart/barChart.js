@@ -71,7 +71,7 @@ const BarChart = () => {
 
                 setChartData(chartData);
             } catch (error) {
-                toast.error('Failed to fetch chart data');
+                toast.error('Failed to fetch chart data', error);
             }
         };
 
