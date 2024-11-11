@@ -114,19 +114,20 @@ function OrderDetail() {
                                 <div className="invoice-print">
                                     <div className="row">
                                         <div className="col-lg-12">
+                                            <Link to="/order" className="btn btn-primary mb-3">
+                                                <i className="fas fa-arrow-left"></i> Back
+                                            </Link>
                                             <div className="invoice-title">
                                                 <h4>
                                                     Order <span style={{ color: 'gray' }}>#{data.codeOrder}</span>
                                                 </h4>
                                             </div>
-                                            <Link to="/order" className="btn btn-primary mb-3">
-                                                <i className="fas fa-arrow-left"></i> Back
-                                            </Link>
                                             <hr />
                                             <div className="row">
                                                 <div className="col-md-6">
                                                     <address>
                                                         <strong>Billed To:</strong>
+                                                        <p>Id: {data.id}</p>
                                                         <p>
                                                             FullName: {data.firstName} {data.lastName}
                                                         </p>
@@ -197,7 +198,10 @@ function OrderDetail() {
                                                                                 item.product.images &&
                                                                                 item.product.images.length > 0 ? (
                                                                                     <img
-                                                                                        src={item.product.images[0].imageUrl}
+                                                                                        src={
+                                                                                            item.product.images[0]
+                                                                                                .imageUrl
+                                                                                        }
                                                                                         alt={item.product.name}
                                                                                         style={{
                                                                                             width: '70px',

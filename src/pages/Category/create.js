@@ -21,7 +21,6 @@ function CreateCategory() {
                 setCategories(response.data.data.content);
             } catch (error) {
                 toast.error('Failed to fetch categories');
-                console.error('Fetch error:', error);
             }
         };
 
@@ -51,7 +50,7 @@ function CreateCategory() {
                             </Link>
                             <form className="forms-sample" onSubmit={handleSubmit}>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Name</label>
                                         <input
                                             type="text"
@@ -62,7 +61,7 @@ function CreateCategory() {
                                             onChange={(e) => setData({ ...data, categoryName: e.target.value })}
                                         />
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Description</label>
                                         <input
                                             type="text"
@@ -73,26 +72,27 @@ function CreateCategory() {
                                             onChange={(e) => setData({ ...data, description: e.target.value })}
                                         />
                                     </div>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="exampleInputCity1">ParentCategoryId</label>
-                                    <select
-                                        name="categoryId"
-                                        className="form-control"
-                                        value={data.parentCategoryId || ''}
-                                        onChange={(e) => setData({ ...data, parentCategoryId: e.target.value || null })}
-                                    >
-                                        <option value="" disabled>
-                                            Select Category
-                                        </option>
-                                        {categories.map((category) => (
-                                            <option key={category.categoryId} value={category.categoryId}>
-                                                {category.categoryName}
+                                    <div className="col-md-4">
+                                        <label className="col-form-label text-md-right">ParentCategoryId</label>
+                                        <select
+                                            name="categoryId"
+                                            className="form-control"
+                                            value={data.parentCategoryId || ''}
+                                            onChange={(e) =>
+                                                setData({ ...data, parentCategoryId: e.target.value || null })
+                                            }
+                                        >
+                                            <option value="" disabled>
+                                                Select Category
                                             </option>
-                                        ))}
-                                    </select>
+                                            {categories.map((category) => (
+                                                <option key={category.categoryId} value={category.categoryId}>
+                                                    {category.categoryName}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 </div>
-
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Submit
                                 </button>

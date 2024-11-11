@@ -69,7 +69,7 @@ const CreateProduct = () => {
     };
 
     const renderInput = (label, name, type = 'text', value) => (
-        <div className="col-md-6">
+        <div className="col-md-3">
             <label className="col-form-label text-md-right">{label}</label>
             <input
                 type={type}
@@ -89,17 +89,34 @@ const CreateProduct = () => {
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Create Product</h4>
-                            <Link to="/product" className="btn btn-primary mb-3">
-                                <i className="fas fa-arrow-left"></i> Back
-                            </Link>
                             <form onSubmit={handleSubmit}>
                                 <div className="row mb-4">
                                     {renderInput('Name', 'name', 'text', data.name)}
                                     {renderInput('Description', 'description', 'text', data.description)}
+                                    {renderInput('Price', 'price', 'text', data.price)}
+                                    <div className="col-md-3">
+                                        <label className="col-form-label text-md-right">Size</label>
+                                        <select
+                                            name="size"
+                                            className="form-control"
+                                            value={data.size}
+                                            onChange={handleInputChange}
+                                            required
+                                        >
+                                            <option value="" disabled>
+                                                Select Size
+                                            </option>
+                                            <option value="S">S</option>
+                                            <option value="M">M</option>
+                                            <option value="L">L</option>
+                                            <option value="XL">XL</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div className="row mb-4">
-                                    {renderInput('Price', 'price', 'text', data.price)}
-                                    <div className="col-md-6">
+                                    {renderInput('Manufacturer', 'manufacturer', 'text', data.manufacturer)}
+                                    {renderInput('Weight', 'weight', 'number', data.weight)}
+                                    <div className="col-md-3">
                                         <label className="col-form-label text-md-right">Category</label>
                                         <select
                                             name="categoryId"
@@ -122,14 +139,7 @@ const CreateProduct = () => {
                                             )}
                                         </select>
                                     </div>
-                                </div>
-                                <div className="row mb-4">
-                                    {renderInput('Size', 'size', 'text', data.size)}
-                                    {renderInput('Manufacturer', 'manufacturer', 'text', data.manufacturer)}
-                                </div>
-                                <div className="row mb-4">
-                                    {renderInput('Weight', 'weight', 'text', data.weight)}
-                                    <div className="col-md-6">
+                                    <div className="col-md-3">
                                         <label className="col-form-label text-md-right">Images</label>
                                         <input
                                             type="file"
@@ -141,9 +151,12 @@ const CreateProduct = () => {
                                         />
                                     </div>
                                 </div>
-                                <button type="submit" className="btn btn-primary">
-                                    Create
+                                <button type="submit" className="btn btn-primary mr-2">
+                                    Save
                                 </button>
+                                <Link to="/product" className="btn btn-light">
+                                    Back
+                                </Link>
                             </form>
                         </div>
                     </div>

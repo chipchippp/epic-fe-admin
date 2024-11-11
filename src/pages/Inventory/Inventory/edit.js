@@ -48,16 +48,14 @@ function EditInventoryStatus() {
     useEffect(() => {
         const fetchData = async () => {
             if (!id || inventoryStatus.length === 0) return;
-    
+
             try {
                 const result = await editInventory(id);
                 const parsedDate = new Date(result.date);
                 const formattedDate = parsedDate.toISOString().slice(0, 16);
-    
-                const statusId = inventoryStatus.find(
-                    (status) => status.name === result.status
-                )?.id;
-    
+
+                const statusId = inventoryStatus.find((status) => status.name === result.status)?.id;
+
                 setData({
                     productId: result.productResponse.productId,
                     inventoryStatusId: statusId || '',
@@ -69,10 +67,9 @@ function EditInventoryStatus() {
                 toast.error('Failed to fetch inventory data');
             }
         };
-    
+
         fetchData();
     }, [id, inventoryStatus]);
-    
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -127,7 +124,7 @@ function EditInventoryStatus() {
                             </Link>
                             <form onSubmit={handleSubmit}>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Product</label>
                                         <select
                                             className="form-control"
@@ -144,21 +141,7 @@ function EditInventoryStatus() {
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Quantity</label>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            placeholder="Quantity"
-                                            name="quantity"
-                                            value={data.quantity}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Status</label>
                                         <select
                                             className="form-control"
@@ -175,7 +158,21 @@ function EditInventoryStatus() {
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
+                                        <label className="col-form-label text-md-right">Quantity</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            placeholder="Quantity"
+                                            name="quantity"
+                                            value={data.quantity}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row mb-4">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Note</label>
                                         <input
                                             type="text"
@@ -186,7 +183,7 @@ function EditInventoryStatus() {
                                             onChange={handleInputChange}
                                         />
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Date</label>
                                         <input
                                             type="datetime-local"
@@ -197,6 +194,16 @@ function EditInventoryStatus() {
                                             required
                                         />
                                     </div>
+                                    {/* <div className="col-md-6">
+                                        <label className="col-form-label text-md-right">UnitPrice</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            name="unitPrice"
+                                            value={data.unitPrice}
+                                            onChange={handleInputChange}
+                                        />
+                                    </div> */}
                                 </div>
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Save

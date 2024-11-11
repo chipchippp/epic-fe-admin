@@ -53,7 +53,7 @@ function EditInventoryStatus() {
                             </Link>
                             <form onSubmit={handleSubmit}>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Name</label>
                                         <input
                                             type="text"
@@ -63,7 +63,7 @@ function EditInventoryStatus() {
                                             onChange={(e) => setData({ ...data, name: e.target.value })}
                                         />
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Description</label>
                                         <input
                                             type="text"
@@ -73,9 +73,7 @@ function EditInventoryStatus() {
                                             onChange={(e) => setData({ ...data, description: e.target.value })}
                                         />
                                     </div>
-                                </div>
-                                <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">IsAddAction</label>
                                         <select
                                             className="form-control"

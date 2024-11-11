@@ -92,12 +92,9 @@ function ManageInventory() {
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Create Inventory</h4>
-                            <Link to="/inventory" className="btn btn-primary mb-3">
-                                <i className="fas fa-arrow-left"></i> Back
-                            </Link>
                             <form onSubmit={handleSubmit}>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Product</label>
                                         <select
                                             className="form-control"
@@ -114,21 +111,7 @@ function ManageInventory() {
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">Quantity</label>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            placeholder="Quantity"
-                                            name="quantity"
-                                            value={data.quantity}
-                                            onChange={handleInputChange}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Status</label>
                                         <select
                                             className="form-control"
@@ -145,7 +128,21 @@ function ManageInventory() {
                                             ))}
                                         </select>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
+                                        <label className="col-form-label text-md-right">Quantity</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            placeholder="Quantity"
+                                            name="quantity"
+                                            value={data.quantity}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                <div className="row mb-4">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Note</label>
                                         <input
                                             type="text"
@@ -156,7 +153,7 @@ function ManageInventory() {
                                             onChange={handleInputChange}
                                         />
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Date</label>
                                         <input
                                             type="datetime-local"
@@ -167,16 +164,6 @@ function ManageInventory() {
                                             required
                                         />
                                     </div>
-                                    {/* <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">UnitPrice</label>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            name="unitPrice"
-                                            value={data.unitPrice}
-                                            onChange={handleInputChange}
-                                        />
-                                    </div> */}
                                 </div>
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Save

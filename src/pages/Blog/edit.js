@@ -141,7 +141,7 @@ const EditBlog = () => {
                         </Link>
                         <form onSubmit={handleSubmit}>
                             <div className="row mb-4">
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <label className="col-form-label text-md-right">Title</label>
                                     <input
                                         type="text"
@@ -152,7 +152,7 @@ const EditBlog = () => {
                                         required
                                     />
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-4">
                                     <label className="col-form-label text-md-right">Author</label>
                                     <input
                                         type="text"
@@ -163,16 +163,24 @@ const EditBlog = () => {
                                         required
                                     />
                                 </div>
-                                <div className="col-md-12">
+                                <div className="col-md-4">
                                     <label className="col-form-label text-md-right">Content</label>
-                                    <ReactQuill
+                                    <input
+                                        type="text"
+                                        name="content"
+                                        className="form-control"
+                                        value={data.content}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                    {/* <ReactQuill
                                         value={data.content}
                                         onChange={handleContentChange}
                                         modules={modules}
                                         formats={formats}
                                         className="custom-quill"
                                         theme="snow"
-                                    />
+                                    /> */}
                                 </div>
                             </div>
 

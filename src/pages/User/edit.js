@@ -67,7 +67,18 @@ function EditUser() {
                         <div className="card-body">
                             <form onSubmit={handleSubmit}>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
+                                        <label className="col-form-label text-md-right">FullName</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="fullName"
+                                            value={data.fullName}
+                                            onChange={(e) => setData({ ...data, fullName: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Username</label>
                                         <input
                                             type="text"
@@ -78,7 +89,7 @@ function EditUser() {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Email</label>
                                         <input
                                             type="email"
@@ -91,7 +102,7 @@ function EditUser() {
                                     </div>
                                 </div>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Password</label>
                                         <input
                                             type="password"
@@ -102,20 +113,7 @@ function EditUser() {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-6">
-                                        <label className="col-form-label text-md-right">FullName</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            name="fullName"
-                                            value={data.fullName}
-                                            onChange={(e) => setData({ ...data, fullName: e.target.value })}
-                                            required
-                                        />
-                                    </div>
-                                </div>
-                                <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Phone Number</label>
                                         <input
                                             type="text"
@@ -126,7 +124,7 @@ function EditUser() {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Address</label>
                                         <input
                                             type="text"
@@ -138,9 +136,12 @@ function EditUser() {
                                         />
                                     </div>
                                 </div>
-                                <button type="submit" className="btn btn-primary">
+                                <button type="submit" className="btn btn-primary mr-2">
                                     Update
                                 </button>
+                                <Link to="/users" className="btn btn-light">
+                                    Back
+                                </Link>
                             </form>
                         </div>
                     </div>

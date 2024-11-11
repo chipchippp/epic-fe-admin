@@ -84,10 +84,11 @@ function Category() {
     };
 
     const formatDescription = (description, maxLength = 70) => {
+        if (!description) return ''; // Handle null or undefined description
         const regex = new RegExp(`.{1,${maxLength}}`, 'g');
         return description.match(regex).join('\n');
     };
-
+    
     return (
         <>
             <div className="content-wrapper">

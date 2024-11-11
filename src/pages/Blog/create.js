@@ -93,7 +93,7 @@ const CreateBlog = () => {
                             </Link>
                             <form onSubmit={handleSubmit}>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-3">
                                         <label className="col-form-label text-md-right">Title</label>
                                         <input
                                             type="text"
@@ -104,7 +104,7 @@ const CreateBlog = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-3">
                                         <label className="col-form-label text-md-right">Author</label>
                                         <input
                                             type="text"
@@ -115,8 +115,29 @@ const CreateBlog = () => {
                                             required
                                         />
                                     </div>
+                                    <div className="col-md-3">
+                                        <label className="col-form-label text-md-right">Content</label>
+                                        <input
+                                            type="text"
+                                            name="content"
+                                            className="form-control"
+                                            value={blog.content}
+                                            onChange={handleInputChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-3">
+                                        <label className="col-form-label text-md-right">Images</label>
+                                        <input
+                                            type="file"
+                                            name="images"
+                                            className="form-control"
+                                            multiple
+                                            onChange={handleFileChange}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="row mb-4">
+                                {/* <div className="row mb-4">
                                     <div className="col-md-12">
                                         <label className="col-form-label text-md-right">Content</label>
                                         <ReactQuill
@@ -128,20 +149,13 @@ const CreateBlog = () => {
                                             theme="snow"
                                         />
                                     </div>
-                                </div>
-                                <div className="form-group">
-                                    <label>Images</label>
-                                    <input
-                                        type="file"
-                                        name="images"
-                                        className="form-control"
-                                        multiple
-                                        onChange={handleFileChange}
-                                    />
-                                </div>
-                                <button type="submit" className="btn btn-primary">
-                                    Create
+                                </div> */}
+                                <button type="submit" className="btn btn-primary mr-2">
+                                    Save
                                 </button>
+                                <Link to="/blog" className="btn btn-light">
+                                    Back
+                                </Link>
                             </form>
                         </div>
                     </div>

@@ -39,6 +39,7 @@ function Inventory() {
         const fetchInventory = async () => {
             try {
                 const response = await getInventory(currentPage, limit);
+                console.log(response.data.content);
                 setData(response.data.content);
                 setSearchedData(response.data.content);
                 setTotalPages(response.data.totalPages);

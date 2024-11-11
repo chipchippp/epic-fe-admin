@@ -25,10 +25,14 @@ function Order() {
         let filteredData = data;
 
         if (search) {
-            filteredData = filteredData.filter((item) =>
-                item.id.toString().toLowerCase().includes(search.toLowerCase()),
+            filteredData = filteredData.filter(
+                (item) =>
+                    item?.orderCode?.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item?.name?.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item?.id?.toString().toLowerCase().includes(search.toLowerCase()),
             );
         }
+
         if (status !== '') {
             filteredData = filteredData.filter((item) => item.status === status);
         }
@@ -36,6 +40,8 @@ function Order() {
         const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
         setNumbers(pagesArray);
         setFilteredOrders(filteredData);
+
+        console.log('Data fetched:', data);
     }, [search, data, totalPages, status]);
 
     useEffect(() => {
@@ -181,6 +187,7 @@ function Order() {
                                                 <tbody>
                                                     {filteredOrders.map((item, index) => (
                                                         <tr key={item.id}>
+
                                                             <td>{item.codeOrder}</td>
                                                             <td>
                                                                 {item.firstName} {item.lastName}

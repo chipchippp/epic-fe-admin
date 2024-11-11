@@ -33,7 +33,10 @@ function Product() {
             const [minPrice, maxPrice] = priceRange;
             const filteredData = data.filter((item) => {
                 const price = parseFloat(item.price);
-                return item.name.toLowerCase().includes(search.toLowerCase()) && price >= minPrice && price <= maxPrice;
+                return (
+                    item.name.toLowerCase().includes(search.toLowerCase()) && price >= minPrice && price <= maxPrice
+                    // || item.category.categoryName.toLowerCase().includes(search.toLowerCase())
+                );
             });
             setFilteredProducts(filteredData);
         };
@@ -53,7 +56,6 @@ function Product() {
         try {
             const response = await getCategories();
             const sortedCategories = response.data.content.sort((a, b) => a.categoryName.localeCompare(b.categoryName));
-            console.log('sortedCategories', sortedCategories);
             setCategories(sortedCategories);
         } catch (error) {
             toast.error('Failed to fetch categories');
@@ -73,10 +75,10 @@ function Product() {
             }
 
             if (selectedCategory) {
-                params.category = `categoryId-${Number(selectedCategory)}`;
+                params.category = `categoryName~${selectedCategory}`;
             }
-
             const response = await getFilteredProducts(params);
+            console.log('response', response.data.content);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
@@ -86,10 +88,9 @@ function Product() {
     };
 
     const handleCategoryChange = (event) => {
-        const categoryId = event.target.value;
-        console.log('categoryId', categoryId);
-        setSelectedCategory(categoryId);
-        setCurrentPage(1);
+        const categoryName = event.target.value;
+        setSelectedCategory(categoryName); // Set category name as string, not ID
+        setCurrentPage(1); // Reset to the first page
     };
 
     const debouncedHandleSliderChange = debounce((value) => {
@@ -180,7 +181,7 @@ function Product() {
                                         <select onChange={handleCategoryChange} className="form-control selectric">
                                             <option value="">All Categories</option>
                                             {categories.map((category) => (
-                                                <option key={category.categoryId} value={category.categoryId}>
+                                                <option key={category.categoryId} value={category.categoryName}>
                                                     {category.categoryName}
                                                 </option>
                                             ))}
@@ -196,8 +197,8 @@ function Product() {
                                                 <th>Name</th>
                                                 <th>Images</th>
                                                 <th>Code Product</th>
-                                                <th>Price</th>
                                                 <th>Category</th>
+                                                <th>Price</th>
                                                 <th>Stock Quantity</th>
                                                 <th>Action</th>
                                             </tr>
@@ -227,8 +228,8 @@ function Product() {
                                                         )}
                                                     </td>
                                                     <td>{item.codeProduct}</td>
-                                                    <td>{item.price}$</td>
                                                     <td>{item.category ? item.category.categoryName : 'N/A'}</td>
+                                                    <td>{item.price}$</td>
                                                     <td>{item.stockQuantity}</td>
                                                     <td>
                                                         <Link

@@ -34,17 +34,16 @@ const ProductDetail = () => {
         <div className="content-wrapper">
             <div className="row mb-4">
                 <div className="col-md-12">
-                    <div className="d-flex justify-content-between align-items-center mb-3">
-                        <h2 className="font-weight-bold">{product.name}</h2>
-                        <Link to="/product" className="btn btn-primary">
-                            <i className="fas fa-arrow-left"></i> Back
-                        </Link>
-                    </div>
                     <div className="card">
                         <div className="card-body">
-                            <h4 className="card-title mb-4">Product Details</h4>
+                            <h4 className="card-title">Product Details</h4>
+
                             <table className="table table-bordered table-striped">
                                 <tbody>
+                                    <tr>
+                                        <th>Name</th>
+                                        <td>{product.name}</td>
+                                    </tr>
                                     <tr>
                                         <th>Description</th>
                                         <td>{product.description}</td>
@@ -102,6 +101,9 @@ const ProductDetail = () => {
                                     </tr>
                                 </tbody>
                             </table>
+                            <Link to="/product" className="btn btn-primary mb-3">
+                                <i className="fas fa-arrow-left"></i> Back
+                            </Link>
                         </div>
                     </div>
                 </div>

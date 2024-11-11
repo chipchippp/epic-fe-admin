@@ -49,12 +49,9 @@ function EditContact() {
                     <div className="card">
                         <div className="card-body">
                             <h3 className="font-weight-bold">Edit Contact</h3>
-                            <Link to="/contact" className="btn btn-primary mb-3">
-                                <i className="fas fa-arrow-left"></i> Back
-                            </Link>
                             <form className="forms-sample" onSubmit={handleSubmit}>
                                 <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">IsRead</label>
                                         <select
                                             className="form-control"
@@ -66,7 +63,7 @@ function EditContact() {
                                             <option value="false">False</option>
                                         </select>
                                     </div>
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">IsImportant</label>
                                         <select
                                             className="form-control"
@@ -78,9 +75,7 @@ function EditContact() {
                                             <option value="false">False</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div className="row mb-4">
-                                    <div className="col-md-6">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">IsSpam</label>
                                         <select
                                             className="form-control"
@@ -93,10 +88,12 @@ function EditContact() {
                                         </select>
                                     </div>
                                 </div>
-
                                 <button type="submit" className="btn btn-primary mr-2">
-                                    Submit
+                                    Update
                                 </button>
+                                <Link to="/contact" className="btn btn-light">
+                                    Back
+                                </Link>
                             </form>
                         </div>
                     </div>

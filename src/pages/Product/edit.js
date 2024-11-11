@@ -50,7 +50,6 @@ const EditProduct = () => {
                 categoryId: data.categoryId || (data.category && data.category.categoryId),
             };
 
-
             const formData = new FormData();
             formData.append('productDTO', new Blob([JSON.stringify(updatedProduct)], { type: 'application/json' }));
 
@@ -120,22 +119,15 @@ const EditProduct = () => {
         }
     };
 
-    if (loading) {
-        return <div>Loading...</div>;
-    }
-
     return (
         <div className="content-wrapper">
             <div className="col-12 grid-margin stretch-card">
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Edit Product {data.codeProduct}</h4>
-                        <Link to="/product" className="btn btn-primary mb-3">
-                            <i className="fas fa-arrow-left"></i> Back
-                        </Link>
                         <form onSubmit={handleSubmit}>
                             <div className="row mb-4">
-                                <div className="col-md-6">
+                                <div className="col-md-3">
                                     <label className="col-form-label text-md-right">Name</label>
                                     <input
                                         type="text"
@@ -146,7 +138,7 @@ const EditProduct = () => {
                                         required
                                     />
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-3">
                                     <label className="col-form-label text-md-right">Description</label>
                                     <input
                                         type="text"
@@ -157,9 +149,7 @@ const EditProduct = () => {
                                         required
                                     />
                                 </div>
-                            </div>
-                            <div className="row mb-4">
-                                <div className="col-md-6">
+                                <div className="col-md-3">
                                     <label className="col-form-label text-md-right">Price</label>
                                     <input
                                         type="text"
@@ -170,7 +160,7 @@ const EditProduct = () => {
                                         required
                                     />
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-3">
                                     <label className="col-form-label text-md-right">Category</label>
                                     <select
                                         name="category"
@@ -191,7 +181,17 @@ const EditProduct = () => {
                                 </div>
                             </div>
                             <div className="row mb-4">
-                                <div className="col-md-6">
+                                <div className="col-md-3">
+                                    <label className="col-form-label text-md-right">Images</label>
+                                    <input
+                                        type="file"
+                                        name="images"
+                                        className="form-control"
+                                        multiple
+                                        onChange={handleFileChange}
+                                    />
+                                </div>
+                                <div className="col-md-3">
                                     <label className="col-form-label text-md-right">Manufacturer</label>
                                     <input
                                         type="text"
@@ -202,7 +202,7 @@ const EditProduct = () => {
                                         required
                                     />
                                 </div>
-                                <div className="col-md-6">
+                                <div className="col-md-3">
                                     <label className="col-form-label text-md-right">Size</label>
                                     <input
                                         type="text"
@@ -213,19 +213,7 @@ const EditProduct = () => {
                                         required
                                     />
                                 </div>
-                            </div>
-                            <div className="row mb-4">
-                                <div className="col-md-6">
-                                    <label className="col-form-label text-md-right">Images</label>
-                                    <input
-                                        type="file"
-                                        name="images"
-                                        className="form-control"
-                                        multiple
-                                        onChange={handleFileChange}
-                                    />
-                                </div>
-                                <div className="col-md-6">
+                                <div className="col-md-3">
                                     <label className="col-form-label text-md-right">Weight</label>
                                     <input
                                         type="text"
@@ -237,8 +225,9 @@ const EditProduct = () => {
                                     />
                                 </div>
                             </div>
-                            <div className="row mb-4">
+                            <div className="row mb-6">
                                 <div
+                                    className="col-md-3"
                                     style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}
                                 >
                                     <div>
@@ -278,7 +267,7 @@ const EditProduct = () => {
                                             )}
                                         </div>
                                     </div>
-                                    <div>
+                                    <div className="">
                                         <h4>New Images Preview:</h4>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                                             {imagesNew.length > 0 ? (
@@ -302,9 +291,13 @@ const EditProduct = () => {
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" className="btn btn-primary">
-                                Update Product
+                            <br />
+                            <button type="submit" className="btn btn-primary mr-2">
+                                Update
                             </button>
+                            <Link to="/product" className="btn btn-light">
+                                Back
+                            </Link>
                         </form>
                     </div>
                 </div>
