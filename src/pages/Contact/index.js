@@ -89,9 +89,9 @@ function Contact() {
                                 ) : (
                                     <>
                                         <h3 className="font-weight-bold">Contact</h3>
-                                        {/* <Link to="/contact/create" className="float-left btn btn-primary">
+                                        <Link to="/contact/create" className="float-left btn btn-primary">
                                             <i className="fas fa-plus"></i> New
-                                        </Link> */}
+                                        </Link>
                                         <Search setSearch={setSearch} />
 
                                         <div className="table-responsive">
@@ -103,6 +103,9 @@ function Contact() {
                                                         <th>Email</th>
                                                         <th>Phone</th>
                                                         <th>Note</th>
+                                                        {/* <th>Spam</th>
+                                                        <th>Important</th>
+                                                        <th>Read</th> */}
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -114,6 +117,9 @@ function Contact() {
                                                             <td>{item.email}</td>
                                                             <td>{item.phoneNumber}</td>
                                                             <td>{item.note}</td>
+                                                            {/* <td>{item.spam}</td>
+                                                            <td>{item.important}</td>
+                                                            <td>{item.read}</td> */}
                                                             <td>
                                                                 <Link
                                                                     to={`/contact/edit/${item.id}`}

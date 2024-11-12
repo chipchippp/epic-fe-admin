@@ -7,9 +7,9 @@ import { editContact, updateContact } from '~/services/User/contactService';
 function EditContact() {
     const { id } = useParams();
     const [data, setData] = useState({
-        isRead: '',
-        isImportant: '',
-        isSpam: '',
+        read: '',
+        important: '',
+        spam: '',
     });
 
     const navigate = useNavigate();
@@ -19,9 +19,9 @@ function EditContact() {
             try {
                 const result = await editContact(id);
                 setData({
-                    isRead: result.isRead || '',
-                    isImportant: result.isImportant || '',
-                    isSpam: result.isSpam || '',
+                    read: result.read || '',
+                    important: result.important || '',
+                    spam: result.spam || '',
                 });
             } catch (error) {
                 toast.error('Failed to fetch contact data');
@@ -52,37 +52,37 @@ function EditContact() {
                             <form className="forms-sample" onSubmit={handleSubmit}>
                                 <div className="row mb-4">
                                     <div className="col-md-4">
-                                        <label className="col-form-label text-md-right">IsRead</label>
+                                        <label className="col-form-label text-md-right">Is Read</label>
                                         <select
                                             className="form-control"
-                                            value={data.isRead}
-                                            onChange={(e) => setData({ ...data, isRead: e.target.value })}
+                                            value={data.read}
+                                            onChange={(e) => setData({ ...data, read: e.target.value })}
                                         >
-                                            <option value="">Select isRead</option>
+                                            <option value="">Select read</option>
                                             <option value="true">True</option>
                                             <option value="false">False</option>
                                         </select>
                                     </div>
                                     <div className="col-md-4">
-                                        <label className="col-form-label text-md-right">IsImportant</label>
+                                        <label className="col-form-label text-md-right">Is Important</label>
                                         <select
                                             className="form-control"
-                                            value={data.isImportant}
-                                            onChange={(e) => setData({ ...data, isImportant: e.target.value })}
+                                            value={data.important}
+                                            onChange={(e) => setData({ ...data, important: e.target.value })}
                                         >
-                                            <option value="">Select isImportant</option>
+                                            <option value="">Select important</option>
                                             <option value="true">True</option>
                                             <option value="false">False</option>
                                         </select>
                                     </div>
                                     <div className="col-md-4">
-                                        <label className="col-form-label text-md-right">IsSpam</label>
+                                        <label className="col-form-label text-md-right">Is Spam</label>
                                         <select
                                             className="form-control"
-                                            value={data.isSpam}
-                                            onChange={(e) => setData({ ...data, isSpam: e.target.value })}
+                                            value={data.spam}
+                                            onChange={(e) => setData({ ...data, spam: e.target.value })}
                                         >
-                                            <option value="">Select isSpam</option>
+                                            <option value="">Select spam</option>
                                             <option value="true">True</option>
                                             <option value="false">False</option>
                                         </select>
@@ -98,6 +98,7 @@ function EditContact() {
                         </div>
                     </div>
                 </div>
+                <ToastContainer />
             </div>
         </>
     );

@@ -12,6 +12,16 @@ export const getContact = async (currentPage = 1, limit = 7) => {
     }
 };
 
+export const getContactsReplyIsNull = async (currentPage = 1, limit = 7) => {
+    try {
+        const response = await get(service, `/contact/getContactsReplyIsNull`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Contact data:', error);
+        throw error;
+    }
+};
+
 export const createContact = async (data) => {
     try {
         const response = await post(service, '/contact', data);
