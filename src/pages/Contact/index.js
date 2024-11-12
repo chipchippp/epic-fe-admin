@@ -89,9 +89,9 @@ function Contact() {
                                 ) : (
                                     <>
                                         <h3 className="font-weight-bold">Contact</h3>
-                                        <Link to="/contact/create" className="float-left btn btn-primary">
+                                        {/* <Link to="/contact/create" className="float-left btn btn-primary">
                                             <i className="fas fa-plus"></i> New
-                                        </Link>
+                                        </Link> */}
                                         <Search setSearch={setSearch} />
 
                                         <div className="table-responsive">
@@ -106,7 +106,7 @@ function Contact() {
                                                         {/* <th>Spam</th>
                                                         <th>Important</th>
                                                         <th>Read</th> */}
-                                                        <th>Action</th>
+                                                        {/* <th>Action</th> */}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -120,7 +120,7 @@ function Contact() {
                                                             {/* <td>{item.spam}</td>
                                                             <td>{item.important}</td>
                                                             <td>{item.read}</td> */}
-                                                            <td>
+                                                            {/* <td>
                                                                 <Link
                                                                     to={`/contact/edit/${item.id}`}
                                                                     className="btn btn-primary"
@@ -128,15 +128,7 @@ function Contact() {
                                                                 >
                                                                     <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
-                                                                &nbsp;
-                                                                {/* <button
-                                                                    className="btn btn-danger"
-                                                                    onClick={() => handleDelete(item.id)}
-                                                                    title="Delete"
-                                                                >
-                                                                    <i className="fas fa-trash"></i>
-                                                                </button> */}
-                                                            </td>
+                                                            </td> */}
                                                         </tr>
                                                     ))}
                                                 </tbody>

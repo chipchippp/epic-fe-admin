@@ -36,6 +36,7 @@ function CreateContact() {
             toast.success('Contact created successfully');
             navigate('/contact');
         } catch (error) {
+            console.error('Error creating Contact:', error.response ? error.response.data : error.message);
             toast.error('Failed to create Contact');
         }
     };
@@ -74,7 +75,7 @@ function CreateContact() {
                                     <div className="col-md-4">
                                         <label className="col-form-label text-md-right">PhoneNumber</label>
                                         <input
-                                            type="text"
+                                            type="number"
                                             className="form-control"
                                             id="exampleInputCity1"
                                             placeholder="phoneNumber"
