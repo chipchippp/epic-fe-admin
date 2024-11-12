@@ -1,6 +1,7 @@
 import axios from 'axios';
 import getBaseUrl from './baseUrl';
-
+import { jwtDecode } from 'jwt-decode';
+import { toast, ToastContainer } from 'react-toastify';
 export const httpRequest = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
 });
@@ -18,16 +19,45 @@ export const createHttpRequest = (service) => {
             }
             return config;
         },
-        (error) => {
-            return Promise.reject(error);
-        },
+        (error) => Promise.reject(error),
     );
 
     httpRequest.interceptors.response.use(
-        (response) => {
-            return response;
-        },
-        (error) => {
+        (response) => response,
+        async (error) => {
+            const originalRequest = error.config;
+
+            // Kiểm tra nếu lỗi là do expired token (status 401)
+            if (error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+                const refreshToken = localStorage.getItem('refreshToken');
+
+                if (refreshToken) {
+                    try {
+                        // Gửi refreshToken lên server để lấy accessToken mới
+                        const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/refresh`, {
+                            refreshToken,
+                        });
+
+                        const { accessToken } = response.data;
+                        localStorage.setItem('accessToken', accessToken); // Lưu accessToken mới
+
+                        // Gửi lại yêu cầu ban đầu với accessToken mới
+                        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+                        return httpRequest(originalRequest);
+                    } catch (error) {
+                        console.log('Refresh token is invalid or expired');
+                        toast.error('Session expired. Please log in again.');
+                        localStorage.removeItem('accessToken');
+                        localStorage.removeItem('refreshToken');
+                        localStorage.removeItem('roles');
+                        localStorage.removeItem('id');
+                        localStorage.removeItem('username');
+                        window.location.href = '/login';
+                    }
+                }
+            }
+
             return Promise.reject(error);
         },
     );

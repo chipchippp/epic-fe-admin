@@ -3,7 +3,8 @@ import { getProduct } from '~/services/Product/productService';
 import { getAllUsers } from '~/services/User/userService';
 import { getAllOrders, getOrderCount } from '~/services/Orders/orderService';
 import Product from './Product';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import { Toast } from 'react-bootstrap';
 
 function HomeAdmin() {
     const [orders, setOrders] = useState([]);
@@ -225,6 +226,7 @@ function HomeAdmin() {
                     <Product />
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 }

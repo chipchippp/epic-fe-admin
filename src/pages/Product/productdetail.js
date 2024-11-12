@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { editProduct } from '~/services/Product/productService';
-
+import { ToastContainer } from 'react-toastify';
 const ProductDetail = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
@@ -108,6 +108,7 @@ const ProductDetail = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

@@ -1,4 +1,5 @@
 import BarChart from './barChart';
+import { ToastContainer } from 'react-toastify';
 
 function Chart() {
     return (
@@ -8,6 +9,7 @@ function Chart() {
                     <BarChart />
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 }

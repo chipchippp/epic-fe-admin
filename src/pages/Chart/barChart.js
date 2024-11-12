@@ -3,7 +3,7 @@ import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip } fro
 import { Bar } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import { getAllOrders } from '~/services/Orders/orderService';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 
@@ -46,7 +46,7 @@ const BarChart = () => {
                             acc[time] = { orderCount: 0, totalRevenue: 0 };
                         }
                         acc[time].orderCount += 1;
-                        acc[time].totalRevenue += order.totalPrice;
+                        acc[time].totalRevenue += parseFloat(order.totalPrice); // Chuyển đổi totalPrice thành số
                         return acc;
                     }, {});
 
@@ -68,6 +68,8 @@ const BarChart = () => {
                 } else if (timeRange === 'Year') {
                     chartData = processData(completeOrders, 'YYYY', 'year', 7);
                 }
+
+                console.log('Chart Data:', chartData); // Kiểm tra dữ liệu của chartData
 
                 setChartData(chartData);
             } catch (error) {
@@ -158,6 +160,7 @@ const BarChart = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

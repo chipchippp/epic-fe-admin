@@ -3,7 +3,7 @@ import { Chart as ChartJS, BarElement, CategoryScale, LinearScale, Tooltip } fro
 import { Bar } from 'react-chartjs-2';
 import dayjs from 'dayjs';
 import { getAllOrders } from '~/services/Orders/orderService';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip);
 

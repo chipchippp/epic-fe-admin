@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { createBlog } from '~/services/Inventory/blogService';
@@ -161,6 +161,7 @@ const CreateBlog = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

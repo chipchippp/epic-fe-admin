@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { createProduct } from '~/services/Product/productService';
@@ -162,6 +162,8 @@ const CreateProduct = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
+
         </div>
     );
 };

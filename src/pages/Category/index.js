@@ -88,7 +88,7 @@ function Category() {
         const regex = new RegExp(`.{1,${maxLength}}`, 'g');
         return description.match(regex).join('\n');
     };
-    
+
     return (
         <>
             <div className="content-wrapper">
@@ -159,7 +159,6 @@ function Category() {
                         </div>
                     </div>
                 </div>
-
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Delete</Modal.Title>
@@ -174,7 +173,6 @@ function Category() {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-
                 <ToastContainer />
             </div>
         </>

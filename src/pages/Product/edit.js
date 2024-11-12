@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { editProduct, updateProduct, deleteProductImg } from '~/services/Product/productService';
 import { getCategories } from '~/services/Category/categoryService';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 
 const EditProduct = () => {
     const navigate = useNavigate();
@@ -302,6 +302,7 @@ const EditProduct = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

@@ -20,6 +20,7 @@ function Order() {
     const [filteredOrders, setFilteredOrders] = useState([]);
     const [dateStart, setDateStart] = useState('');
     const [dateEnd, setDateEnd] = useState('');
+    const [sortStatus, setSortStatus] = useState('');
 
     useEffect(() => {
         let filteredData = data;
@@ -40,13 +41,11 @@ function Order() {
         const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
         setNumbers(pagesArray);
         setFilteredOrders(filteredData);
-
-        console.log('Data fetched:', data);
     }, [search, data, totalPages, status]);
 
     useEffect(() => {
         getFilteredData();
-    }, [currentPage, limit, sortOrder, search, dateStart, dateEnd]);
+    }, [currentPage, limit, sortOrder, search, dateStart, dateEnd, sortStatus]);
 
     const getFilteredData = async () => {
         try {
@@ -55,6 +54,10 @@ function Order() {
                 size: Number(limit),
                 sort: `createdAt:${sortOrder}`,
             };
+
+            if (sortStatus) {
+                params.order = `status:${sortStatus}`;
+            }
 
             if (search) {
                 params.order = `id~${search}`;
@@ -94,6 +97,10 @@ function Order() {
         setSortOrder(order);
     };
 
+    const handleSortStatus = (order) => {
+        setSortStatus(order);
+    };
+
     const handleSearch = useCallback(
         debounce((value) => {
             setSearch(value);
@@ -131,9 +138,10 @@ function Order() {
                                         <div className="float-left">
                                             <select
                                                 className="form-control selectric btn-primary"
-                                                onChange={handleStatusChange}
+                                                // onChange={handleStatusChange}
+                                                onChange={(e) => handleSortStatus(e.target.value)}
                                             >
-                                                <option value="">Sort Status</option>
+                                                <option value="">Filter Status</option>
                                                 <option value="CREATED">Created</option>
                                                 <option value="PAYMENT_FAILED">Payment Failed</option>
                                                 <option value="PENDING">Pending</option>
@@ -144,22 +152,6 @@ function Order() {
                                                 <option value="COMPLETE">Complete</option>
                                             </select>
                                         </div>
-                                        {/* <div className="float-left ml-2">
-                                            <input
-                                                type="date"
-                                                className="form-control"
-                                                value={dateStart}
-                                                onChange={(e) => handleDateStartChange(e.target.value)}
-                                            />
-                                        </div>
-                                        <div className="float-left ml-2">
-                                            <input
-                                                type="date"
-                                                className="form-control"
-                                                value={dateEnd}
-                                                onChange={(e) => handleDateEndChange(e.target.value)}
-                                            />
-                                        </div> */}
 
                                         <div className="float-left ml-2">
                                             <select
@@ -171,6 +163,7 @@ function Order() {
                                                 <option value="desc">Sort Descending</option>
                                             </select>
                                         </div>
+
                                         <Search className="float-left ml-2" setSearch={handleSearch} />
                                         <div className="table-responsive">
                                             <table className="table table-striped">
@@ -185,9 +178,8 @@ function Order() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {filteredOrders.map((item, index) => (
+                                                    {filteredOrders.map((item) => (
                                                         <tr key={item.id}>
-
                                                             <td>{item.codeOrder}</td>
                                                             <td>
                                                                 {item.firstName} {item.lastName}
@@ -283,6 +275,9 @@ function Order() {
                                                                         Complete
                                                                     </div>
                                                                 )}
+                                                                {/* <div className={`badge ${item.status.toLowerCase()}`}>
+                                                                    {item.status}
+                                                                </div> */}
                                                             </td>
                                                             <td>
                                                                 <Link

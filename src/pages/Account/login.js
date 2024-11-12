@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { httpRequest } from '~/utils/httpRequest';
-import { jwtDecode } from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import { isAuthenticated } from '~/utils/httpRequest';
 
 function Login() {
@@ -22,54 +22,45 @@ function Login() {
 
         if (validate()) {
             try {
-                const response = await httpRequest.post('http://localhost:8080/api/v1/auth/login', {
-                    username: username,
-                    password: password,
+                const response = await httpRequest.post('/auth/login', {
+                    username,
+                    password,
                     platform: 'WEB',
                 });
 
                 if (response && response.data && response.data.accessToken) {
-                    const accessToken = response.data.accessToken;
-                    let decodedToken;
+                    const { accessToken, refreshToken, roles, id } = response.data;
 
-                    try {
-                        decodedToken = jwtDecode(accessToken);
-                        const id = response.data.id;
-                        const roles = response.data.roles;
-                        const refreshToken = response.data.refreshToken;
-
-                        if (!roles.includes('ROLE_ADMIN')) {
-                            toast.warn('Username and password are incorrect');
-                            return;
-                        }
-
-                        localStorage.setItem('roles', roles);
-                        localStorage.setItem('accessToken', accessToken);
-                        localStorage.setItem('refreshToken', refreshToken);
-                        localStorage.setItem('id', id);
-                        localStorage.setItem('username', username);
-
-                        navigate('/');
-                        window.location.reload();
-                    } catch (error) {
-                        return toast.warning('Failed to decode token.');
+                    if (!roles.includes('ROLE_ADMIN')) {
+                        toast.warn('You are not authorized to access this section.');
+                        return;
                     }
+
+                    // Lưu cả accessToken và refreshToken vào localStorage
+                    localStorage.setItem('accessToken', accessToken);
+                    localStorage.setItem('refreshToken', refreshToken);
+                    localStorage.setItem('roles', JSON.stringify(roles));
+                    localStorage.setItem('id', id);
+                    localStorage.setItem('username', username);
+
+                    navigate('/');
+                    window.location.reload();
                 } else {
-                    toast.warning('Invalid response from server');
+                    toast.warning('Invalid server response');
                 }
             } catch (error) {
-                toast.error('Failed to login. Please try again.');
+                toast.error('Login failed. Please try again.');
             }
         }
     };
 
     const validate = () => {
         if (!username.trim()) {
-            toast.warning('Please enter username.');
+            toast.warning('Please enter a username.');
             return false;
         }
         if (!password.trim()) {
-            toast.warning('Please enter password.');
+            toast.warning('Please enter a password.');
             return false;
         }
         return true;

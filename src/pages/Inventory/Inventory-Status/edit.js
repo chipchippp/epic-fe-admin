@@ -94,6 +94,7 @@ function EditInventoryStatus() {
                         </div>
                     </div>
                 </div>
+                <ToastContainer />
             </div>
         </>
     );

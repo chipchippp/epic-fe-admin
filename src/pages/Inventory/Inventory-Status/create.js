@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { createInventoryStatus } from '~/services/Inventory/inventoryStatusService';
@@ -80,6 +80,7 @@ function ManageInventoryStatus() {
                         </div>
                     </div>
                 </div>
+                <ToastContainer />
             </div>
         </>
     );

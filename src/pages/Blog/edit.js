@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import { editBlog, updateBlog } from '~/services/Inventory/blogService';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
@@ -128,7 +128,7 @@ const EditBlog = () => {
         'background',
     ];
 
-    const imageUrl = imagesOld.length > 0 ? `http://localhost:8080/api/v1/blogs/blog/${imagesOld[0]}` : '';
+    // const imageUrl = imagesOld.length > 0 ? {imagesOld[0]} : '';
 
     return (
         <div className="content-wrapper">
@@ -269,6 +269,7 @@ const EditBlog = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </div>
     );
 };

@@ -2,6 +2,7 @@ import HeaderAdmin from '../components/Header';
 import SidebarAdmin from '../components/Sidebar';
 import FooterAdmin from '../components/Footer';
 import PartialAdmin from '../components/Partial';
+import { ToastContainer } from 'react-toastify';
 
 function AdminLayout({ children }) {
     return (
@@ -15,6 +16,18 @@ function AdminLayout({ children }) {
                     <FooterAdmin />
                 </div>
             </div>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+            />
         </div>
     );
 }

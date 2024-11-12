@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 function HeaderAdmin() {
@@ -16,13 +16,14 @@ function HeaderAdmin() {
     }, [navigate]);
 
     const handleLogout = () => {
-        localStorage.removeItem('roles');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        localStorage.removeItem('username');
+        localStorage.removeItem('roles');
         localStorage.removeItem('id');
+        localStorage.removeItem('username');
+
+        toast.success('Successfully logged out.');
         navigate('/login');
-        toast.success('Logout Success');
     };
 
     return (
@@ -78,6 +79,7 @@ function HeaderAdmin() {
                         <span className="icon-menu" />
                     </button>
                 </div>
+                <ToastContainer />
             </nav>
         </>
     );

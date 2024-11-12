@@ -68,9 +68,6 @@ function EditCategory() {
                     <div className="card">
                         <div className="card-body">
                             <h3 className="font-weight-bold">Edit Category</h3>
-                            <Link to="/category" className="btn btn-primary mb-3">
-                                <i className="fas fa-arrow-left"></i> Back
-                            </Link>
                             <form className="forms-sample" onSubmit={handleSubmit}>
                                 <div className="row mb-4">
                                     <div className="col-md-4">
@@ -117,13 +114,19 @@ function EditCategory() {
                                     </div>
                                 </div>
                                 <button type="submit" className="btn btn-primary mr-2">
-                                    Submit
+                                    Save
                                 </button>
+                                <Link to="/category" className="btn btn-light">
+                                    Back
+                                </Link>
                             </form>
                         </div>
                     </div>
+                    <ToastContainer />
                 </div>
+                <ToastContainer />
             </div>
+            
         </>
     );
 }
