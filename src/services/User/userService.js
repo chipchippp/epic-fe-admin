@@ -4,7 +4,7 @@ const service = 'user';
 
 export const getAllUsers = async (currentPage = 1, limit = 10) => {
     try {
-        const response = await get(service, `/users?page=1&limit=100`);
+        const response = await get(service, `/users/count`);
         return response;
     } catch (error) {
         console.error('Error fetching Users data:', error);

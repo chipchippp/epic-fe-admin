@@ -34,8 +34,10 @@ function Product() {
             const filteredData = data.filter((item) => {
                 const price = parseFloat(item.price);
                 return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) && price >= minPrice && price <= maxPrice
-                    // || item.category.categoryName.toLowerCase().includes(search.toLowerCase())
+                    (item.codeProduct.toLowerCase().includes(search.toLowerCase()) &&
+                        price >= minPrice &&
+                        price <= maxPrice) ||
+                    item.name.toLowerCase().includes(search.toLowerCase())
                 );
             });
             setFilteredProducts(filteredData);
@@ -71,12 +73,14 @@ function Product() {
             };
 
             if (search) {
-                params.product = `name~${search}`;
+                params.product = `codeProduct~${search}, 'name~${search}`;
             }
 
             if (selectedCategory) {
                 params.category = `categoryName~${selectedCategory}`;
             }
+            console.log('params', params);
+
             const response = await getFilteredProducts(params);
             console.log('response', response.data.content);
             setData(response.data.content);
@@ -89,8 +93,8 @@ function Product() {
 
     const handleCategoryChange = (event) => {
         const categoryName = event.target.value;
-        setSelectedCategory(categoryName); // Set category name as string, not ID
-        setCurrentPage(1); // Reset to the first page
+        setSelectedCategory(categoryName);
+        setCurrentPage(1);
     };
 
     const debouncedHandleSliderChange = debounce((value) => {
@@ -209,7 +213,9 @@ function Product() {
                                                     <td>{(currentPage - 1) * limit + index + 1}</td>
                                                     <td>
                                                         <Link to={`/product/detail/${item.productId}`}>
-                                                            {item.name}
+                                                            {item.name.length > 20
+                                                                ? item.name.slice(0, 20) + '...'
+                                                                : item.name}
                                                         </Link>
                                                     </td>
                                                     <td>

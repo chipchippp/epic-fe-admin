@@ -4,15 +4,13 @@ import { getAllUsers } from '~/services/User/userService';
 import { getAllOrders, getOrderCount } from '~/services/Orders/orderService';
 import Product from './Product';
 import { toast, ToastContainer } from 'react-toastify';
-import { Toast } from 'react-bootstrap';
 
 function HomeAdmin() {
     const [orders, setOrders] = useState([]);
     const [products, setProducts] = useState([]);
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState({});
 
     useEffect(() => {
-        // getOrderData();
         getProductData();
         getOrderCounts();
         getUserData();
@@ -51,7 +49,8 @@ function HomeAdmin() {
     const getUserData = () => {
         getAllUsers()
             .then((data) => {
-                setUsers(data.data.content);
+                console.log(data.data);
+                setUsers(data.data);
             })
             .catch((error) => {
                 toast.error('Failed to fetch users', error);
@@ -90,8 +89,8 @@ function HomeAdmin() {
                         <div className="col-md-6 mb-4">
                             <div className="card card-dark-blue">
                                 <div className="card-body">
-                                    <p className="mb-4">Today’s Bookings</p>
-                                    <p className="fs-30 mb-2">4006</p>
+                                    <p className="mb-4">Total Revenue</p>
+                                    <p className="fs-30 mb-2">{orders.revenue}</p>
                                     <p> </p>
                                 </div>
                             </div>
@@ -118,8 +117,9 @@ function HomeAdmin() {
                             <div className="card card-light-blue">
                                 <div className="card-body">
                                     <p className="mb-4">Total Users</p>
-                                    <p className="fs-30 mb-2">{users.length}</p>
-                                    <p> </p>
+                                    <p className="fs-30 mb-2">
+                                        {(users.totalUsersCustomer || 0)}
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -195,22 +195,10 @@ function HomeAdmin() {
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <p className="fs-20 mb-2">
-                                                    {
-                                                        users.filter((user) =>
-                                                            user.roles.some((role) => role.name === 'ROLE_USER'),
-                                                        ).length
-                                                    }
-                                                </p>
+                                                <p className="fs-20 mb-2">{users.totalUsersCustomer || 0}</p>
                                             </td>
                                             <td>
-                                                <p className="fs-20 mb-2">
-                                                    {
-                                                        users.filter((user) =>
-                                                            user.roles.some((role) => role.name === 'ROLE_ADMIN'),
-                                                        ).length
-                                                    }
-                                                </p>
+                                                <p className="fs-20 mb-2">{users.totalUsersAdmin || 0}</p>
                                             </td>
                                         </tr>
                                     </tbody>

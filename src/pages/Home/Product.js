@@ -13,21 +13,17 @@ const Product = () => {
     }, []);
 
     const getData = () => {
-        getProduct(1, 7)
-            .then((response) => {
-                const data = response.data.content;
-                const sortedData = data
-                    .sort((a, b) => {
-                        const soldQuantityA = a.soldQuantity || 0;
-                        const soldQuantityB = b.soldQuantity || 0;
-                        return soldQuantityB - soldQuantityA;
-                    })
-                    .slice(0, 7);
-                setProducts(sortedData);
-            })
-            .catch((error) => {
-                toast.error('Failed to fetch products', error);
-            });
+        try {
+            getProduct()
+                .then((response) => {
+                    setProducts(response.data.content);
+                })
+                .catch((error) => {
+                    toast.error('Failed to fetch products', error);
+                });
+        } catch (error) {
+            toast.error('Failed to fetch products', error);
+        }
     };
 
     return (

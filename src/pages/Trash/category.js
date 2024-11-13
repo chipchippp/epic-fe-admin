@@ -4,10 +4,12 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Search from '~/layouts/components/Search';
 import Pagination from '~/layouts/components/Pagination';
-import { getTrashCategory, updateRestoreCategory } from '~/services/Category/categoryService';
+import { getTrashCategory, updateRestoreCategory, removeCategory } from '~/services/Category/categoryService';
 
 function Category() {
     const [loading, setLoading] = useState(true);
+    const [updateShow, setUpdateShow] = useState(false);
+    const [updateId, setUpdateId] = useState(null);
     const [deleteShow, setDeleteShow] = useState(false);
     const [deleteId, setDeleteId] = useState(null);
     const [data, setData] = useState([]);
@@ -47,14 +49,19 @@ function Category() {
         }
     };
 
+    const handleUpdate = (id) => {
+        setUpdateId(id);
+        setUpdateShow(true);
+    };
+
     const handleDelete = (id) => {
         setDeleteId(id);
         setDeleteShow(true);
     };
 
-    const handleDeleteConfirm = async () => {
+    const handleUpdateConfirm = async () => {
         try {
-            await updateRestoreCategory(deleteId);
+            await updateRestoreCategory(updateId);
             toast.success('Category has been restored');
             handleClose();
             getData();
@@ -63,6 +70,17 @@ function Category() {
         }
     };
 
+    const handleDeleteConfirm = async () => {
+        try {
+            await removeCategory(deleteId);
+            toast.success('Category has been remove');
+            handleClose();
+            getData();
+        } catch (error) {
+            toast.error('Failed to restore category');
+        }
+    };
+    const handleCloses = () => setUpdateShow(false);
     const handleClose = () => setDeleteShow(false);
 
     const handlePageChange = (pageNumber) => {
@@ -105,10 +123,18 @@ function Category() {
                                                             <td>
                                                                 <button
                                                                     className="btn btn-success"
-                                                                    onClick={() => handleDelete(item.categoryId)}
+                                                                    onClick={() => handleUpdate(item.categoryId)}
                                                                     title="Update Restore"
                                                                 >
                                                                     <i class="fa-solid fa-check"></i>
+                                                                </button>
+                                                                &nbsp;
+                                                                <button
+                                                                    className="btn btn-danger"
+                                                                    onClick={() => handleDelete(item.categoryId)}
+                                                                    title="Delete"
+                                                                >
+                                                                    <i className="fas fa-trash"></i>
                                                                 </button>
                                                             </td>
                                                         </tr>
@@ -130,6 +156,20 @@ function Category() {
                     </div>
                 </div>
 
+                <Modal show={updateShow} onHide={handleCloses}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Confirm Update</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Are you sure you want to update this category?</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleCloses}>
+                            Cancel
+                        </Button>
+                        <Button variant="success" onClick={handleUpdateConfirm}>
+                            Update
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
                 <Modal show={deleteShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Confirm Update</Modal.Title>
@@ -139,8 +179,8 @@ function Category() {
                         <Button variant="secondary" onClick={handleClose}>
                             Cancel
                         </Button>
-                        <Button variant="success" onClick={handleDeleteConfirm}>
-                            Update
+                        <Button variant="danger" onClick={handleDeleteConfirm}>
+                            Delete
                         </Button>
                     </Modal.Footer>
                 </Modal>

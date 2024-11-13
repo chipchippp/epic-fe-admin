@@ -72,6 +72,16 @@ export const updateRestoreCategory = async (id) => {
     }
 };
 
+export const removeCategory = async (id) => {
+    try {
+        await del(service, `/categories/${id}`);
+        return true;
+    } catch (error) {
+        console.error('Failed to remove category', error);
+        throw error;
+    }
+};
+
 export const deleteCategory = async (id) => {
     try {
         await del(service, `/categories/in-trash/${id}`);

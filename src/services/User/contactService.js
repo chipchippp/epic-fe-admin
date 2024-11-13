@@ -24,7 +24,7 @@ export const getContactsReplyIsNull = async (currentPage = 1, limit = 7) => {
 
 export const createContact = async (data) => {
     try {
-        const response = await post(service, '/contact', data);
+        const response = await post(service, '/contact/create', data);
         return response;
     } catch (error) {
         console.error('Error creating Contact:', error);

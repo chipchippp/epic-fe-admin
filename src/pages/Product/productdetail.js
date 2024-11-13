@@ -37,7 +37,9 @@ const ProductDetail = () => {
                     <div className="card">
                         <div className="card-body">
                             <h4 className="card-title">Product Details</h4>
-
+                            <Link to="/product" className="btn btn-primary mb-3">
+                                <i className="fas fa-arrow-left"></i> Back
+                            </Link>
                             <table className="table table-bordered table-striped">
                                 <tbody>
                                     <tr>
@@ -81,29 +83,28 @@ const ProductDetail = () => {
                                         <td>{new Date(product.updatedAt).toLocaleString()}</td>
                                     </tr>
                                     <tr>
-                                        <th>Images</th>
+                                        <th>Images Product</th>
                                         <td>
-                                            {product.images.length > 0 ? (
-                                                <img
-                                                    src={`http://localhost:8080/api/v1/product-images/images/${product.images[0].imageUrl}`}
-                                                    alt={product.name}
-                                                    style={{
-                                                        width: '150px',
-                                                        height: '150px',
-                                                        objectFit: 'cover',
-                                                        borderRadius: '4px',
-                                                    }}
-                                                />
-                                            ) : (
-                                                'No Image'
-                                            )}
+                                            {product.images && product.images.length > 0
+                                                ? product.images.map((image, index) => (
+                                                      <img
+                                                          key={image.imageId || index}
+                                                          src={image.imageUrl}
+                                                          alt={`${product.name} ${index + 1}`}
+                                                          style={{
+                                                              width: '150px',
+                                                              height: '150px',
+                                                              objectFit: 'cover',
+                                                              borderRadius: '4px',
+                                                              marginRight: '10px',
+                                                          }}
+                                                      />
+                                                  ))
+                                                : 'No Images'}
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <Link to="/product" className="btn btn-primary mb-3">
-                                <i className="fas fa-arrow-left"></i> Back
-                            </Link>
                         </div>
                     </div>
                 </div>
