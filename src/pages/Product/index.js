@@ -47,22 +47,8 @@ function Product() {
     }, [search, priceRange, data]);
 
     useEffect(() => {
-        fetchCategories();
-    }, []);
-
-    useEffect(() => {
         getFilteredData();
-    }, [search, priceRange, sortOrder, currentPage, limit, selectedCategory]);
-
-    const fetchCategories = async () => {
-        try {
-            const response = await getCategories();
-            const sortedCategories = response.data.content.sort((a, b) => a.categoryName.localeCompare(b.categoryName));
-            setCategories(sortedCategories);
-        } catch (error) {
-            toast.error('Failed to fetch categories');
-        }
-    };
+    }, [currentPage, limit, search, priceRange, sortOrder, selectedCategory]);
 
     const getFilteredData = async () => {
         try {
@@ -79,15 +65,26 @@ function Product() {
             if (selectedCategory) {
                 params.category = `categoryName~${selectedCategory}`;
             }
-            console.log('params', params);
-
             const response = await getFilteredProducts(params);
-            console.log('response', response.data.content);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
         } catch (error) {
             toast.error('Failed to fetch products');
+        }
+    };
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
+    const fetchCategories = async () => {
+        try {
+            const response = await getCategories();
+            const sortedCategories = response.data.content.sort((a, b) => a.categoryName.localeCompare(b.categoryName));
+            setCategories(sortedCategories);
+        } catch (error) {
+            toast.error('Failed to fetch categories');
         }
     };
 
@@ -197,7 +194,7 @@ function Product() {
                                     <table className="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Id</th>
+                                                <th>#</th>
                                                 <th>Name</th>
                                                 <th>Images</th>
                                                 <th>Code Product</th>

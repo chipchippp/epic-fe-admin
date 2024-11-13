@@ -32,16 +32,6 @@ export const getOrderCount = async () => {
     }
 };
 
-export const createOrders = async (params) => {
-    try {
-        const response = await get(service, `/orders/search-by-specification`, { params });
-        return response;
-    } catch (error) {
-        console.error('Error fetching Orders data:', error);
-        throw error;
-    }
-};
-
 export const editOrders = async (id) => {
     try {
         const response = await get(service, `/orders/${id}`);
@@ -60,16 +50,6 @@ export const updateOrders = async (id, status) => {
         return response;
     } catch (error) {
         console.error('Failed to update Orders', error);
-        throw error;
-    }
-};
-
-export const deleteOrders = async (id) => {
-    try {
-        await del(service, `/orders/id?id=${id}`);
-        return true;
-    } catch (error) {
-        console.error('Failed to delete orders', error);
         throw error;
     }
 };

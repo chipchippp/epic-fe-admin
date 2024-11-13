@@ -9,7 +9,6 @@ import debounce from 'lodash.debounce';
 
 function Order() {
     const [loading, setLoading] = useState(true);
-    const [status, setStatus] = useState('');
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -18,79 +17,60 @@ function Order() {
     const [search, setSearch] = useState('');
     const [sortOrder, setSortOrder] = useState('desc');
     const [filteredOrders, setFilteredOrders] = useState([]);
-    const [dateStart, setDateStart] = useState('');
-    const [dateEnd, setDateEnd] = useState('');
     const [sortStatus, setSortStatus] = useState('');
 
     useEffect(() => {
-        let filteredData = data;
+        const applyFilters = () => {
+            const filteredData = data.filter((item) => {
+                return (
+                    item.codeOrder.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.id.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.firstName.toString().toLowerCase().includes(search.toLowerCase()) ||
+                    item.lastName.toString().toLowerCase().includes(search.toLowerCase())
+                );
+            });
+            setFilteredOrders(filteredData);
+        };
 
-        if (search) {
-            filteredData = filteredData.filter(
-                (item) =>
-                    item?.orderCode?.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item?.name?.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item?.id?.toString().toLowerCase().includes(search.toLowerCase()),
-            );
-        }
-
-        if (status !== '') {
-            filteredData = filteredData.filter((item) => item.status === status);
-        }
-
-        const pagesArray = Array.from({ length: totalPages }, (_, i) => i + 1);
-        setNumbers(pagesArray);
-        setFilteredOrders(filteredData);
-    }, [search, data, totalPages, status]);
+        applyFilters();
+    }, [search, data]);
 
     useEffect(() => {
+        const getFilteredData = async () => {
+            try {
+                const params = {
+                    page: currentPage,
+                    size: Number(limit),
+                    sort: `createdAt:${sortOrder}`,
+                };
+
+                if (sortStatus) {
+                    params.order = `status:${sortStatus}`;
+                }
+
+                if (search) {
+                    params.order = `codeOrder~${search}, 'id~${search}, 'firstName~${search}, 'lastName~${search}`;
+                }
+
+                console.log('params', params);
+
+                const response = await getFilteredOrders(params);
+                console.log('response', response.data.content);
+                setData(response.data.content);
+                setTotalPages(response.data.totalPages);
+                setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
+                setLoading(false);
+            } catch (error) {
+                toast.error('Failed to fetch orders', error);
+                setLoading(false);
+            }
+        };
+
         getFilteredData();
-    }, [currentPage, limit, sortOrder, search, dateStart, dateEnd, sortStatus]);
-
-    const getFilteredData = async () => {
-        try {
-            const params = {
-                page: currentPage,
-                size: Number(limit),
-                sort: `createdAt:${sortOrder}`,
-            };
-
-            if (sortStatus) {
-                params.order = `status:${sortStatus}`;
-            }
-
-            if (search) {
-                params.order = `id~${search}`;
-            }
-            if (dateStart) {
-                params.dateStart = dateStart;
-            }
-            if (dateEnd) {
-                params.dateEnd = dateEnd;
-            }
-
-            const response = await getFilteredOrders(params);
-            setData(response.data.content);
-            setTotalPages(response.data.totalPages);
-            setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
-            setLoading(false);
-        } catch (error) {
-            toast.error('Failed to fetch products', error);
-            setLoading(false);
-        }
-    };
-
-    const handleStatusChange = (event) => {
-        setStatus(event.target.value);
-    };
+    }, [currentPage, limit, sortOrder, search, sortStatus]);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
-    };
-
-    const handleLimitChange = (e) => {
-        setLimit(Number(e.target.value));
-        setCurrentPage(1);
     };
 
     const handleSort = (order) => {
@@ -108,19 +88,16 @@ function Order() {
         [],
     );
 
-    const handleDateStartChange = useCallback(
-        debounce((value) => {
-            setDateStart(value);
-        }, 500),
-        [],
-    );
-
-    const handleDateEndChange = useCallback(
-        debounce((value) => {
-            setDateEnd(value);
-        }, 500),
-        [],
-    );
+    const statusColors = {
+        CREATED: { backgroundColor: '#FFA500', label: 'Created', color: '#FFFFFF' },
+        PAYMENT_FAILED: { backgroundColor: '#FF0000', label: 'Payment Failed', color: '#FFFFFF' },
+        PENDING: { backgroundColor: '#808080', label: 'Pending', color: '#FFFFFF' },
+        PROCESSING: { backgroundColor: '#0000FF', label: 'Processing', color: '#FFFFFF' },
+        ONDELIVERY: { backgroundColor: '#17A2B8', label: 'On Delivery', color: '#FFFFFF' },
+        DELIVERED: { backgroundColor: '#28A745', label: 'Delivered', color: '#FFFFFF' },
+        CANCEL: { backgroundColor: '#DC3545', label: 'Cancel', color: '#FFFFFF' },
+        COMPLETE: { backgroundColor: '#008000', label: 'Complete', color: '#FFFFFF' },
+    };
 
     return (
         <>
@@ -138,7 +115,6 @@ function Order() {
                                         <div className="float-left">
                                             <select
                                                 className="form-control selectric btn-primary"
-                                                // onChange={handleStatusChange}
                                                 onChange={(e) => handleSortStatus(e.target.value)}
                                             >
                                                 <option value="">Filter Status</option>
@@ -169,17 +145,19 @@ function Order() {
                                             <table className="table table-striped">
                                                 <thead>
                                                     <tr>
+                                                        <th>#</th>
                                                         <th>OrderCode</th>
-                                                        <th>Full Name</th>
+                                                        <th>FullName</th>
                                                         <th>Total Price</th>
-                                                        <th>Created At</th>
+                                                        <th>CreatedAt</th>
                                                         <th>Status</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {filteredOrders.map((item) => (
+                                                    {filteredOrders.map((item, index) => (
                                                         <tr key={item.id}>
+                                                            <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.codeOrder}</td>
                                                             <td>
                                                                 {item.firstName} {item.lastName}
@@ -187,97 +165,12 @@ function Order() {
                                                             <td>{item.totalPrice}</td>
                                                             <td>{item.createdAt}</td>
                                                             <td>
-                                                                {item.status === 'CREATED' && (
-                                                                    <div
-                                                                        className="badge"
-                                                                        style={{
-                                                                            backgroundColor: '#FFA500',
-                                                                            color: '#FFFFFF',
-                                                                        }}
-                                                                    >
-                                                                        Created
-                                                                    </div>
-                                                                )}
-                                                                {item.status === 'PAYMENT_FAILED' && (
-                                                                    <div
-                                                                        className="badge"
-                                                                        style={{
-                                                                            backgroundColor: '#FF0000',
-                                                                            color: '#FFFFFF',
-                                                                        }}
-                                                                    >
-                                                                        Payment Failed
-                                                                    </div>
-                                                                )}
-                                                                {item.status === 'PENDING' && (
-                                                                    <div
-                                                                        className="badge"
-                                                                        style={{
-                                                                            backgroundColor: '#808080',
-                                                                            color: '#FFFFFF',
-                                                                        }}
-                                                                    >
-                                                                        Pending
-                                                                    </div>
-                                                                )}
-                                                                {item.status === 'PROCESSING' && (
-                                                                    <div
-                                                                        className="badge"
-                                                                        style={{
-                                                                            backgroundColor: '#0000FF',
-                                                                            color: '#FFFFFF',
-                                                                        }}
-                                                                    >
-                                                                        Processing
-                                                                    </div>
-                                                                )}
-                                                                {item.status === 'ONDELIVERY' && (
-                                                                    <div
-                                                                        className="badge"
-                                                                        style={{
-                                                                            backgroundColor: '#17A2B8',
-                                                                            color: '#FFFFFF',
-                                                                        }}
-                                                                    >
-                                                                        On Delivery
-                                                                    </div>
-                                                                )}
-                                                                {item.status === 'DELIVERED' && (
-                                                                    <div
-                                                                        className="badge"
-                                                                        style={{
-                                                                            backgroundColor: '#28A745',
-                                                                            color: '#FFFFFF',
-                                                                        }}
-                                                                    >
-                                                                        Delivered
-                                                                    </div>
-                                                                )}
-                                                                {item.status === 'CANCEL' && (
-                                                                    <div
-                                                                        className="badge"
-                                                                        style={{
-                                                                            backgroundColor: '#DC3545',
-                                                                            color: '#FFFFFF',
-                                                                        }}
-                                                                    >
-                                                                        Cancel
-                                                                    </div>
-                                                                )}
-                                                                {item.status === 'COMPLETE' && (
-                                                                    <div
-                                                                        className="badge"
-                                                                        style={{
-                                                                            backgroundColor: '#008000',
-                                                                            color: '#FFFFFF',
-                                                                        }}
-                                                                    >
-                                                                        Complete
-                                                                    </div>
-                                                                )}
-                                                                {/* <div className={`badge ${item.status.toLowerCase()}`}>
-                                                                    {item.status}
-                                                                </div> */}
+                                                                <div
+                                                                    className="badge"
+                                                                    style={statusColors[item.status]}
+                                                                >
+                                                                    {statusColors[item.status]?.label || item.status}
+                                                                </div>
                                                             </td>
                                                             <td>
                                                                 <Link
