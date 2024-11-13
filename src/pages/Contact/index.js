@@ -89,9 +89,6 @@ function Contact() {
                                 ) : (
                                     <>
                                         <h3 className="font-weight-bold">Contact</h3>
-                                        {/* <Link to="/contact/create" className="float-left btn btn-primary">
-                                            <i className="fas fa-plus"></i> New
-                                        </Link> */}
                                         <Search setSearch={setSearch} />
 
                                         <div className="table-responsive">
@@ -129,6 +126,15 @@ function Contact() {
                                                                     <i className="fas fa-pencil-alt"></i>
                                                                 </Link>
                                                             </td> */}
+                                                            <td>
+                                                                <Link
+                                                                    to="/contact/create"
+                                                                    className="float-left btn btn-primary"
+                                                                    title="Send"
+                                                                >
+                                                                    <i className="fas fa-plus"></i>
+                                                                </Link>
+                                                            </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
