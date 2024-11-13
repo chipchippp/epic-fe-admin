@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, Link } from 'react-router-dom';
 import { createBlog } from '~/services/Inventory/blogService';
-import { getUsers } from '~/services/User/userService';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import './CreateBlog.css';
@@ -16,7 +15,7 @@ const CreateBlog = () => {
         author: '',
         userId: 1,
     });
-    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -28,7 +27,7 @@ const CreateBlog = () => {
     };
 
     const handleFileChange = (e) => {
-        setSelectedFiles(e.target.files);
+        setSelectedFile(e.target.files[0]); // Store only the first selected file
     };
 
     const handleSubmit = async (e) => {
@@ -37,14 +36,14 @@ const CreateBlog = () => {
             const formData = new FormData();
             formData.append('blog', new Blob([JSON.stringify(blog)], { type: 'application/json' }));
 
-            if (selectedFiles.length > 0) {
-                Array.from(selectedFiles).forEach((file) => formData.append('file', file));
+            if (selectedFile) {
+                formData.append('file', selectedFile); // Append the single file
             }
 
             await createBlog(formData);
 
             toast.success('Blog created successfully');
-            navigate('/Blog');
+            navigate('/blog');
         } catch (error) {
             toast.error(`Failed to create Blog: ${error.message}`);
         }
@@ -93,7 +92,7 @@ const CreateBlog = () => {
                             </Link>
                             <form onSubmit={handleSubmit}>
                                 <div className="row mb-4">
-                                    <div className="col-md-3">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Title</label>
                                         <input
                                             type="text"
@@ -104,7 +103,7 @@ const CreateBlog = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-3">
+                                    <div className="col-md-4">
                                         <label className="col-form-label text-md-right">Author</label>
                                         <input
                                             type="text"
@@ -115,29 +114,18 @@ const CreateBlog = () => {
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-3">
-                                        <label className="col-form-label text-md-right">Content</label>
+                                    <div className="col-md-4">
+                                        <label className="col-form-label text-md-right">Image</label>
                                         <input
-                                            type="text"
-                                            name="content"
+                                            type="file"
+                                            name="image"
                                             className="form-control"
-                                            value={blog.content}
-                                            onChange={handleInputChange}
+                                            onChange={handleFileChange}
                                             required
                                         />
                                     </div>
-                                    <div className="col-md-3">
-                                        <label className="col-form-label text-md-right">Images</label>
-                                        <input
-                                            type="file"
-                                            name="images"
-                                            className="form-control"
-                                            multiple
-                                            onChange={handleFileChange}
-                                        />
-                                    </div>
                                 </div>
-                                {/* <div className="row mb-4">
+                                <div className="row mb-4">
                                     <div className="col-md-12">
                                         <label className="col-form-label text-md-right">Content</label>
                                         <ReactQuill
@@ -149,7 +137,7 @@ const CreateBlog = () => {
                                             theme="snow"
                                         />
                                     </div>
-                                </div> */}
+                                </div>
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Save
                                 </button>

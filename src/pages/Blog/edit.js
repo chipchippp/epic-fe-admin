@@ -24,6 +24,7 @@ const EditBlog = () => {
                 if (blogData.user && blogData.user.userId) {
                     blogData.userId = blogData.user.userId;
                 }
+                console.log(blogData);
                 setData(blogData);
                 setImagesOld(blogData.imageTitle ? [blogData.imageTitle] : []);
                 setLoading(false);
@@ -136,9 +137,6 @@ const EditBlog = () => {
                 <div className="card">
                     <div className="card-body">
                         <h4 className="card-title">Edit Blog</h4>
-                        <Link to="/blog" className="btn btn-primary mb-3">
-                            <i className="fas fa-arrow-left"></i> Back
-                        </Link>
                         <form onSubmit={handleSubmit}>
                             <div className="row mb-4">
                                 <div className="col-md-4">
@@ -164,28 +162,6 @@ const EditBlog = () => {
                                     />
                                 </div>
                                 <div className="col-md-4">
-                                    <label className="col-form-label text-md-right">Content</label>
-                                    <input
-                                        type="text"
-                                        name="content"
-                                        className="form-control"
-                                        value={data.content}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                    {/* <ReactQuill
-                                        value={data.content}
-                                        onChange={handleContentChange}
-                                        modules={modules}
-                                        formats={formats}
-                                        className="custom-quill"
-                                        theme="snow"
-                                    /> */}
-                                </div>
-                            </div>
-
-                            <div className="row mb-4">
-                                <div className="col-md-6">
                                     <label className="col-form-label text-md-right">Images</label>
                                     <input
                                         type="file"
@@ -195,7 +171,10 @@ const EditBlog = () => {
                                         onChange={handleFileChange}
                                     />
                                 </div>
+                            </div>
+                            <div className="row mb-4">
                                 <div
+                                    className="col-md-4"
                                     style={{ display: 'flex', flexDirection: 'column', gap: '20px', marginTop: '20px' }}
                                 >
                                     <div>
@@ -257,6 +236,19 @@ const EditBlog = () => {
                                             )}
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div className="row mb-6">
+                                <div className="col-md-12">
+                                    <label className="col-form-label text-md-right">Content</label>
+                                    <ReactQuill
+                                        value={data.content}
+                                        onChange={handleContentChange}
+                                        modules={modules}
+                                        formats={formats}
+                                        className="custom-quill"
+                                        theme="snow"
+                                    />
                                 </div>
                             </div>
                             <button type="submit" className="btn btn-primary">

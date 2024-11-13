@@ -48,6 +48,9 @@ function SidebarAdmin() {
                                     <Link className="nav-link" to="/order">
                                         Orders
                                     </Link>
+                                    <Link className="nav-link" to="/return-item">
+                                        Return Item
+                                    </Link>
                                     <Link className="nav-link" to="/category">
                                         Category
                                     </Link>

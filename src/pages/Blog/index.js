@@ -41,6 +41,7 @@ function Blog() {
         try {
             const response = await getBlog(currentPage, limit);
 
+            console.log(response.data.content);
             if (response && response.data && response.data.content) {
                 setData(response.data.content);
                 setSearchedData(response.data.content);
@@ -83,9 +84,11 @@ function Blog() {
         setCurrentPage(1);
     };
 
-    const formatDescription = (content, maxLength = 70) => {
-        const regex = new RegExp(`.{1,${maxLength}}`, 'g');
-        return content.match(regex).join('\n');
+    const formatDescription = (content, maxLength = 18) => {
+        if (content.length > maxLength) {
+            return content.substring(0, maxLength) + '...';
+        }
+        return content;
     };
 
     return (
@@ -113,7 +116,7 @@ function Blog() {
                                                         <th>Title</th>
                                                         <th>ImageTitle</th>
                                                         <th>Author</th>
-                                                        {/* <th>Content</th> */}
+                                                        <th>Content</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -138,9 +141,13 @@ function Blog() {
                                                                 )}
                                                             </td>
                                                             <td>{item.author}</td>
-                                                            {/* <td style={{ whiteSpace: 'pre-wrap' }}>
-                                                                {formatDescription(item.content)}
-                                                            </td> */}
+                                                            <td
+                                                                style={{ whiteSpace: 'pre-wrap' }}
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: formatDescription(item.content),
+                                                                }}
+                                                            ></td>
+
                                                             <td>
                                                                 <Link
                                                                     to={`/blog/edit/${item.id}`}

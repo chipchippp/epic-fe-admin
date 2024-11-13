@@ -27,6 +27,10 @@ const routes = {
     createInventoryStatus: '/inventory-status/create',
     editInventoryStatus: '/inventory-status/edit/:id',
 
+    // Return item
+    returnItem: '/return-item',
+    returnItemUpdate: '/return-item/edit/:id',
+
     //     Blog
     blog: '/blog',
     createBlog: '/blog/create',
