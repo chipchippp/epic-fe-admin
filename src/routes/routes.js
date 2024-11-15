@@ -27,6 +27,10 @@ import InventoryStatus from '~/pages/Inventory/Inventory-Status/index';
 import InventoryStatusCreate from '~/pages/Inventory/Inventory-Status/create';
 import InventoryStatusEdit from '~/pages/Inventory/Inventory-Status/edit';
 
+// Return item
+import ReturnItem from '~/pages/Return-Item/index';
+import ReturnItemEdit from '~/pages/Return-Item/edit';
+
 // Blog
 import Blog from '~/pages/Blog/index';
 import BlogCreate from '~/pages/Blog/create';
@@ -98,6 +102,10 @@ export const publicRoutes = [
     { path: config.routes.inventoryStatus, component: InventoryStatus, layout: AdminLayout },
     { path: config.routes.createInventoryStatus, component: InventoryStatusCreate, layout: AdminLayout },
     { path: config.routes.editInventoryStatus, component: InventoryStatusEdit, layout: AdminLayout },
+
+    // Return Item
+    { path: config.routes.returnItem, component: ReturnItem, layout: AdminLayout },
+    { path: config.routes.returnItemUpdate, component: ReturnItemEdit, layout: AdminLayout },
 
     // Blog
     { path: config.routes.blog, component: Blog, layout: AdminLayout },

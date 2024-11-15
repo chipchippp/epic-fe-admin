@@ -93,7 +93,7 @@ const CreateProduct = () => {
                                 <div className="row mb-4">
                                     {renderInput('Name', 'name', 'text', data.name)}
                                     {renderInput('Description', 'description', 'text', data.description)}
-                                    {renderInput('Price', 'price', 'text', data.price)}
+                                    {renderInput('Price', 'price', 'number', data.price)}
                                     <div className="col-md-3">
                                         <label className="col-form-label text-md-right">Size</label>
                                         <select
@@ -163,7 +163,6 @@ const CreateProduct = () => {
                 </div>
             </div>
             <ToastContainer />
-
         </div>
     );
 };

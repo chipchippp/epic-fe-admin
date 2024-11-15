@@ -22,11 +22,13 @@ function Order() {
     useEffect(() => {
         const applyFilters = () => {
             const filteredData = data.filter((item) => {
+                const codeOrder = item.codeOrder ? item.codeOrder.toString().toLowerCase() : '';
+                const firstName = item.firstName ? item.firstName.toString().toLowerCase() : '';
+                const lastName = item.lastName ? item.lastName.toString().toLowerCase() : '';
+                const searchLower = search.toLowerCase();
+
                 return (
-                    item.codeOrder.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.id.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.firstName.toString().toLowerCase().includes(search.toLowerCase()) ||
-                    item.lastName.toString().toLowerCase().includes(search.toLowerCase())
+                    codeOrder.includes(searchLower) || firstName.includes(searchLower) || lastName.includes(searchLower)
                 );
             });
             setFilteredOrders(filteredData);

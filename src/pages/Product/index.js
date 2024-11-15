@@ -218,7 +218,7 @@ function Product() {
                                                     <td>
                                                         {item.images.length > 0 ? (
                                                             <img
-                                                                src={`${item.images[0].imageUrl}`}
+                                                                src={item.images[0].imageUrl}
                                                                 alt={item.name}
                                                                 style={{
                                                                     width: '70px',
