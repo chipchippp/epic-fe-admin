@@ -15,7 +15,7 @@ function ReturnItemEdit() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({
         id: '',
-        orderDetailId: '',
+        orderDetail: null,
         quantityReturned: '',
         reason: '',
         reasonNote: '',
@@ -58,6 +58,7 @@ function ReturnItemEdit() {
             await updateReturnStatus(id, tempStatus, statusNote);
             toast.success('Return item status updated successfully');
             if (tempStatus === 'REFUNDED') {
+                setEditShow(true);
                 setShowMarkAsCompleted(true);
             }
             navigate(`/return-item/edit/${id}`);
@@ -102,7 +103,6 @@ function ReturnItemEdit() {
             { value: 'APPROVED', label: 'Approved' },
             { value: 'REJECTED', label: 'Rejected' },
             { value: 'REFUNDED', label: 'Refunded' },
-            { value: 'REPLACEMENT_SHIPPED', label: 'Replacement Shipped' },
             { value: 'COMPLETED', label: 'Completed' },
         ];
 
@@ -112,7 +112,7 @@ function ReturnItemEdit() {
             case 'APPROVED':
                 return options.filter((option) => ['APPROVED', 'REFUNDED'].includes(option.value));
             case 'REFUNDED':
-                return options.filter((option) => ['REFUNDED'].includes(option.value));
+                return options.filter((option) => ['REFUNDED', 'COMPLETED'].includes(option.value));
             default:
                 return options;
         }
@@ -141,7 +141,7 @@ function ReturnItemEdit() {
                                 <div className="col-md-4">
                                     <address>
                                         <strong>Return Item:</strong>
-                                        <p>ReturnItemEditId: {data.orderDetailId || 'null'}</p>
+                                        <p>ReturnItemEditId: {data.orderDetail ? data.orderDetail.id : 'null'}</p>
                                         <p>QuantityReturned: {data.quantityReturned || 'null'}</p>
                                         <p>Status: {data.status}</p>
                                         <p>StatusNote: {data.statusNote || 'null'}</p>
@@ -168,58 +168,64 @@ function ReturnItemEdit() {
                                 <div className="col-md-4">
                                     <strong>Images:</strong>
                                     <div>
-                                        <img
-                                            src={data.images}
-                                            alt={data.name}
-                                            style={{ width: '140px', height: '120px', borderRadius: '0px' }}
-                                        />
+                                        {data.images && data.images.length > 0 ? (
+                                            <img
+                                                src={data.images[0]}
+                                                alt="Return Item"
+                                                style={{ width: '140px', height: '120px', borderRadius: '0px' }}
+                                            />
+                                        ) : (
+                                            'No Image'
+                                        )}
                                     </div>
                                 </div>
                                 <div className="col-md-8">
                                     <form onSubmit={handleSubmit}>
                                         <div className="row">
-                                            {tempStatus !== 'REFUNDED' && (
-                                                <>
-                                                    <div className="col-md-6">
-                                                        <label className="col-form-label">Status</label>
-                                                        <select
-                                                            className="form-control"
-                                                            id="status"
-                                                            value={tempStatus}
-                                                            onChange={(e) => setTempStatus(e.target.value)}
-                                                            disabled={
-                                                                data.status === 'COMPLETED' ||
-                                                                data.status === 'REJECTED'
+                                            <>
+                                                <div className="col-md-6">
+                                                    <label className="col-form-label">Status</label>
+                                                    <select
+                                                        className="form-control"
+                                                        id="status"
+                                                        value={tempStatus}
+                                                        onChange={(e) => {
+                                                            setTempStatus(e.target.value);
+                                                            if (e.target.value === 'REFUNDED') {
+                                                                setEditShow(true);
                                                             }
-                                                        >
-                                                            {getSelectableOptions().map((option) => (
-                                                                <option key={option.value} value={option.value}>
-                                                                    {option.label}
-                                                                </option>
-                                                            ))}
-                                                        </select>
+                                                        }}
+                                                        disabled={
+                                                            data.status === 'COMPLETED' || data.status === 'REJECTED'
+                                                        }
+                                                    >
+                                                        {getSelectableOptions().map((option) => (
+                                                            <option key={option.value} value={option.value}>
+                                                                {option.label}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                                {tempStatus === 'REJECTED' && (
+                                                    <div className="col-md-6">
+                                                        <label className="col-form-label">StatusNote</label>
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            placeholder="StatusNote"
+                                                            required
+                                                            value={statusNote}
+                                                            onChange={(e) => setStatusNote(e.target.value)}
+                                                        />
                                                     </div>
-                                                    {tempStatus === 'REJECTED' && (
-                                                        <div className="col-md-6">
-                                                            <label className="col-form-label">StatusNote</label>
-                                                            <input
-                                                                type="text"
-                                                                className="form-control"
-                                                                placeholder="StatusNote"
-                                                                required
-                                                                value={statusNote}
-                                                                onChange={(e) => setStatusNote(e.target.value)}
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    <div className="col-md-12 mt-3">
-                                                        <button className="btn btn-primary" type="submit">
-                                                            Update Status
-                                                        </button>
-                                                    </div>
-                                                </>
-                                            )}
-                                            {showMarkAsCompleted && (
+                                                )}
+                                                <div className="col-md-12 mt-3">
+                                                    <button className="btn btn-primary" type="submit">
+                                                        Update Status
+                                                    </button>
+                                                </div>
+                                            </>
+                                            {/* {showMarkAsCompleted && (
                                                 <div className="col-md-6 mt-3">
                                                     <button
                                                         type="button"
@@ -229,7 +235,7 @@ function ReturnItemEdit() {
                                                         Mark as Completed
                                                     </button>
                                                 </div>
-                                            )}
+                                            )} */}
                                         </div>
                                     </form>
                                 </div>
@@ -238,77 +244,79 @@ function ReturnItemEdit() {
                     </div>
                 </div>
             </div>
-            <Modal
-                show={editShow}
-                onHide={handleClose}
-                // size="lg"
-                // style={{ width: '1500px', height: '1000px', }}
-            >
-                <Modal.Header closeButton>
-                    <Modal.Title>Return Item</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Container>
-                        <Row className="mb-3">
-                            <Col md={6}>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Condition Item"
-                                    value={data.conditionItem}
-                                    onChange={(e) => setData({ ...data, conditionItem: e.target.value })}
-                                    style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
-                                />
-                            </Col>
-                            <Col md={6}>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    placeholder="Condition Note"
-                                    value={data.conditionNote}
-                                    onChange={(e) => setData({ ...data, conditionNote: e.target.value })}
-                                    style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
-                                />
-                            </Col>
-                        </Row>
-                        <Row className="mb-3">
-                            <Col md={6}>
-                                <input
-                                    type="number"
-                                    className="form-control"
-                                    placeholder="Refund Percentage"
-                                    value={data.refundPercentage}
-                                    onChange={(e) => setData({ ...data, refundPercentage: e.target.value })}
-                                    style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
-                                />
-                            </Col>
-                            <Col md={6}>
-                                <select
-                                    name="size"
-                                    className="form-control"
-                                    value={data.isAddStockQty}
-                                    onChange={(e) => setData({ ...data, isAddStockQty: e.target.value })}
-                                    required
-                                >
-                                    <option value="" disabled>
-                                        Select Is Add Stock Qty
-                                    </option>
-                                    <option value="True">True</option>
-                                    <option value="false">False</option>
-                                </select>
-                            </Col>
-                        </Row>
-                    </Container>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleUpdate}>
-                        Update
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+            {tempStatus === 'REFUNDED' && (
+                <Modal
+                    show={editShow}
+                    onHide={handleClose}
+                    // size="lg"
+                    // style={{ width: '1500px', height: '1000px', }}
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title>Return Item</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Container>
+                            <Row className="mb-3">
+                                <Col md={6}>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Condition Item"
+                                        value={data.conditionItem}
+                                        onChange={(e) => setData({ ...data, conditionItem: e.target.value })} 
+                                        style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
+                                    />
+                                </Col>
+                                <Col md={6}>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Condition Note"
+                                        value={data.conditionNote}
+                                        onChange={(e) => setData({ ...data, conditionNote: e.target.value })}
+                                        style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
+                                    />
+                                </Col>
+                            </Row>
+                            <Row className="mb-3">
+                                <Col md={6}>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        placeholder="Refund Percentage"
+                                        value={data.refundPercentage}
+                                        onChange={(e) => setData({ ...data, refundPercentage: e.target.value })}
+                                        style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
+                                    />
+                                </Col>
+                                <Col md={6}>
+                                    <select
+                                        name="size"
+                                        className="form-control"
+                                        value={data.isAddStockQty}
+                                        onChange={(e) => setData({ ...data, isAddStockQty: e.target.value })}
+                                        required
+                                    >
+                                        <option value="" disabled>
+                                            Select Is Add Stock Qty
+                                        </option>
+                                        <option value="True">True</option>
+                                        <option value="false">False</option>
+                                    </select>
+                                </Col>
+                            </Row>
+                        </Container>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" onClick={handleUpdate}>
+                            Update
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+            )}
 
             <ToastContainer />
         </>

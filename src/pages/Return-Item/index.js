@@ -23,7 +23,7 @@ function Return() {
     useEffect(() => {
         const applyFilters = () => {
             const filteredData = data.filter((item) => {
-                return item.orderDetailId && item.orderDetailId.toString().toLowerCase().includes(search.toLowerCase());
+                return item.orderDetail && item.orderDetail.id.toString().toLowerCase().includes(search.toLowerCase());
             });
             setFilteredReturns(filteredData);
         };
@@ -43,7 +43,6 @@ function Return() {
                 sort: `id:${sortOrder}`,
             };
 
-            console.log('params ', params);
             if (sortStatus) {
                 params.returnItem = `status:${sortStatus}`;
             }
@@ -53,6 +52,7 @@ function Return() {
             }
 
             const response = await getReturn(params);
+            console.log('response ', response.data.content);
             setData(response.data.content);
             setTotalPages(response.data.totalPages);
             setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
@@ -108,7 +108,7 @@ function Return() {
                                             <option value="APPROVED">Approved</option>
                                             <option value="REJECTED">Rejected</option>
                                             <option value="REFUNDED">Refunded</option>
-                                            <option value="REPLACEMENT_SHIPPED">Replacement Shipped</option>
+                                            {/* <option value="REPLACEMENT_SHIPPED">Replacement Shipped</option> */}
                                             <option value="COMPLETED">Completed</option>
                                         </select>
                                     </div>
@@ -145,15 +145,17 @@ function Return() {
                                                 <tr key={item.id}>
                                                     <td>{(currentPage - 1) * limit + index + 1}</td>
                                                     <td>
-                                                        {item.orderDetailId.length > 15
-                                                            ? item.orderDetailId.slice(0, 15) + '...'
-                                                            : item.orderDetailId}
+                                                        {item.orderDetail && item.orderDetail.id
+                                                            ? item.orderDetail.id.length > 20
+                                                                ? item.orderDetail.id.slice(0, 20) + '...'
+                                                                : item.orderDetail.id
+                                                            : 'No Order Detail'}
                                                     </td>
                                                     <td>
                                                         {item.images.length > 0 ? (
                                                             <img
-                                                                src={item.images}
-                                                                alt={item.name}
+                                                                src={item.images[0]}
+                                                                alt="Return Item"
                                                                 style={{
                                                                     width: '70px',
                                                                     height: '70px',
@@ -166,7 +168,7 @@ function Return() {
                                                     </td>
                                                     <td>{item.quantityReturned}</td>
                                                     <td>{item.reason}</td>
-                                                    <td>{item.reasonNote}$</td>
+                                                    <td>{item.reasonNote}</td>
                                                     <td>
                                                         <div className="badge" style={statusColors[item.status]}>
                                                             {statusColors[item.status]?.label || item.status}
