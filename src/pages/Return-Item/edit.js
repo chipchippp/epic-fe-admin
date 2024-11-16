@@ -126,6 +126,8 @@ function ReturnItemEdit() {
         setEditShow(false);
     };
 
+    const shouldShowModal = tempStatus === 'REFUNDED' && data.status !== 'REFUNDED';
+
     return (
         <>
             <div className="content-wrapper">
@@ -165,24 +167,48 @@ function ReturnItemEdit() {
                                 </div>
                             </div>
                             <div className="row mt-4">
-                                <div className="col-md-4">
-                                    <strong>Images:</strong>
-                                    <div>
-                                        {data.images && data.images.length > 0 ? (
-                                            <img
-                                                src={data.images[0]}
-                                                alt="Return Item"
-                                                style={{ width: '140px', height: '120px', borderRadius: '0px' }}
-                                            />
-                                        ) : (
-                                            'No Image'
-                                        )}
+                                <div className="col-md-12">
+                                    <div className="table-responsive">
+                                        <table className="table table-striped table-hover table-md">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Image</th>
+                                                    <th>Quantity</th>
+                                                    <th>Price</th>
+                                                    <th>TotalPrice</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {data.orderDetail && (
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td>
+                                                            {data.images && data.images.length > 0 ? (
+                                                                <img
+                                                                    src={data.images[0]}
+                                                                    alt="Product Image"
+                                                                    style={{
+                                                                        width: '70px',
+                                                                        height: '70px',
+                                                                        borderRadius: '0px',
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                'No Image'
+                                                            )}
+                                                        </td>
+                                                        <td>{data.orderDetail.quantity}</td>
+                                                        <td>${data.orderDetail.unitPrice}</td>
+                                                        <td>${data.orderDetail.totalPrice}</td>
+                                                    </tr>
+                                                )}
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </div>
-                                <div className="col-md-8">
-                                    <form onSubmit={handleSubmit}>
-                                        <div className="row">
-                                            <>
+                                    <div className="col-md-8 ">
+                                        <form onSubmit={handleSubmit}>
+                                            <div className="row">
                                                 <div className="col-md-6">
                                                     <label className="col-form-label">Status</label>
                                                     <select
@@ -224,33 +250,18 @@ function ReturnItemEdit() {
                                                         Update Status
                                                     </button>
                                                 </div>
-                                            </>
-                                            {/* {showMarkAsCompleted && (
-                                                <div className="col-md-6 mt-3">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-success ml-2"
-                                                        onClick={handleMarkAsCompleted}
-                                                    >
-                                                        Mark as Completed
-                                                    </button>
-                                                </div>
-                                            )} */}
-                                        </div>
-                                    </form>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            {tempStatus === 'REFUNDED' && (
-                <Modal
-                    show={editShow}
-                    onHide={handleClose}
-                    // size="lg"
-                    // style={{ width: '1500px', height: '1000px', }}
-                >
+
+            {shouldShowModal && (
+                <Modal show={editShow} onHide={handleClose}>
                     <Modal.Header closeButton>
                         <Modal.Title>Return Item</Modal.Title>
                     </Modal.Header>
@@ -263,7 +274,7 @@ function ReturnItemEdit() {
                                         className="form-control"
                                         placeholder="Condition Item"
                                         value={data.conditionItem}
-                                        onChange={(e) => setData({ ...data, conditionItem: e.target.value })} 
+                                        onChange={(e) => setData({ ...data, conditionItem: e.target.value })}
                                         style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
                                     />
                                 </Col>
@@ -317,7 +328,6 @@ function ReturnItemEdit() {
                     </Modal.Footer>
                 </Modal>
             )}
-
             <ToastContainer />
         </>
     );

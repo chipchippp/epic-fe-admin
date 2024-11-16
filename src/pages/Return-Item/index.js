@@ -57,7 +57,7 @@ function Return() {
             setTotalPages(response.data.totalPages);
             setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
         } catch (error) {
-            toast.error('Failed to fetch products');
+            toast.error('Failed to fetch return item');
         }
     };
 

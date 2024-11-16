@@ -98,13 +98,13 @@ function User() {
                                                                     <i className="far fa-eye"></i>
                                                                 </Link>
                                                                 &nbsp;
-                                                                <Link
+                                                                {/* <Link
                                                                     to={`/users/edit/${item.id}`}
                                                                     className="btn btn-primary"
                                                                     title="Edit"
                                                                 >
                                                                     <i className="fas fa-pencil-alt"></i>
-                                                                </Link>
+                                                                </Link> */}
                                                             </td>
                                                         </tr>
                                                     ))}

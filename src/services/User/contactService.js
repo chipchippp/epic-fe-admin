@@ -42,6 +42,16 @@ export const editContact = async (id) => {
     }
 };
 
+export const editContactReply = async (id) => {
+    try {
+        const response = await get(service, `/contact/contactReplyId/${id}`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Contact data:', error);
+        throw error;
+    }
+};
+
 export const updateContact = async (id, data) => {
     try {
         const response = await put(service, `/contact/${id}`, data);

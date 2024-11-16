@@ -22,7 +22,13 @@ function Contact() {
 
     const debouncedSearch = useCallback(
         debounce((query) => {
-            const filteredData = data.filter((item) => item.username.toLowerCase().includes(query.toLowerCase()));
+            if (!query.trim()) {
+                setSearchedData(data);
+                return;
+            }
+            const filteredData = data.filter(
+                (item) => item.username && item.username.toLowerCase().includes(query.toLowerCase()),
+            );
             setSearchedData(filteredData);
         }, 500),
         [data],
@@ -117,22 +123,13 @@ function Contact() {
                                                             {/* <td>{item.spam}</td>
                                                             <td>{item.important}</td>
                                                             <td>{item.read}</td> */}
-                                                            {/* <td>
-                                                                <Link
-                                                                    to={`/contact/edit/${item.id}`}
-                                                                    className="btn btn-primary"
-                                                                    title="Edit"
-                                                                >
-                                                                    <i className="fas fa-pencil-alt"></i>
-                                                                </Link>
-                                                            </td> */}
                                                             <td>
                                                                 <Link
-                                                                    to="/contact/create"
-                                                                    className="float-left btn btn-primary"
-                                                                    title="Send"
+                                                                    to={`/contact/edit/${item.id}`}
+                                                                    className="btn btn-warning"
+                                                                    title="Detail"
                                                                 >
-                                                                    <i className="fas fa-plus"></i>
+                                                                    <i className="far fa-eye"></i>
                                                                 </Link>
                                                             </td>
                                                         </tr>
