@@ -123,7 +123,7 @@ function Contact() {
                                                             {/* <td>{item.spam}</td>
                                                             <td>{item.important}</td>
                                                             <td>{item.read}</td> */}
-                                                            <td>
+                                                            {/* <td>
                                                                 <Link
                                                                     to={`/contact/edit/${item.id}`}
                                                                     className="btn btn-warning"
@@ -131,7 +131,7 @@ function Contact() {
                                                                 >
                                                                     <i className="far fa-eye"></i>
                                                                 </Link>
-                                                            </td>
+                                                            </td> */}
                                                         </tr>
                                                     ))}
                                                 </tbody>

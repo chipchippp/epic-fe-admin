@@ -22,7 +22,8 @@ function HomeAdmin() {
                 setOrders(data.data.content);
             })
             .catch((error) => {
-                toast.error('Failed to fetch orders', error);
+                // toast.error('Failed to fetch orders', error);
+                console.log(error);
             });
     };
 
@@ -32,7 +33,8 @@ function HomeAdmin() {
                 setOrders(data.data);
             })
             .catch((error) => {
-                toast.error('Failed to fetch orders', error);
+                // toast.error('Failed to fetch orders', error);
+                console.log(error);
             });
     };
 
@@ -42,7 +44,8 @@ function HomeAdmin() {
                 setProducts(data.data.content);
             })
             .catch((error) => {
-                toast.error('Failed to fetch products', error);
+                // toast.error('Failed to fetch products', error);
+                console.log(error);
             });
     };
 
@@ -53,7 +56,8 @@ function HomeAdmin() {
                 setUsers(data.data);
             })
             .catch((error) => {
-                toast.error('Failed to fetch users', error);
+                // toast.error('Failed to fetch users', error);
+                console.log(error);
             });
     };
 
@@ -117,9 +121,7 @@ function HomeAdmin() {
                             <div className="card card-light-blue">
                                 <div className="card-body">
                                     <p className="mb-4">Total Users</p>
-                                    <p className="fs-30 mb-2">
-                                        {(users.totalUsersCustomer || 0)}
-                                    </p>
+                                    <p className="fs-30 mb-2">{users.totalUsersCustomer || 0}</p>
                                 </div>
                             </div>
                         </div>

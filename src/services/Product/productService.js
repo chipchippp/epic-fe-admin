@@ -4,7 +4,7 @@ const service = 'product';
 
 export const getProduct = async () => {
     try {
-        const response = await get(service, `/products/search-by-specification?page=1&limit=7&sort=soldQuantity:desc`);
+        const response = await get(service, `/products/search-by-specification?page=1&limit=100&sort=soldQuantity:desc`);
         return response;
     } catch (error) {
         console.error('Error fetching Product data:', error);

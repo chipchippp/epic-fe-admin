@@ -17,6 +17,7 @@ const CreateProduct = () => {
         manufacturer: '',
         size: '',
         weight: '',
+        returnPeriodDays: '',
     });
     const [categories, setCategories] = useState([]);
     const [selectedFiles, setSelectedFiles] = useState([]);
@@ -151,6 +152,7 @@ const CreateProduct = () => {
                                         />
                                     </div>
                                 </div>
+                                <div className="row mb-4">{renderInput('ReturnPeriodDays', 'returnPeriodDays', 'number', data.returnPeriodDays)}</div>
                                 <button type="submit" className="btn btn-primary mr-2">
                                     Save
                                 </button>

@@ -24,7 +24,6 @@ const EditBlog = () => {
                 if (blogData.user && blogData.user.userId) {
                     blogData.userId = blogData.user.userId;
                 }
-                console.log(blogData);
                 setData(blogData);
                 setImagesOld(blogData.imageTitle ? [blogData.imageTitle] : []);
                 setLoading(false);
@@ -184,8 +183,8 @@ const EditBlog = () => {
                                                 imagesOld.map((image, index) => (
                                                     <div key={index} style={{ position: 'relative' }}>
                                                         <img
-                                                            src={image.imageTitle}
-                                                            alt={image.imageName}
+                                                            src={image}
+                                                            alt={`Old Image ${index + 1}`}
                                                             style={{
                                                                 width: '100px',
                                                                 height: '100px',

@@ -57,13 +57,24 @@ function EditContact() {
             try {
                 const result = await editContact(id);
                 const contactReplyResult = await editContactReply(id);
+
+                const contactReplyData =
+                    Array.isArray(contactReplyResult.data) && contactReplyResult.data.length > 0
+                        ? contactReplyResult.data[0]
+                        : {};
+
+                if (Array.isArray(contactReplyResult.data) && contactReplyResult.data.length > 0) {
+                    setContactReplys(contactReplyResult.data);
+                }
+
                 setDataContactReply({
-                    username: contactReplyResult.data.username || '',
-                    phoneNumber: contactReplyResult.data.phoneNumber || '',
-                    email: contactReplyResult.data.email || '',
-                    note: contactReplyResult.data.note || '',
-                    contactReplyId: contactReplyResult.data.contactReplyId || 0,
+                    username: contactReplyData.username || '',
+                    phoneNumber: contactReplyData.phoneNumber || '',
+                    email: contactReplyData.email || '',
+                    note: contactReplyData.note || '',
+                    contactReplyId: contactReplyData.contactReplyId || 0,
                 });
+
                 setData({
                     username: result.data.username || '',
                     phoneNumber: result.data.phoneNumber || '',
@@ -71,11 +82,16 @@ function EditContact() {
                     note: result.data.note || '',
                     contactReplyId: result.data.contactReplyId || 0,
                 });
+
+                setDataPost((prevDataPost) => ({
+                    ...prevDataPost,
+                    contactReplyId: result.data.contactReplyId || 0,
+                }));
+
                 console.log('result ', result.data);
                 console.log('contactReplyResult ', contactReplyResult.data);
             } catch (error) {
                 toast.error('Failed to fetch contact or contact reply');
-                console.error('Error:', error.response ? error.response.data : error.message);
             }
         };
         fetchData();
@@ -88,7 +104,6 @@ function EditContact() {
             toast.success('Contact created successfully');
             navigate('/contact');
         } catch (error) {
-            console.error('Error creating Contact:', error.response ? error.response.data : error.message);
             toast.error('Failed to create Contact');
         }
     };
@@ -119,16 +134,18 @@ function EditContact() {
                                         <p>ContactReply: {data.contactReplyId}</p>
                                     </address>
                                 </div>
-                                <div className="col-md-4">
-                                    <address>
-                                        <strong>Contact Admin Reply:</strong>
-                                        <p>Username: {dataContactReply.username}</p>
-                                        <p>Email: {dataContactReply.email}</p>
-                                        <p>PhoneNumber: {dataContactReply.phoneNumber}</p>
-                                        <p>Note: {dataContactReply.note}</p>
-                                        <p>ContactReply: {dataContactReply.contactReplyId}</p>
-                                    </address>
-                                </div>
+                                {contactReplys.map((contactReply, index) => (
+                                    <div key={index} className="col-md-4">
+                                        <address>
+                                            <strong>Contact Admin Reply {index + 1}:</strong>
+                                            <p>Username: {contactReply.username}</p>
+                                            <p>Email: {contactReply.email}</p>
+                                            <p>PhoneNumber: {contactReply.phoneNumber}</p>
+                                            <p>Note: {contactReply.note}</p>
+                                            <p>ContactReply: {contactReply.contactReplyId}</p>
+                                        </address>
+                                    </div>
+                                ))}
                             </div>
                             {data.contactReplyId === 0 && (
                                 <div className="mb-4">
@@ -166,14 +183,14 @@ function EditContact() {
                                                 <select
                                                     name="contactReplyId"
                                                     className="form-control"
-                                                    value={dataPost.contactReplyId || data.contactReplyId || ''} // Default to result.contactReplyId
+                                                    value={dataPost.contactReplyId || ''} // Bind to dataPost.contactReplyId
                                                     onChange={(e) =>
                                                         setDataPost({
                                                             ...dataPost,
-                                                            contactReplyId: parseInt(e.target.value) || null, // Ensure the value is parsed to an integer
+                                                            contactReplyId: parseInt(e.target.value) || null,
                                                         })
                                                     }
-                                                    disabled={data.contactReplyId !== 0}
+                                                    disabled={data.contactReplyId !== 0} // Keep this condition for disabling the form when needed
                                                 >
                                                     <option value="" disabled>
                                                         Select Contact Reply

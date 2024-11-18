@@ -10,6 +10,7 @@ function ReturnItemEdit() {
     const navigate = useNavigate();
     const [editShow, setEditShow] = useState(false);
     const [showMarkAsCompleted, setShowMarkAsCompleted] = useState(false);
+    const [refund, setRefund] = useState(false);
     const [tempStatus, setTempStatus] = useState('');
     const [statusNote, setStatusNote] = useState('');
     const [loading, setLoading] = useState(true);
@@ -44,6 +45,7 @@ function ReturnItemEdit() {
                     setEditShow(true);
                     setShowMarkAsCompleted(true);
                 }
+                console.log(result.data);
             } catch (error) {
                 toast.error('Failed to fetch return item data');
                 setLoading(false);
@@ -90,6 +92,7 @@ function ReturnItemEdit() {
             .then(() => {
                 handleClose();
                 toast.success('Return has been updated');
+                navigate(`/return-item/edit/${id}`);
                 setShowMarkAsCompleted(true);
             })
             .catch((error) => {
@@ -112,7 +115,7 @@ function ReturnItemEdit() {
             case 'APPROVED':
                 return options.filter((option) => ['APPROVED', 'REFUNDED'].includes(option.value));
             case 'REFUNDED':
-                return options.filter((option) => ['REFUNDED', 'COMPLETED'].includes(option.value));
+                return options.filter((option) => ['REFUNDED'].includes(option.value));
             default:
                 return options;
         }
@@ -144,27 +147,30 @@ function ReturnItemEdit() {
                                     <address>
                                         <strong>Return Item:</strong>
                                         <p>ReturnItemEditId: {data.orderDetail ? data.orderDetail.id : 'null'}</p>
+                                        <p>Username: {data.username}</p>
                                         <p>QuantityReturned: {data.quantityReturned || 'null'}</p>
                                         <p>Status: {data.status}</p>
-                                        <p>StatusNote: {data.statusNote || 'null'}</p>
+                                        <p>StatusNote: {data.statusNote}</p>
                                     </address>
                                 </div>
                                 <div className="col-md-4">
                                     <address>
                                         <strong>Reason:</strong>
                                         <p>Reason: {data.reason || 'null'}</p>
-                                        <p>ReasonNote: {data.reasonNote || 'null'}</p>
+                                        <p>ReasonNote: {data.reasonNote}</p>
                                     </address>
                                 </div>
-                                <div className="col-md-4">
-                                    <address>
-                                        <strong>Refund:</strong>
-                                        <p>RefundPercentage: {data.refundPercentage || 'null'}</p>
-                                        <p>RefundAmount: {data.refundAmount || 'null'}</p>
-                                        <p>ConditionItem: {data.conditionItem || 'null'}</p>
-                                        <p>ConditionNote: {data.conditionNote || 'null'}</p>
-                                    </address>
-                                </div>
+                                {['PENDING', 'APPROVED', 'REJECTED', 'REFUNDED'].includes(data.status) && (
+                                    <div className="col-md-4">
+                                        <address>
+                                            <strong>Refund:</strong>
+                                            <p>RefundPercentage: {data.refundPercentage}</p>
+                                            <p>RefundAmount: {data.refundAmount}</p>
+                                            <p>ConditionItem: {data.conditionItem}</p>
+                                            <p>ConditionNote: {data.conditionNote}</p>
+                                        </address>
+                                    </div>
+                                )}
                             </div>
                             <div className="row mt-4">
                                 <div className="col-md-12">
@@ -184,23 +190,25 @@ function ReturnItemEdit() {
                                                     <tr>
                                                         <td>1</td>
                                                         <td>
-                                                            {data.images && data.images.length > 0 ? (
-                                                                <img
-                                                                    src={data.images[0]}
-                                                                    alt="Product Image"
-                                                                    style={{
-                                                                        width: '70px',
-                                                                        height: '70px',
-                                                                        borderRadius: '0px',
-                                                                    }}
-                                                                />
-                                                            ) : (
-                                                                'No Image'
-                                                            )}
+                                                            {data.images && data.images.length > 0
+                                                                ? data.images.map((image, index) => (
+                                                                      <img
+                                                                          key={index}
+                                                                          src={image}
+                                                                          alt={`Product Image ${index + 1}`}
+                                                                          style={{
+                                                                              width: '70px',
+                                                                              height: '70px',
+                                                                              borderRadius: '0px',
+                                                                              marginRight: '10px',
+                                                                          }}
+                                                                      />
+                                                                  ))
+                                                                : 'No Image'}
                                                         </td>
                                                         <td>{data.orderDetail.quantity}</td>
-                                                        <td>${data.orderDetail.unitPrice}</td>
-                                                        <td>${data.orderDetail.totalPrice}</td>
+                                                        <td>{data.orderDetail.unitPrice}$</td>
+                                                        <td>{data.orderDetail.totalPrice}$</td>
                                                     </tr>
                                                 )}
                                             </tbody>
@@ -240,6 +248,7 @@ function ReturnItemEdit() {
                                                             className="form-control"
                                                             placeholder="StatusNote"
                                                             required
+                                                            disabled={data.status === 'REJECTED'}
                                                             value={statusNote}
                                                             onChange={(e) => setStatusNote(e.target.value)}
                                                         />
@@ -269,14 +278,26 @@ function ReturnItemEdit() {
                         <Container>
                             <Row className="mb-3">
                                 <Col md={6}>
-                                    <input
-                                        type="text"
+                                    <select
+                                        name="size"
                                         className="form-control"
-                                        placeholder="Condition Item"
                                         value={data.conditionItem}
                                         onChange={(e) => setData({ ...data, conditionItem: e.target.value })}
-                                        style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
-                                    />
+                                        required
+                                    >
+                                        <option value="" disabled>
+                                            Select conditionItem
+                                        </option>
+                                        <option value="SEVERELY_DAMAGED">SEVERELY_DAMAGED</option>
+                                        <option value="MODERATELY_DAMAGED">MODERATELY_DAMAGED</option>
+                                        <option value="SLIGHTLY_DAMAGED">SLIGHTLY_DAMAGED</option>
+                                        <option value="NORMAL">NORMAL</option>
+                                        <option value="NEW_OPEN_BOX">NEW_OPEN_BOX</option>
+                                        <option value="LIKE_NEW">LIKE_NEW</option>
+                                        <option value="INCOMPLETE">INCOMPLETE</option>
+                                        <option value="MISDELIVERED_ITEM">MISDELIVERED_ITEM</option>
+                                        <option value="OTHER">OTHER</option>
+                                    </select>
                                 </Col>
                                 <Col md={6}>
                                     <input
@@ -309,10 +330,10 @@ function ReturnItemEdit() {
                                         required
                                     >
                                         <option value="" disabled>
-                                            Select Is Add Stock Qty
+                                            Select IsAddStockQty
                                         </option>
-                                        <option value="True">True</option>
                                         <option value="false">False</option>
+                                        <option value="true">True</option>
                                     </select>
                                 </Col>
                             </Row>

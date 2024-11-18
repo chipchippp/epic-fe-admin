@@ -97,35 +97,30 @@ function Return() {
                         <div className="card">
                             <div className="card-body">
                                 <h3 className="font-weight-bold">Return-Item</h3>
-                                <div className="filter-product">
-                                    <div className="float-left">
-                                        <select
-                                            className="form-control selectric btn-primary"
-                                            onChange={(e) => handleSortStatus(e.target.value)}
-                                        >
-                                            <option value="">Filter Status</option>
-                                            <option value="PENDING">Pending</option>
-                                            <option value="APPROVED">Approved</option>
-                                            <option value="REJECTED">Rejected</option>
-                                            <option value="REFUNDED">Refunded</option>
-                                            {/* <option value="REPLACEMENT_SHIPPED">Replacement Shipped</option> */}
-                                            <option value="COMPLETED">Completed</option>
+                                <div className="float-left">
+                                    <select
+                                        className="form-control selectric btn-primary"
+                                        onChange={(e) => handleSortStatus(e.target.value)}
+                                    >
+                                        <option value="">Filter Status</option>
+                                        <option value="PENDING">Pending</option>
+                                        <option value="APPROVED">Approved</option>
+                                        <option value="REJECTED">Rejected</option>
+                                        <option value="REFUNDED">Refunded</option>
+                                        {/* <option value="REPLACEMENT_SHIPPED">Replacement Shipped</option> */}
+                                        {/* <option value="COMPLETED">Completed</option> */}
+                                    </select>
+                                </div>
+                                <div className="float-left ml-2">
+                                    <div className="sort-container">
+                                        <select className="sort-dropdown" onChange={(e) => handleSort(e.target.value)}>
+                                            <option value="desc">Sort Date</option>
+                                            <option value="asc">Sort Ascending</option>
+                                            <option value="desc">Sort Descending</option>
                                         </select>
                                     </div>
-                                    <div className="float-left filter-sort-group">
-                                        <div className="sort-container">
-                                            <select
-                                                className="sort-dropdown"
-                                                onChange={(e) => handleSort(e.target.value)}
-                                            >
-                                                <option value="desc">Sort Date</option>
-                                                <option value="asc">Sort Ascending</option>
-                                                <option value="desc">Sort Descending</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <Search setSearch={handleSearch} />
                                 </div>
+                                <Search setSearch={handleSearch} />
                                 <div className="table-responsive">
                                     <table className="table table-striped">
                                         <thead>
@@ -167,7 +162,13 @@ function Return() {
                                                         )}
                                                     </td>
                                                     <td>{item.quantityReturned}</td>
-                                                    <td>{item.reason}</td>
+                                                    <td>
+                                                        {item.reason && item.reason
+                                                            ? item.reason.length > 20
+                                                                ? item.reason.slice(0, 20) + '...'
+                                                                : item.reason
+                                                            : 'No Order Detail'}
+                                                    </td>
                                                     <td>{item.reasonNote}</td>
                                                     <td>
                                                         <div className="badge" style={statusColors[item.status]}>
