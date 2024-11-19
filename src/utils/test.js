@@ -1,10 +1,26 @@
 import axios from 'axios';
 import getBaseUrl from './baseUrl';
 import { toast } from 'react-toastify';
+import { navigate } from 'react-router-dom';
 
 export const httpRequest = axios.create({
     baseURL: process.env.REACT_APP_BASE_URL,
 });
+
+const refreshAccessToken = async () => {
+    const refreshToken = localStorage.getItem('refreshToken');
+    if (!refreshToken) {
+        throw new Error('No refresh token available');
+    }
+
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/auth/refresh`, { refreshToken });
+    if (response && response.data && response.data.accessToken) {
+        localStorage.setItem('accessToken', response.data.accessToken);
+        return response.data.accessToken;
+    } else {
+        throw new Error('Failed to refresh access token');
+    }
+};
 
 export const createHttpRequest = (service) => {
     const httpRequest = axios.create({
@@ -28,17 +44,20 @@ export const createHttpRequest = (service) => {
         (response) => {
             return response;
         },
-        (error) => {
-            // if (error.response && error.response.status === 401 && error.response.status === 403) {
-            //     localStorage.clear();
-            //     localStorage.removeItem('accessToken');
-            //     localStorage.removeItem('refreshToken');
-            //     localStorage.removeItem('roles');
-            //     localStorage.removeItem('id');
-            //     localStorage.removeItem('username');
-            //     toast.error('Session expired. Please log in again.');
-            //     window.location.href = '/login';
-            // }
+        async (error) => {
+            const originalRequest = error.config;
+            if (error.response && error.response.status === 401 && !originalRequest._retry) {
+                originalRequest._retry = true;
+                try {
+                    const newAccessToken = await refreshAccessToken();
+                    axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
+                    return httpRequest(originalRequest);
+                } catch (refreshError) {
+                    localStorage.clear();
+                    toast.error('Session expired. Please log in again.');
+                    navigate('/login');
+                }
+            }
             return Promise.reject(error);
         },
     );
