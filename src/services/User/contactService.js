@@ -2,9 +2,9 @@ import { get, post, put, del } from '~/utils/httpRequest';
 
 const service = 'user';
 
-export const getContact = async (currentPage = 1, limit = 7) => {
+export const getContact = async (params) => {
     try {
-        const response = await get(service, `/contact/getAll?page=${currentPage}&limit=${limit}`);
+        const response = await get(service, `/contact/searchBySpecification`, { params });
         return response;
     } catch (error) {
         console.error('Error fetching Contact data:', error);
@@ -42,9 +42,9 @@ export const editContact = async (id) => {
     }
 };
 
-export const editContactReply = async (id) => {
+export const editContactReply = async (contactReplyId) => {
     try {
-        const response = await get(service, `/contact/contactReplyId/${id}`);
+        const response = await get(service, `/contact/contactReplyId/${contactReplyId}`);
         return response;
     } catch (error) {
         console.error('Error fetching Contact data:', error);

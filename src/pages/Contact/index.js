@@ -9,75 +9,68 @@ import { getContact, deleteContact } from '~/services/User/contactService';
 import { debounce } from 'lodash';
 
 function Contact() {
+    const [filteredContact, setFilteredContact] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [deleteShow, setDeleteShow] = useState(false);
-    const [deleteId, setDeleteId] = useState(null);
     const [data, setData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [limit, setLimit] = useState(10);
     const [numbers, setNumbers] = useState([]);
     const [search, setSearch] = useState('');
-    const [searchedData, setSearchedData] = useState([]);
+    const [sortOrder, setSortOrder] = useState('desc');
 
-    const debouncedSearch = useCallback(
-        debounce((query) => {
-            if (!query.trim()) {
-                setSearchedData(data);
-                return;
+    useEffect(() => {
+        const applyFilters = () => {
+            const filteredData = data.filter((item) => {
+                const email = item.email ? item.email.toString().toLowerCase() : '';
+                const username = item.username ? item.username.toString().toLowerCase() : '';
+                const searchLower = search.toLowerCase();
+
+                return (
+                    email.includes(searchLower) || username.includes(searchLower)
+                );
+            });
+            setFilteredContact(filteredData);
+        };
+        applyFilters();
+    }, [search, data]);
+
+    useEffect(() => {
+        getFilteredData();
+    }, [currentPage, limit, search, sortOrder]);
+
+    const getFilteredData = async () => {
+        try {
+            const params = {
+                page: currentPage,
+                size: limit,
+                sort: `id:${sortOrder}`,
+            };
+
+            if (search) {
+                params.contact = `username~${search}, 'email~${search}`;
             }
-            const filteredData = data.filter(
-                (item) => item.username && item.username.toLowerCase().includes(query.toLowerCase()),
-            );
-            setSearchedData(filteredData);
+
+            const response = await getContact(params);
+            setData(response.data.content);
+            setLoading(false);
+            setTotalPages(response.data.totalPages);
+            setNumbers([...Array(response.data.totalPages).keys()].map((i) => i + 1));
+        } catch (error) {
+            toast.error('Failed to fetch return item');
+        }
+    };
+
+    const handleSearch = useCallback(
+        debounce((value) => {
+            setSearch(value);
         }, 500),
-        [data],
+        [],
     );
 
-    useEffect(() => {
-        debouncedSearch(search);
-    }, [search, debouncedSearch]);
-
-    useEffect(() => {
-        getData();
-    }, [currentPage, limit]);
-
-    const getData = async () => {
-        try {
-            const response = await getContact(currentPage, limit);
-
-            if (response && response.data && response.data.content) {
-                setData(response.data.content);
-                setSearchedData(response.data.content);
-                setTotalPages(response.data.totalPages);
-                const pagesArray = Array.from({ length: response.data.totalPages }, (_, i) => i + 1);
-                setNumbers(pagesArray);
-            } else {
-                toast.error('Invalid response structure from server');
-            }
-            setLoading(false);
-        } catch (error) {
-            toast.error('Failed to fetch contact');
-        }
+    const handleSort = (order) => {
+        setSortOrder(order);
     };
-
-    const handleDelete = (id) => {
-        setDeleteId(id);
-        setDeleteShow(true);
-    };
-
-    const handleDeleteConfirm = async () => {
-        try {
-            await deleteContact(deleteId);
-            toast.success('Contact has been deleted successfully');
-            handleClose();
-            getData();
-        } catch (error) {
-            toast.error('Failed to delete contact');
-        }
-    };
-
-    const handleClose = () => setDeleteShow(false);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -95,8 +88,19 @@ function Contact() {
                                 ) : (
                                     <>
                                         <h3 className="font-weight-bold">Contact</h3>
-                                        <Search setSearch={setSearch} />
-
+                                        <Search setSearch={handleSearch} />
+                                        <div className="float-left ml-2">
+                                            <div className="sort-container">
+                                                <select
+                                                    className="sort-dropdown"
+                                                    onChange={(e) => handleSort(e.target.value)}
+                                                >
+                                                    <option value="desc">Sort Date</option>
+                                                    <option value="asc">Sort Ascending</option>
+                                                    <option value="desc">Sort Descending</option>
+                                                </select>
+                                            </div>
+                                        </div>
                                         <div className="table-responsive">
                                             <table className="table table-striped">
                                                 <thead>
@@ -106,24 +110,18 @@ function Contact() {
                                                         <th>Email</th>
                                                         <th>Phone</th>
                                                         <th>Note</th>
-                                                        {/* <th>Spam</th>
-                                                        <th>Important</th>
-                                                        <th>Read</th> */}
                                                         {/* <th>Action</th> */}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    {searchedData.map((item, index) => (
+                                                    {filteredContact.map((item, index) => (
                                                         <tr key={item.id}>
                                                             <td>{(currentPage - 1) * limit + index + 1}</td>
                                                             <td>{item.username}</td>
                                                             <td>{item.email}</td>
                                                             <td>{item.phoneNumber}</td>
                                                             <td>{item.note}</td>
-                                                            {/* <td>{item.spam}</td>
-                                                            <td>{item.important}</td>
-                                                            <td>{item.read}</td> */}
-                                                            {/* <td>
+                                                            <td>
                                                                 <Link
                                                                     to={`/contact/edit/${item.id}`}
                                                                     className="btn btn-warning"
@@ -131,7 +129,7 @@ function Contact() {
                                                                 >
                                                                     <i className="far fa-eye"></i>
                                                                 </Link>
-                                                            </td> */}
+                                                            </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
@@ -150,21 +148,6 @@ function Contact() {
                         </div>
                     </div>
                 </div>
-
-                <Modal show={deleteShow} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Confirm Delete</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>Are you sure you want to delete this contact?</Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="secondary" onClick={handleClose}>
-                            Cancel
-                        </Button>
-                        <Button variant="danger" onClick={handleDeleteConfirm}>
-                            Delete
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
 
                 <ToastContainer />
             </div>

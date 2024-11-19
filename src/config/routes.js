@@ -39,7 +39,7 @@ const routes = {
     //    Contact
     contact: '/contact',
     createContact: '/contact/create',
-    editContact: '/contact/edit/:id',
+    editContact: '/contact/edit/:contactReplyId',
 
     //     Designer
     designer: '/designer',

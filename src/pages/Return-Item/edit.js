@@ -329,7 +329,7 @@ function ReturnItemEdit() {
                                         onChange={(e) => setData({ ...data, isAddStockQty: e.target.value })}
                                         required
                                     >
-                                        <option value="" disabled>
+                                        <option value="">
                                             Select IsAddStockQty
                                         </option>
                                         <option value="false">False</option>

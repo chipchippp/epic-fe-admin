@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import { editContact, createContact, getContactsReplyIsNull, editContactReply } from '~/services/User/contactService';
+import { createContact, getContactsReplyIsNull, editContactReply } from '~/services/User/contactService';
 
 function EditContact() {
-    const { id } = useParams();
+    const { contactReplyId } = useParams();
     const [contactReplys, setContactReplys] = useState([]);
     const [data, setData] = useState({
         username: '',
@@ -13,13 +13,7 @@ function EditContact() {
         email: '',
         note: '',
         contactReplyId: 0,
-    });
-    const [dataContactReply, setDataContactReply] = useState({
-        username: '',
-        phoneNumber: '',
-        email: '',
-        note: '',
-        contactReplyId: 0,
+        contactReply: null,
     });
     const [dataPost, setDataPost] = useState({
         username: 'Epicgures',
@@ -55,31 +49,25 @@ function EditContact() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const result = await editContact(id);
-                const contactReplyResult = await editContactReply(id);
-                setDataContactReply({
-                    username: contactReplyResult.data.username || '',
-                    phoneNumber: contactReplyResult.data.phoneNumber || '',
-                    email: contactReplyResult.data.email || '',
-                    note: contactReplyResult.data.note || '',
-                    contactReplyId: contactReplyResult.data.contactReplyId || 0,
-                });
-                setData({
-                    username: result.data.username || '',
-                    phoneNumber: result.data.phoneNumber || '',
-                    email: result.data.email || '',
-                    note: result.data.note || '',
-                    contactReplyId: result.data.contactReplyId || 0,
-                });
-                console.log('result ', result.data);
-                console.log('contactReplyResult ', contactReplyResult.data);
+                const result = await editContactReply(contactReplyId);
+                if (result.data.length > 0) {
+                    setData(result.data[0]);
+                } else {
+                    toast.error('No contact reply found');
+                }
             } catch (error) {
                 toast.error('Failed to fetch contact or contact reply');
-                console.error('Error:', error.response ? error.response.data : error.message);
             }
         };
         fetchData();
-    }, [id]);
+    }, [contactReplyId]);
+
+    useEffect(() => {
+        if (dataPost.contactReplyId) {
+            const selected = contactReplys.find((reply) => reply.id === dataPost.contactReplyId);
+            // setSelectedReply(selected || null);
+        }
+    }, [dataPost.contactReplyId, contactReplys]);
 
     const handleSubmitPost = async (event) => {
         event.preventDefault();
@@ -111,26 +99,32 @@ function EditContact() {
                             <div className="row mb-4">
                                 <div className="col-md-4">
                                     <address>
-                                        <strong>Contact User Reply:</strong>
+                                        <strong>Contact Admin Reply:</strong>
                                         <p>Username: {data.username}</p>
                                         <p>Email: {data.email}</p>
                                         <p>PhoneNumber: {data.phoneNumber}</p>
                                         <p>Note: {data.note}</p>
-                                        <p>ContactReply: {data.contactReplyId}</p>
                                     </address>
                                 </div>
                                 <div className="col-md-4">
                                     <address>
-                                        <strong>Contact Admin Reply:</strong>
-                                        <p>Username: {dataContactReply.username}</p>
-                                        <p>Email: {dataContactReply.email}</p>
-                                        <p>PhoneNumber: {dataContactReply.phoneNumber}</p>
-                                        <p>Note: {dataContactReply.note}</p>
-                                        <p>ContactReply: {dataContactReply.contactReplyId}</p>
+                                        <strong>Contact User Reply:</strong>
+                                        {data.contactReply ? (
+                                            <>
+                                                <p>Username: {data.contactReply.username}</p>
+                                                <p>Email: {data.contactReply.email}</p>
+                                                <p>PhoneNumber: {data.contactReply.phoneNumber}</p>
+                                                <p>Note: {data.contactReply.note}</p>
+                                                <p>ContactReplyId: {data.contactReply.id}</p>
+                                            </>
+                                        ) : (
+                                            <p>No contact reply available</p>
+                                        )}
                                     </address>
                                 </div>
                             </div>
-                            {data.contactReplyId === 0 && (
+
+                            {data.contactReplyId !== 0 && (
                                 <div className="mb-4">
                                     <button className="btn btn-primary" onClick={handleClickShowForm}>
                                         Show Reply Form
@@ -148,7 +142,7 @@ function EditContact() {
                                                     <p>Username: {dataPost.username}</p>
                                                     <p>Email: {dataPost.email}</p>
                                                     <p>PhoneNumber: {dataPost.phoneNumber}</p>
-                                                    <p>ContactReplyId: {data.contactReplyId}</p>
+                                                    <p>ContactReplyId: {dataPost.contactReplyId}</p>
                                                 </address>
                                             </div>
                                             <div className="col-md-5">
@@ -166,14 +160,13 @@ function EditContact() {
                                                 <select
                                                     name="contactReplyId"
                                                     className="form-control"
-                                                    value={dataPost.contactReplyId || data.contactReplyId || ''} // Default to result.contactReplyId
+                                                    value={data.contactReply.id}
                                                     onChange={(e) =>
                                                         setDataPost({
                                                             ...dataPost,
-                                                            contactReplyId: parseInt(e.target.value) || null, // Ensure the value is parsed to an integer
+                                                            contactReplyId: parseInt(e.target.value) || null,
                                                         })
                                                     }
-                                                    disabled={data.contactReplyId !== 0}
                                                 >
                                                     <option value="" disabled>
                                                         Select Contact Reply
@@ -186,11 +179,9 @@ function EditContact() {
                                                 </select>
                                             </div>
                                         </div>
-                                        <div className="col-md-12 text-right">
-                                            <button type="submit" className="btn btn-primary">
-                                                Send Email
-                                            </button>
-                                        </div>
+                                        <button type="submit" className="btn btn-success">
+                                            Submit
+                                        </button>
                                     </form>
                                 </div>
                             )}
