@@ -92,11 +92,11 @@ function EditContact() {
                 <div className="col-12 grid-margin stretch-card">
                     <div className="card">
                         <div className="card-body">
-                            <h3 className="font-weight-bold">Detail Reply Contact</h3>
+                            <h3 className="font-weight-bold">Detail Contact</h3>
                             <div className="row mb-4">
                                 <div className="col-md-4">
                                     <address>
-                                        <strong>Contact Admin Reply:</strong>
+                                        <strong>Contact Reply:</strong>
                                         <p>Username: {data.username}</p>
                                         <p>Email: {data.email}</p>
                                         <p>PhoneNumber: {data.phoneNumber}</p>
@@ -104,6 +104,67 @@ function EditContact() {
                                     </address>
                                 </div>
                             </div>
+                            {data.contactReplyId !== 0 && (
+                                <div className="mb-4">
+                                    <button className="btn btn-primary" onClick={handleClickShowForm}>
+                                        Show Reply Form
+                                    </button>
+                                </div>
+                            )}
+
+                            {showForm && (
+                                <div className="mt-4">
+                                    <form className="forms-sample ml-2" onSubmit={handleSubmitPost}>
+                                        <div className="row mb-4">
+                                            <div className="col-md-4">
+                                                <address>
+                                                    <strong>Contact Admin Reply:</strong>
+                                                    <p>Username: {dataPost.username}</p>
+                                                    <p>Email: {dataPost.email}</p>
+                                                    <p>PhoneNumber: {dataPost.phoneNumber}</p>
+                                                    <p>ContactReplyId: {dataPost.contactReplyId}</p>
+                                                </address>
+                                            </div>
+                                            <div className="col-md-5">
+                                                <label className="col-form-label text-md-right">Note</label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder="Note"
+                                                    value={dataPost.note}
+                                                    onChange={(e) => setDataPost({ ...dataPost, note: e.target.value })}
+                                                />
+                                            </div>
+                                            <div className="col-md-3">
+                                                <label className="col-form-label text-md-right">Contact Reply</label>
+                                                <select
+                                                    name="contactReplyId"
+                                                    className="form-control"
+                                                    value={dataPost.contactReplyId}
+                                                    onChange={(e) =>
+                                                        setDataPost({
+                                                            ...dataPost,
+                                                            contactReplyId: parseInt(e.target.value) || null,
+                                                        })
+                                                    }
+                                                >
+                                                    <option value="" disabled>
+                                                        Select Contact Reply
+                                                    </option>
+                                                    {contactReplys.map((contact) => (
+                                                        <option key={contact.id} value={contact.id}>
+                                                            {contact.username}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <button type="submit" className="btn btn-success">
+                                            Submit
+                                        </button>
+                                    </form>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>

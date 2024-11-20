@@ -124,7 +124,7 @@ function EditContact() {
                                 </div>
                             </div>
 
-                            {data.contactReplyId !== 0 && (
+                            {data.contactReplyId === 0 && (
                                 <div className="mb-4">
                                     <button className="btn btn-primary" onClick={handleClickShowForm}>
                                         Show Reply Form
