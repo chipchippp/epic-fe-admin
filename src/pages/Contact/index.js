@@ -26,9 +26,7 @@ function Contact() {
                 const username = item.username ? item.username.toString().toLowerCase() : '';
                 const searchLower = search.toLowerCase();
 
-                return (
-                    email.includes(searchLower) || username.includes(searchLower)
-                );
+                return email.includes(searchLower) || username.includes(searchLower);
             });
             setFilteredContact(filteredData);
         };
@@ -125,7 +123,15 @@ function Contact() {
                                                                 <Link
                                                                     to={`/contact/edit/${item.id}`}
                                                                     className="btn btn-warning"
-                                                                    title="Detail"
+                                                                    title="Contact Reply"
+                                                                >
+                                                                    <i className="far fa-eye"></i>
+                                                                </Link>
+                                                                &nbsp;
+                                                                <Link
+                                                                    to={`/contact/detail/${item.id}`}
+                                                                    className="btn btn-primary"
+                                                                    title="Contact"
                                                                 >
                                                                     <i className="far fa-eye"></i>
                                                                 </Link>

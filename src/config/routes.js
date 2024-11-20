@@ -40,6 +40,7 @@ const routes = {
     contact: '/contact',
     createContact: '/contact/create',
     editContact: '/contact/edit/:contactReplyId',
+    contactDetail: '/contact/detail/:id',
 
     //     Designer
     designer: '/designer',

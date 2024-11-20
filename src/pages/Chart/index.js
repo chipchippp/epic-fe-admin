@@ -9,7 +9,7 @@ function Chart() {
                     <BarChart />
                 </div>
             </div>
-            <ToastContainer />
+            {/* <ToastContainer /> */}
         </div>
     );
 }
