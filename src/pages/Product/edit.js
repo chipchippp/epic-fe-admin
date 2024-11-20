@@ -8,9 +8,18 @@ const EditProduct = () => {
     const navigate = useNavigate();
     const { id } = useParams();
     const [categories, setCategories] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [selectedFiles, setSelectedFiles] = useState([]);
-    const [data, setData] = useState({});
+    const [data, setData] = useState({
+        name: '',
+        description: '',
+        price: 0,
+        size: '',
+        manufacturer: '',
+        weight: 0,
+        categoryId: null,
+        images: [{}],
+        returnPeriodDays: 0,
+    });
     const [imagesOld, setImagesOld] = useState([]);
     const [imagesNew, setImagesNew] = useState([]);
     const [removedImages, setRemovedImages] = useState([]);
@@ -44,25 +53,29 @@ const EditProduct = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         try {
             const updatedProduct = {
                 ...data,
-                categoryId: data.categoryId || (data.category && data.category.categoryId),
+                categoryId: parseInt(data.categoryId, 10) || null,
             };
+            console.log('Updated Product:', JSON.stringify(updatedProduct, null, 2));
 
             const formData = new FormData();
             formData.append('productDTO', new Blob([JSON.stringify(updatedProduct)], { type: 'application/json' }));
 
-            if (selectedFiles.length > 0) {
-                selectedFiles.forEach((file) => formData.append('files', file));
-            }
-
+            selectedFiles.forEach((file) => formData.append('files', file));
             if (removedImages.length > 0) {
                 formData.append('removedImages', JSON.stringify(removedImages));
             }
 
-            const response = await updateProduct(id, formData);
+            // Log FormData content for debugging
+            for (const [key, value] of formData.entries()) {
+                console.log(`${key}:`, value);
+            }
 
+            const response = await updateProduct(id, formData);
+            console.log('Response:', response);
             toast.success('Product updated successfully');
             navigate('/product');
         } catch (error) {
@@ -79,9 +92,11 @@ const EditProduct = () => {
         const { name, value } = e.target;
 
         if (name === 'price' && value < 1) {
-            toast.warning(`${name.charAt(0).toUpperCase() + name.slice(1)} must be 1 or higher`);
+            toast.warning('Price must be 1 or higher');
             return;
         }
+
+        console.log(name, ': ', value);
         setData({ ...data, [name]: value });
     };
 
@@ -119,6 +134,20 @@ const EditProduct = () => {
         }
     };
 
+    const renderInput = (label, name, type = 'text', value) => (
+        <div className="col-md-3">
+            <label className="col-form-label text-md-right">{label}</label>
+            <input
+                type={type}
+                name={name}
+                className="form-control"
+                value={value}
+                onChange={handleInputChange}
+                required
+            />
+        </div>
+    );
+
     return (
         <div className="content-wrapper">
             <div className="col-12 grid-margin stretch-card">
@@ -127,60 +156,55 @@ const EditProduct = () => {
                         <h4 className="card-title">Edit Product {data.codeProduct}</h4>
                         <form onSubmit={handleSubmit}>
                             <div className="row mb-4">
+                                {renderInput('Name', 'name', 'text', data.name)}
+                                {renderInput('Description', 'description', 'text', data.description)}
+                                {renderInput('Price', 'price', 'number', data.price)}
                                 <div className="col-md-3">
-                                    <label className="col-form-label text-md-right">Name</label>
-                                    <input
-                                        type="text"
-                                        name="name"
+                                    <label className="col-form-label text-md-right">Size</label>
+                                    <select
+                                        name="size"
                                         className="form-control"
-                                        value={data.name}
+                                        value={data.size}
                                         onChange={handleInputChange}
                                         required
-                                    />
+                                    >
+                                        <option value="" disabled>
+                                            Select Size
+                                        </option>
+                                        <option value="S">S</option>
+                                        <option value="M">M</option>
+                                        <option value="L">L</option>
+                                        <option value="XL">XL</option>
+                                    </select>
                                 </div>
-                                <div className="col-md-3">
-                                    <label className="col-form-label text-md-right">Description</label>
-                                    <input
-                                        type="text"
-                                        name="description"
-                                        className="form-control"
-                                        value={data.description}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="col-md-3">
-                                    <label className="col-form-label text-md-right">Price</label>
-                                    <input
-                                        type="text"
-                                        name="price"
-                                        className="form-control"
-                                        value={data.price}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
+                            </div>
+                            <div className="row mb-4">
+                                {renderInput('Manufacturer', 'manufacturer', 'text', data.manufacturer)}
+                                {renderInput('Weight', 'weight', 'number', data.weight)}
+                                {renderInput('Return Period Days', 'returnPeriodDays', 'number', data.returnPeriodDays)}
                                 <div className="col-md-3">
                                     <label className="col-form-label text-md-right">Category</label>
                                     <select
-                                        name="category"
+                                        name="categoryId"
                                         className="form-control"
-                                        value={data.categoryId || ''}
+                                        value={data.categoryId}
                                         onChange={handleInputChange}
                                         required
                                     >
                                         <option value="" disabled>
                                             Select Category
                                         </option>
-                                        {categories.map((category) => (
-                                            <option key={category.categoryId} value={category.categoryId}>
-                                                {category.categoryName}
-                                            </option>
-                                        ))}
+                                        {categories.length > 0 ? (
+                                            categories.map((category) => (
+                                                <option key={category.categoryId} value={category.categoryId}>
+                                                    {category.categoryName}
+                                                </option>
+                                            ))
+                                        ) : (
+                                            <option disabled>No categories available</option>
+                                        )}
                                     </select>
                                 </div>
-                            </div>
-                            <div className="row mb-4">
                                 <div className="col-md-3">
                                     <label className="col-form-label text-md-right">Images</label>
                                     <input
@@ -189,39 +213,6 @@ const EditProduct = () => {
                                         className="form-control"
                                         multiple
                                         onChange={handleFileChange}
-                                    />
-                                </div>
-                                <div className="col-md-3">
-                                    <label className="col-form-label text-md-right">Manufacturer</label>
-                                    <input
-                                        type="text"
-                                        name="manufacturer"
-                                        className="form-control"
-                                        value={data.manufacturer}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="col-md-3">
-                                    <label className="col-form-label text-md-right">Size</label>
-                                    <input
-                                        type="text"
-                                        name="size"
-                                        className="form-control"
-                                        value={data.size}
-                                        onChange={handleInputChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="col-md-3">
-                                    <label className="col-form-label text-md-right">Weight</label>
-                                    <input
-                                        type="text"
-                                        name="weight"
-                                        className="form-control"
-                                        value={data.weight}
-                                        onChange={handleInputChange}
-                                        required
                                     />
                                 </div>
                             </div>
@@ -302,7 +293,7 @@ const EditProduct = () => {
                     </div>
                 </div>
             </div>
-            <ToastContainer />
+            {/* <ToastContainer /> */}
         </div>
     );
 };

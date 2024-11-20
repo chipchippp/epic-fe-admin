@@ -27,7 +27,7 @@ const CreateBlog = () => {
     };
 
     const handleFileChange = (e) => {
-        setSelectedFile(e.target.files[0]); // Store only the first selected file
+        setSelectedFile(e.target.files[0]);
     };
 
     const handleSubmit = async (e) => {
@@ -37,7 +37,7 @@ const CreateBlog = () => {
             formData.append('blog', new Blob([JSON.stringify(blog)], { type: 'application/json' }));
 
             if (selectedFile) {
-                formData.append('file', selectedFile); // Append the single file
+                formData.append('file', selectedFile);
             }
 
             await createBlog(formData);
@@ -149,7 +149,7 @@ const CreateBlog = () => {
                     </div>
                 </div>
             </div>
-            <ToastContainer />
+            {/* <ToastContainer /> */}
         </div>
     );
 };

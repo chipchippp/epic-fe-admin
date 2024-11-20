@@ -122,9 +122,8 @@ function EditCategory() {
                             </form>
                         </div>
                     </div>
-                    <ToastContainer />
                 </div>
-                <ToastContainer />
+                {/* <ToastContainer /> */}
             </div>
             
         </>

@@ -185,7 +185,7 @@ function Category() {
                     </Modal.Footer>
                 </Modal>
 
-                <ToastContainer />
+                {/* <ToastContainer /> */}
             </div>
         </>
     );

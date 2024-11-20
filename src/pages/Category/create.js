@@ -100,7 +100,7 @@ function CreateCategory() {
                         </div>
                     </div>
                 </div>
-                <ToastContainer />
+                {/* <ToastContainer /> */}
             </div>
         </>
     );
