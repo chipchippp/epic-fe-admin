@@ -12,6 +12,26 @@ export const getContact = async (params) => {
     }
 };
 
+export const getContactByReplyId = async (replyId) => {
+    try {
+        const response = await get(service, `/contact/contactReplyId/${replyId}`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Contact data:', error);
+        throw error;
+    }
+};
+
+export const getContactById = async (id) => {
+    try {
+        const response = await get(service, `/contact/id/${id}`);
+        return response;
+    } catch (error) {
+        console.error('Error fetching Contact data:', error);
+        throw error;
+    }
+};
+
 export const getContactsReplyIsNull = async (currentPage = 1, limit = 7) => {
     try {
         const response = await get(service, `/contact/getContactsReplyIsNull`);

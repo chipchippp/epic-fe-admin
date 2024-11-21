@@ -2,20 +2,26 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createContact, getContactsReplyIsNull, editContact } from '~/services/User/contactService';
+import { createContact, getContactByReplyId, getContactById } from '~/services/User/contactService';
 
 function EditContact() {
     const { id } = useParams();
-    const [contactReplys, setContactReplys] = useState([]);
-    const [data, setData] = useState({
+    const navigate = useNavigate();
+
+    const [contactData, setContactData] = useState({
         username: '',
         phoneNumber: '',
         email: '',
         note: '',
-        contactReplyId: 0,
-        contactReply: null,
+        isReply: false,
     });
-    const [dataPost, setDataPost] = useState({
+    const [contactReplyData, setContactReplyData] = useState({
+        username: '',
+        phoneNumber: '',
+        email: '',
+        note: '',
+    });
+    const [replyFormData, setReplyFormData] = useState({
         username: 'Epicgures',
         phoneNumber: '0123456789',
         email: 'quannhth2210007@fpt.edu.vn',
@@ -23,154 +29,171 @@ function EditContact() {
         contactReplyId: 0,
     });
 
-    useEffect(() => {
-        setDataPost((prevDataPost) => ({
-            ...prevDataPost,
-            id: data.id,
-        }));
-    }, [data.id]);
-
     const [showForm, setShowForm] = useState(false);
-    const navigate = useNavigate();
+    const [isDataFetched, setIsDataFetched] = useState(false);
 
     useEffect(() => {
-        const fetchContactReply = async () => {
+        const fetchContactData = async () => {
             try {
-                const response = await getContactsReplyIsNull();
-                setContactReplys(response.data.content);
+                const replyResponse = await getContactByReplyId(id);
+                console.log('replyResponse', replyResponse);
+
+                if (replyResponse?.data && replyResponse.data.length > 0) {
+                    setContactData(replyResponse.data[0]?.contactReply);
+                    setContactData((prevData) => ({
+                        ...prevData,
+                        isReply: true,
+                    }));
+                    setContactReplyData(replyResponse.data[0]);
+                } else {
+                    const contactResponse = await getContactById(id);
+                    if (contactResponse?.data) {
+                        setContactData(contactResponse.data);
+                    } else {
+                        toast.error('Contact not found');
+                    }
+                    console.log('contactResponse', contactResponse);
+                }
+                setIsDataFetched(true);
             } catch (error) {
-                toast.error('Failed to fetch contact reply');
+                toast.error('Failed to fetch contact data');
+                console.error('Error fetching contact data:', error);
+                setIsDataFetched(true);
             }
         };
 
-        fetchContactReply();
-    }, []);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await editContact(id);
-                console.log(result.data);
-                setData(result.data);
-            } catch (error) {
-                toast.error('Failed to fetch contact or contact reply');
-            }
-        };
-        fetchData();
+        fetchContactData();
     }, [id]);
-
-    useEffect(() => {
-        if (dataPost.contactReplyId) {
-            const selected = contactReplys.find((reply) => reply.id === dataPost.contactReplyId);
-            // setSelectedReply(selected || null);
-        }
-    }, [dataPost.contactReplyId, contactReplys]);
 
     const handleSubmitPost = async (event) => {
         event.preventDefault();
         try {
-            await createContact(dataPost);
+            await createContact(replyFormData);
             toast.success('Contact created successfully');
             navigate('/contact');
         } catch (error) {
-            console.error('Error creating Contact:', error.response ? error.response.data : error.message);
             toast.error('Failed to create Contact');
+            console.error('Error creating Contact:', error.response ? error.response.data : error.message);
         }
     };
 
-    const handleClickShowForm = () => {
-        setDataPost({
-            ...dataPost,
-            contactReplyId: data.contactReplyId || 0,
-        });
-        setShowForm(true);
+    const handleShowForm = () => {
+        setReplyFormData((prevData) => ({
+            ...prevData,
+            contactReplyId: id || 0,
+        }));
+        setShowForm((prevState) => !prevState);
     };
 
     return (
-        <>
-            <div className="content-wrapper">
-                <div className="col-12 grid-margin stretch-card">
-                    <div className="card">
-                        <div className="card-body">
-                            <h3 className="font-weight-bold">Detail Contact</h3>
-                            <div className="row mb-4">
+        <div className="content-wrapper">
+            <div className="col-12 grid-margin stretch-card">
+                <div className="card">
+                    <div className="card-body">
+                        <h3 className="font-weight-bold">Detail Contact</h3>
+                        <div className="row mb-4">
+                            <div className="col-md-4">
+                                <address>
+                                    <h4>
+                                        <strong>User send contact:</strong>
+                                    </h4>
+                                    <p>Username: {contactData.username}</p>
+                                    <p>Email: {contactData.email}</p>
+                                    <p>PhoneNumber: {contactData.phoneNumber}</p>
+                                    <p>Note: {contactData.note}</p>
+                                </address>
+                            </div>
+                            {contactData.isReply && (
                                 <div className="col-md-4">
                                     <address>
-                                        <strong>Contact Reply:</strong>
-                                        <p>Username: {data.username}</p>
-                                        <p>Email: {data.email}</p>
-                                        <p>PhoneNumber: {data.phoneNumber}</p>
-                                        <p>Note: {data.note}</p>
+                                        <h4>
+                                            <strong>Contact Reply:</strong>
+                                        </h4>
+                                        <p>Username: {contactReplyData.username}</p>
+                                        <p>Email: {contactReplyData.email}</p>
+                                        <p>PhoneNumber: {contactReplyData.phoneNumber}</p>
+                                        <p>Note: {contactReplyData.note}</p>
                                     </address>
-                                </div>
-                            </div>
-                            {data.contactReplyId !== 0 && (
-                                <div className="mb-4">
-                                    <button className="btn btn-primary" onClick={handleClickShowForm}>
-                                        Show Reply Form
-                                    </button>
-                                </div>
-                            )}
-
-                            {showForm && (
-                                <div className="mt-4">
-                                    <form className="forms-sample ml-2" onSubmit={handleSubmitPost}>
-                                        <div className="row mb-4">
-                                            <div className="col-md-4">
-                                                <address>
-                                                    <strong>Contact Admin Reply:</strong>
-                                                    <p>Username: {dataPost.username}</p>
-                                                    <p>Email: {dataPost.email}</p>
-                                                    <p>PhoneNumber: {dataPost.phoneNumber}</p>
-                                                    <p>ContactReplyId: {dataPost.contactReplyId}</p>
-                                                </address>
-                                            </div>
-                                            <div className="col-md-5">
-                                                <label className="col-form-label text-md-right">Note</label>
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    placeholder="Note"
-                                                    value={dataPost.note}
-                                                    onChange={(e) => setDataPost({ ...dataPost, note: e.target.value })}
-                                                />
-                                            </div>
-                                            <div className="col-md-3">
-                                                <label className="col-form-label text-md-right">Contact Reply</label>
-                                                <select
-                                                    name="contactReplyId"
-                                                    className="form-control"
-                                                    value={dataPost.contactReplyId}
-                                                    onChange={(e) =>
-                                                        setDataPost({
-                                                            ...dataPost,
-                                                            contactReplyId: parseInt(e.target.value) || null,
-                                                        })
-                                                    }
-                                                >
-                                                    <option value="" disabled>
-                                                        Select Contact Reply
-                                                    </option>
-                                                    {contactReplys.map((contact) => (
-                                                        <option key={contact.id} value={contact.id}>
-                                                            {contact.username}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <button type="submit" className="btn btn-success">
-                                            Submit
-                                        </button>
-                                    </form>
                                 </div>
                             )}
                         </div>
+
+                        {/* <div className="row mb-4">
+                            <div className="col-12">
+                                {' '}
+                                <address>
+                                    <h4>
+                                        <strong>User send contact:</strong>
+                                    </h4>
+                                    <p>Username: {contactData.username}</p>
+                                    <p>Email: {contactData.email}</p>
+                                    <p>PhoneNumber: {contactData.phoneNumber}</p>
+                                    <p>Note: {contactData.note}</p>
+                                </address>
+                            </div>
+                            {contactData.isReply && (
+                                <div className="col-12">
+                                    {' '}
+                                    <address>
+                                        <h4>
+                                            <strong>Contact Reply:</strong>
+                                        </h4>
+                                        <p>Username: {contactReplyData.username}</p>
+                                        <p>Email: {contactReplyData.email}</p>
+                                        <p>PhoneNumber: {contactReplyData.phoneNumber}</p>
+                                        <p>Note: {contactReplyData.note}</p>
+                                    </address>
+                                </div>
+                            )}
+                        </div> */}
+
+                        {isDataFetched && !contactData.isReply && (
+                            <div className="mb-4">
+                                <button className="btn btn-primary" onClick={handleShowForm}>
+                                    Show Reply Form
+                                </button>
+                            </div>
+                        )}
+
+                        {showForm && (
+                            <div className="mt-4">
+                                <form className="forms-sample ml-2" onSubmit={handleSubmitPost}>
+                                    <div className="row mb-4">
+                                        <div className="col-md-4">
+                                            <address>
+                                                <strong>Contact Admin Reply:</strong>
+                                                <p>Username: {replyFormData.username}</p>
+                                                <p>Email: {replyFormData.email}</p>
+                                                <p>PhoneNumber: {replyFormData.phoneNumber}</p>
+                                            </address>
+                                        </div>
+                                        <div className="col-md-5">
+                                            <label className="col-form-label text-md-right">Note</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Note"
+                                                value={replyFormData.note}
+                                                onChange={(e) =>
+                                                    setReplyFormData({
+                                                        ...replyFormData,
+                                                        note: e.target.value,
+                                                    })
+                                                }
+                                            />
+                                        </div>
+                                    </div>
+                                    <button type="submit" className="btn btn-success">
+                                        Submit
+                                    </button>
+                                </form>
+                            </div>
+                        )}
                     </div>
                 </div>
-                {/* <ToastContainer /> */}
             </div>
-        </>
+            <ToastContainer />
+        </div>
     );
 }
 

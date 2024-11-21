@@ -120,14 +120,14 @@ function Contact() {
                                                             <td>{item.phoneNumber}</td>
                                                             <td>{item.note}</td>
                                                             <td>
-                                                                <Link
+                                                                {/* <Link
                                                                     to={`/contact/edit/${item.id}`}
                                                                     className="btn btn-warning"
                                                                     title="Contact Reply"
                                                                 >
                                                                     <i className="far fa-eye"></i>
                                                                 </Link>
-                                                                &nbsp;
+                                                                &nbsp; */}
                                                                 <Link
                                                                     to={`/contact/detail/${item.id}`}
                                                                     className="btn btn-primary"
