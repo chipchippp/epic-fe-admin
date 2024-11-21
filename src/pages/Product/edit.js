@@ -32,7 +32,13 @@ const EditProduct = () => {
 
                 productData.categoryId = productData.category?.categoryId || null;
                 setData(productData);
-                setImagesOld(response.data.images || []);
+                const imagesOld =
+                    response.data.images.map((image) => ({
+                        imageId: image.imageId,
+                        imageUrl: image.imageUrl,
+                    })) || [];
+
+                setImagesOld(imagesOld);
             } catch (error) {
                 toast.error(error.message);
             }
@@ -56,15 +62,29 @@ const EditProduct = () => {
 
         try {
             const updatedProduct = {
-                ...data,
-                categoryId: parseInt(data.categoryId, 10) || null,
+                productId: data.productId,
+                name: data.name,
+                description: data.description,
+                price: data.price,
+                size: data.size,
+                manufacturer: data.manufacturer,
+                weight: data.weight,
+                categoryId: data.categoryId,
+                images: imagesOld,
+                returnPeriodDays: data.returnPeriodDays,
             };
             console.log('Updated Product:', JSON.stringify(updatedProduct, null, 2));
 
             const formData = new FormData();
             formData.append('productDTO', new Blob([JSON.stringify(updatedProduct)], { type: 'application/json' }));
 
-            selectedFiles.forEach((file) => formData.append('files', file));
+            if (selectedFiles.length > 0) {
+                selectedFiles.forEach((file) => formData.append('files', file));
+            } else {
+                const emptyFile = new File([], '', { type: 'application/octet-stream' });
+                formData.append('files', emptyFile);
+            }
+
             if (removedImages.length > 0) {
                 formData.append('removedImages', JSON.stringify(removedImages));
             }
@@ -126,7 +146,6 @@ const EditProduct = () => {
         e.preventDefault();
         try {
             const imageId = imagesOld[index].imageId;
-            await deleteProductImg(imageId);
             setImagesOld((prevImages) => prevImages.filter((_, i) => i !== index));
             setRemovedImages((prevImages) => [...prevImages, imageId]);
         } catch (error) {

@@ -80,6 +80,9 @@ const EditBlog = () => {
 
             if (selectedFiles.length > 0) {
                 selectedFiles.forEach((file) => formData.append('file', file));
+            } else {
+                const emptyFile = new File([], '', { type: 'application/octet-stream' });
+                formData.append('file', emptyFile);
             }
 
             await updateBlog(id, formData);
