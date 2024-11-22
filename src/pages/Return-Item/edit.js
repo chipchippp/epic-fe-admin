@@ -270,7 +270,50 @@ function ReturnItemEdit() {
             </div>
 
             {shouldShowModal && (
-                <Modal show={editShow} onHide={handleClose}>
+                <Modal show={editShow} onHide={handleClose} dialogClassName="custom-modal">
+                    <style>
+                        {`
+                        .custom-modal {
+                            max-width: 800px;
+                            width: 100%;
+                        }
+            
+                        .custom-modal .form-group {
+                            display: flex;
+                            flex-direction: column;
+                            margin-bottom: 15px;
+                        }
+            
+                        .custom-modal .form-inline {
+                            display: flex;
+                            justify-content: space-between;
+                            gap: 20px;
+                        }
+            
+                        .custom-modal .radio-group {
+                            display: flex;
+                            justify-content: flex-start;
+                            gap: 20px;
+                            margin-top: 5px;
+                        }
+            
+                        .form-check + .form-check {
+                            margin-left: 20px;
+                        }
+            
+                        .ml-2 {
+                            margin-left: 8px;
+                        }
+            
+                        .mls-20 {
+                            padding-left: 20px;
+                        }
+            
+                        .d-flex.align-items-center {
+                            flex-wrap: wrap; 
+                        }
+                    `}
+                    </style>
                     <Modal.Header closeButton>
                         <Modal.Title>Return Item</Modal.Title>
                     </Modal.Header>
@@ -278,63 +321,87 @@ function ReturnItemEdit() {
                         <Container>
                             <Row className="mb-3">
                                 <Col md={6}>
-                                    <select
-                                        name="size"
-                                        className="form-control"
-                                        value={data.conditionItem}
-                                        onChange={(e) => setData({ ...data, conditionItem: e.target.value })}
-                                        required
-                                    >
-                                        <option value="" disabled>
-                                            Select conditionItem
-                                        </option>
-                                        <option value="SEVERELY_DAMAGED">SEVERELY_DAMAGED</option>
-                                        <option value="MODERATELY_DAMAGED">MODERATELY_DAMAGED</option>
-                                        <option value="SLIGHTLY_DAMAGED">SLIGHTLY_DAMAGED</option>
-                                        <option value="NORMAL">NORMAL</option>
-                                        <option value="NEW_OPEN_BOX">NEW_OPEN_BOX</option>
-                                        <option value="LIKE_NEW">LIKE_NEW</option>
-                                        <option value="INCOMPLETE">INCOMPLETE</option>
-                                        <option value="MISDELIVERED_ITEM">MISDELIVERED_ITEM</option>
-                                        <option value="OTHER">OTHER</option>
-                                    </select>
+                                    <div className="form-group">
+                                        <label>Condition Item</label>
+                                        <select
+                                            className="form-control"
+                                            value={data.conditionItem}
+                                            onChange={(e) => setData({ ...data, conditionItem: e.target.value })}
+                                        >
+                                            <option value="SEVERELY_DAMAGED">SEVERELY_DAMAGED</option>
+                                            <option value="SLIGHTLY_DAMAGED">SLIGHTLY_DAMAGED</option>
+                                            <option value="MODERATELY_DAMAGED">MODERATELY_DAMAGED</option>
+                                            <option value="NORMAL">NORMAL</option>
+                                            <option value="NEW_OPEN_BOX">NEW_OPEN_BOX</option>
+                                            <option value="LIKE_NEW">LIKE_NEW</option>
+                                            <option value="INCOMPLETE">INCOMPLETE</option>
+                                            <option value="MISDELIVERED_ITEM">MISDELIVERED_ITEM</option>
+                                            <option value="OTHER">OTHER</option>
+                                        </select>
+                                    </div>
                                 </Col>
                                 <Col md={6}>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="Condition Note"
-                                        value={data.conditionNote}
-                                        onChange={(e) => setData({ ...data, conditionNote: e.target.value })}
-                                        style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
-                                    />
+                                    <div className="form-group">
+                                        <label>Condition Note</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={data.conditionNote}
+                                            onChange={(e) => setData({ ...data, conditionNote: e.target.value })}
+                                        />
+                                    </div>
                                 </Col>
                             </Row>
                             <Row className="mb-3">
                                 <Col md={6}>
-                                    <input
-                                        type="number"
-                                        className="form-control"
-                                        placeholder="Refund Percentage"
-                                        value={data.refundPercentage}
-                                        onChange={(e) => setData({ ...data, refundPercentage: e.target.value })}
-                                        style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
-                                    />
+                                    <div className="form-group">
+                                        <label>Quantity</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            value={data.quantityReturned}
+                                            onChange={(e) => setData({ ...data, quantityReturned: e.target.value })}
+                                        />
+                                    </div>
                                 </Col>
                                 <Col md={6}>
-                                    <select
-                                        name="size"
-                                        className="form-control"
-                                        value={data.isAddStockQty}
-                                        onChange={(e) => setData({ ...data, isAddStockQty: e.target.value })}
-                                        required
-                                    >
-                                        <option value="">
-                                            Select IsAddStockQty
-                                        </option>
-                                        <option value="false">False</option>
-                                        <option value="true">True</option>
-                                    </select>
+                                    <div className="form-group">
+                                        <label className="col-form-label">IsAddStockQty</label>
+                                        <div className="d-flex align-items-center mls-20">
+                                            <div className="form-check mr-4">
+                                                <input
+                                                    type="radio"
+                                                    id="addStockYes"
+                                                    name="isAddStockQty"
+                                                    className="form-check-input"
+                                                    value="true"
+                                                    checked={data.isAddStockQty === 'true'}
+                                                    onChange={(e) =>
+                                                        setData({ ...data, isAddStockQty: e.target.value })
+                                                    }
+                                                />
+                                                <label className="form-check-label ml-2" htmlFor="addStockYes">
+                                                    True
+                                                </label>
+                                            </div>
+                                            <div className="form-check">
+                                                <input
+                                                    type="radio"
+                                                    id="addStockNo"
+                                                    name="isAddStockQty"
+                                                    className="form-check-input"
+                                                    value="false"
+                                                    checked={data.isAddStockQty === 'false'}
+                                                    onChange={(e) =>
+                                                        setData({ ...data, isAddStockQty: e.target.value })
+                                                    }
+                                                />
+                                                <label className="form-check-label ml-2" htmlFor="addStockNo">
+                                                    False
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </Col>
                             </Row>
                         </Container>
