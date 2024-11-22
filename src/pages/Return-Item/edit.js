@@ -355,12 +355,12 @@ function ReturnItemEdit() {
                             <Row className="mb-3">
                                 <Col md={6}>
                                     <div className="form-group">
-                                        <label>Quantity</label>
+                                        <label>RefundPercentage</label>
                                         <input
                                             type="number"
                                             className="form-control"
-                                            value={data.quantityReturned}
-                                            onChange={(e) => setData({ ...data, quantityReturned: e.target.value })}
+                                            value={data.refundPercentage}
+                                            onChange={(e) => setData({ ...data, refundPercentage: e.target.value })}
                                         />
                                     </div>
                                 </Col>
