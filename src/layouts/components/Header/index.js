@@ -8,11 +8,11 @@ function HeaderAdmin() {
 
     useEffect(() => {
         const storedUsername = localStorage.getItem('username');
-        if (storedUsername) {
-            setUsername(storedUsername);
-        } else {
-            navigate('/login');
-        }
+        // if (storedUsername) {
+        //     setUsername(storedUsername);
+        // } else {
+        //     navigate('/login');
+        // }
     }, [navigate]);
 
     const handleLogout = () => {
