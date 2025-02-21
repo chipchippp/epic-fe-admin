@@ -26,6 +26,12 @@ function SidebarAdmin() {
                                     <Link className="nav-link" to="/chart">
                                         ChartJs
                                     </Link>
+                                    <Link className="nav-link" to="/course">
+                                        Course
+                                    </Link>
+                                    <Link className="nav-link" to="/class-list">
+                                        Class-list
+                                    </Link>
                                 </li>
                             </ul>
                         </div>

@@ -5,6 +5,10 @@ const routes = {
     //      Account
     login: '/login',
 
+    //      Course
+    course: '/course',
+    classList: '/class-list',
+
     //      Category
     category: '/category',
     createCategory: '/Category/create',
