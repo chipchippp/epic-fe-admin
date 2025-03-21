@@ -6,10 +6,6 @@ import HomeAdmin from '~/pages/Home/index';
 // Account
 import Login from '~/pages/Account/login';
 
-// Course
-import ClassList from '~/pages/Course/index';
-import Course from '~/pages/Course/course';
-
 // Category
 import Category from '~/pages/Category/index';
 import CategoryCreate from '~/pages/Category/create';
@@ -85,10 +81,6 @@ export const publicRoutes = [
 
     // Account
     { path: config.routes.login, component: Login, layout: null },
-
-    // Course
-    { path: config.routes.classList, component: ClassList, layout: AdminLayout },
-    { path: config.routes.course, component: Course, layout: AdminLayout },
 
     // Category
     { path: config.routes.category, component: Category, layout: AdminLayout },
